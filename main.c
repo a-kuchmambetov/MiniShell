@@ -1,173 +1,113 @@
 #include "main.h"
-// compile with: gcc -Wall -Wextra -Werror main.c src/free_utils.c libft.a -o minishell
 
-void parse_envp(t_shell_data *data, char **envp)
+char *create_prompt()
 {
-    t_env_node *new_node;
-    t_env_node *current;
-    char **res;
+    const char *cwd = getcwd(NULL, 0);
+    char *prompt;
 
-    if (!envp || !envp[0])
-        return ;
-    current = data->env.first;
-    for (int i = 0; envp[i] != NULL; i++)
-    {
-        new_node = malloc(sizeof(t_env_node));
-        res = ft_split(envp[i], '=');
-        new_node->key = ft_strdup(res[0]);
-        new_node->value = ft_strdup(res[1]);
-        if (!new_node->key || !new_node->value || !res)
-            return (free(new_node->key), free(new_node->value),
-                    free(new_node), free_str_arr(res));
-        free_str_arr(res);
-        new_node->next = NULL;
-        if (current)
-            current->next = new_node;
-        else
-            data->env.first = new_node;
-        current = new_node;
-        data->env.size++;
-    }
-}
-
-void parse_exec_folders(t_shell_data *data)
-{
-    t_env_node *current;
-
-    current = data->env.first;
-    while (current)
-    {
-        if (ft_strncmp(current->key, "PATH", 4) == 0)
-        {
-            data->paths = ft_split(current->value, ':');
-            break;
-        }
-        current = current->next;
-    }
-}
-
-char *find_executable(t_shell_data *data, char *command)
-{
-    int i;
-    char *full_path;
-
-    i = 0;
-    if (!data->paths)
+    if (!cwd)
         return (NULL);
-    while (data->paths[i])
-    {
-        full_path = malloc(ft_strlen(data->paths[i]) + ft_strlen(command) + 2);
-        if (!full_path)
-            return (NULL);
-        ft_strlcpy(full_path, data->paths[i], ft_strlen(data->paths[i]) + 1);
-        ft_strlcat(full_path, "/", ft_strlen(full_path) + 2);
-        ft_strlcat(full_path, command, ft_strlen(full_path) + ft_strlen(command) + 1);
-        if (access(full_path, X_OK) == 0)
-            return (full_path);
-        free(full_path);
-        i++;
-    }
-    return (NULL);
+    prompt = ft_calloc(1, ft_strlen(cwd) + 20);
+    if (!prompt)
+        return (NULL);
+    ft_strlcpy(prompt, COLOR_CYAN, ft_strlen(COLOR_CYAN) + 1);
+    ft_strlcat(prompt, cwd, ft_strlen(prompt) + ft_strlen(cwd) + 1);
+    ft_strlcat(prompt, " \n> \033[0m", ft_strlen(prompt) + 10);
+    free((char *)cwd);
+    return (prompt);
 }
 
-void run_command(t_shell_data *data, char *command, char *argv_str)
+static void handle_sigint(int sig)
 {
-    char *executable;
-    pid_t pid;
+    char *prompt;
 
-    executable = find_executable(data, command);
-    if (!executable)
+    (void)sig;
+    prompt = create_prompt();
+    ft_printf("\n%s", prompt);
+    free(prompt);
+}
+
+static void setup_signals(void)
+{
+    // Handle Ctrl+C (SIGINT)
+    signal(SIGINT, handle_sigint);
+    // Ignore Ctrl+\ (SIGQUIT)
+    signal(SIGQUIT, SIG_IGN);
+}
+
+char *read_input()
+{
+    char *prompt;
+    char *input;
+
+    prompt = create_prompt();
+    if (!prompt)
+        return (NULL);
+    input = readline(prompt);
+    free(prompt);
+    if (!input)
+        return (NULL);
+    return (input);
+}
+
+void process_input(t_shell_data *data, char *input)
+{
+    char **args;
+
+    if (ft_strncmp(input, "exit", 4) == 0)
     {
-        data->last_exit_status = 127 << 8;
-        printf("%s: Command not found\n", command);
-        if (executable)
-            free(executable);
-        return ;
+        free_shell_data(data);
+        free(input);
+        exit(0);
     }
-    pid = fork();
-    if (pid == 0)
-    {
-        char *args[] = {argv_str, NULL};
-        execve(executable, args, NULL);
-        perror("execve");
-        exit(EXIT_FAILURE);
-    }
-    else if (pid > 0)
-    {
-        waitpid(pid, &data->last_exit_status, 0);
-    }
-    free(executable);
+    args = ft_split(input, ' ');
+    if (!args)
+        return;
+    if (ft_strncmp(args[0], "$?", 2) == 0)
+        return (ft_printf("%d: command not found\n", WEXITSTATUS(data->last_exit_status)), (void)0);
+    exec_cmd_2(data, args[0], args);
+    free_str_arr(args);
+}
+
+void init_shell_data(t_shell_data *data, char **envp)
+{
+    char *cwd;
+
+    *data = (t_shell_data){0};
+    cwd = getcwd(NULL, 0);
+    if (!cwd)
+        return (free_shell_data(data), (void)0);
+    if (data->pwd)
+        free(data->pwd);
+    data->pwd = ft_strdup(cwd);
+    free(cwd);
+    parse_envp(data, envp);
+    parse_exec_folders(data);
+    set_envp_from_env(data);
 }
 
 int main(int argc, char **argv, char **envp)
-{
-    (void)argc;
-    (void)argv;
-    (void)envp;
-
+{    
     t_shell_data data;
-    data = (t_shell_data){0};
-
-    // Check with empty envp
-    // char *envp2[] = { "PATH", NULL };
-    // parse_envp(&data, envp2);
-    // parse_exec_folders(&data);
-
-    parse_envp(&data, envp);
-    parse_exec_folders(&data);
-
-    // t_env_node *current;
-    // current = data.env.first;
-    // int i = 0;
-    // while (i < data.env.size)
-    // {
-    //     printf("Key and value %s=%s\n", current->key, current->value);
-    //     current = current->next;
-    //     i++;
-    // }
-
-    // printf("\nPATHS:\n");
-    // i = 0;
-    // while (data.paths[i])
-    // {
-    //     printf("Path %s\n", data.paths[i]);
-    //     i++;
-    // }
-
-    printf("\nSEARCHING EXECUTABLE:\n");
-
-    printf("Looking for ls: ");
-    char *result = find_executable(&data, "ls");
-    if (result == NULL)
-        printf("Command not found\n");
-    else
+    char *input;
+    
+    (void)argc; 
+    (void)argv;
+    setup_signals();
+    init_shell_data(&data, envp);
+    while (1)
     {
-        printf("\nCommand FOUND: %s\nRunning...\n\n", result);
-        run_command(&data, "ls", "-la");
-        printf("\nCommand finished.\n");
-        printf("Last exit status: %d\n\n", WEXITSTATUS(data.last_exit_status));
+        input = read_input(&data);
+        if (!input)
+            break;
+        if (*input)  // Only process non-empty input
+        {
+            add_history(input);  // Add to readline history
+            process_input(&data, input);
+        }
+        free(input);
     }
-    free(result);
-
-    printf("Looking for gcc: ");
-    result = find_executable(&data, "gcc");
-    if (result == NULL)
-        printf("Command not found\n");
-    else
-        printf("%s\n\n", result);
-    free(result);
-
-    printf("Looking for nonexistentcommand: ");
-    result = find_executable(&data, "nonexistentcommand");
-    if (result == NULL)
-        printf("Command not found\n");
-    else
-        printf("%s\n\n", result);
-    run_command(&data, "lss", "-la");
-
-    printf("Last exit status: %d\n", WEXITSTATUS(data.last_exit_status));
-    if (result)
-        free(result);
     free_shell_data(&data);
-    return 0;
+    rl_clear_history();  // Clear readline history
+    return (0);
 }

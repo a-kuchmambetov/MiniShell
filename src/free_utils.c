@@ -40,4 +40,7 @@ void free_shell_data(t_shell_data *data)
 {
     free_env_list(&data->env);
     free_str_arr(data->paths);
+    free_str_arr(data->envp);
+    if (data->pwd)
+        free(data->pwd);
 }
