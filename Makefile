@@ -19,7 +19,9 @@ SRC      = main.c \
 		src/tokenizer_utils/tokenizer_lengths.c \
 		src/tokenizer_utils/tokenizer_build.c \
 		src/process_fd.c \
-		src/print_prompt_header.c
+		src/print_prompt_header.c\
+		src/built_in_comands/built_in_comands.c \
+		src/built_in_comands/echo_comand.c
 OBJS     = $(SRC:.c=.o)
 
 # Source files excluding main.c for tests
@@ -53,14 +55,11 @@ fclean:
 	rm -f $(NAME)
 	$(MAKE) -C $(LIBFTDIR) fclean
 
-mlxDel:
-	rm -rf mlx
-
-allClean: fclean mlxDel
+allClean: fclean
 
 re: fclean all
 
 compileTest1: all
 	$(CC) tests/test_main_1.c $(TEST_OBJS_1) $(LIBFT) $(LIBS) -o test_minishell_1
 
-.PHONY: all clean fclean mlxDel allClean re
+.PHONY: all clean fclean allClean re

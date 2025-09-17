@@ -73,5 +73,8 @@ void process_input(t_shell_data *data, char *input);
 char **split_by_delims(const char *s);
 
 void print_prompt_header(void);
+///
 
+int     is_builtin(char *cmd);
+int     exec_builtin(t_shell_data *data, char **args);
 #endif
