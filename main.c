@@ -1,30 +1,13 @@
 #include "main.h"
 
-char *create_prompt()
-{
-    const char *cwd = getcwd(NULL, 0);
-    char *prompt;
-
-    if (!cwd)
-        return (NULL);
-    prompt = ft_calloc(1, ft_strlen(cwd) + 20);
-    if (!prompt)
-        return (NULL);
-    ft_strlcpy(prompt, COLOR_CYAN, ft_strlen(COLOR_CYAN) + 1);
-    ft_strlcat(prompt, cwd, ft_strlen(prompt) + ft_strlen(cwd) + 1);
-    ft_strlcat(prompt, " \n> \033[0m", ft_strlen(prompt) + 10);
-    free((char *)cwd);
-    return (prompt);
-}
-
 static void handle_sigint(int sig)
 {
-    char *prompt;
-
     (void)sig;
-    prompt = create_prompt();
-    ft_printf("\n%s", prompt);
-    free(prompt);
+    write(1, "\n", 1);
+    print_prompt_header();
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
 }
 
 static void setup_signals(void)
@@ -37,14 +20,10 @@ static void setup_signals(void)
 
 char *read_input()
 {
-    char *prompt;
     char *input;
 
-    prompt = create_prompt();
-    if (!prompt)
-        return (NULL);
-    input = readline(prompt);
-    free(prompt);
+    print_prompt_header();
+    input = readline("> ");
     if (!input)
         return (NULL);
     return (input);
@@ -69,23 +48,6 @@ void process_input(t_shell_data *data, char *input)
     free_str_arr(args);
 }
 
-void init_shell_data(t_shell_data *data, char **envp)
-{
-    char *cwd;
-
-    *data = (t_shell_data){0};
-    cwd = getcwd(NULL, 0);
-    if (!cwd)
-        return (free_shell_data(data), (void)0);
-    if (data->pwd)
-        free(data->pwd);
-    data->pwd = ft_strdup(cwd);
-    free(cwd);
-    parse_envp(data, envp);
-    parse_exec_folders(data);
-    set_envp_from_env(data);
-}
-
 int main(int argc, char **argv, char **envp)
 {    
     t_shell_data data;
@@ -103,9 +65,14 @@ int main(int argc, char **argv, char **envp)
         if (*input)  // Only process non-empty input
         {
             add_history(input);  // Add to readline history
-            process_input(&data, input);
+            char **cmds = split_by_delims(input);
+            for (int i = 0; cmds && cmds[i]; i++)
+            {
+                process_input(&data, cmds[i]);
+            }
+            free_str_arr(cmds);
+            free(input);
         }
-        free(input);
     }
     free_shell_data(&data);
     rl_clear_history();  // Clear readline history
