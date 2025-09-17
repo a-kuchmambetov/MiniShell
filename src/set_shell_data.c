@@ -8,7 +8,7 @@ void parse_envp(t_shell_data *data, char **envp)
 
     if (!envp || !envp[0])
         return ;
-    current = data->env.first;
+    current = data->env_list.first;
     for (int i = 0; envp[i] != NULL; i++)
     {
         new_node = malloc(sizeof(t_env_node));
@@ -23,9 +23,9 @@ void parse_envp(t_shell_data *data, char **envp)
         if (current)
             current->next = new_node;
         else
-            data->env.first = new_node;
+            data->env_list.first = new_node;
         current = new_node;
-        data->env.len++;
+        data->env_list.len++;
     }
 }
 
@@ -33,7 +33,7 @@ void parse_exec_folders(t_shell_data *data)
 {
     t_env_node *current;
 
-    current = data->env.first;
+    current = data->env_list.first;
     while (current)
     {
         if (ft_strncmp(current->key, "PATH", 4) == 0)
@@ -51,10 +51,10 @@ void set_envp_from_env(t_shell_data *data)
     int i;
 
     free_str_arr(data->envp);
-    current = data->env.first;
-    data->envp = ft_calloc(sizeof(char *), (data->env.len + 1));
+    current = data->env_list.first;
+    data->envp = ft_calloc(sizeof(char *), (data->env_list.len + 1));
     i = 0;
-    while (i < data->env.len)
+    while (i < data->env_list.len)
     {
         data->envp[i] = ft_calloc(sizeof(char), (ft_strlen(current->key) + ft_strlen(current->value) + 2));
         if (!data->envp[i])

@@ -23,6 +23,24 @@
 # define COLOR_BOLD     "\033[1m"
 # define COLOR_DIM      "\033[2m"
 
+typedef struct s_cmd_node
+{
+    char *cmd;
+    char *args;
+    char *input_redir;
+    int input_type; // 2: <<, 1: <, 0: |, -1: normal command
+    char *output_redir;
+    int output_type; // 2: >>, 1: >, 0: |, -1: normal command
+    struct s_cmd_node *prev;
+    struct s_cmd_node *next;
+} t_cmd_node;
+
+typedef struct s_cmd_list
+{
+    t_cmd_node *first;
+    int len;
+} t_cmd_list;
+
 typedef struct s_env_node
 {
     char *key;
@@ -38,7 +56,9 @@ typedef struct s_env_list
 
 typedef struct s_shell_data
 {
-    t_env_list env;
+    t_cmd_list cmd_list;
+    // Environment variables and execution paths
+    t_env_list env_list;
     char **paths;
     char **envp;
     char *pwd;

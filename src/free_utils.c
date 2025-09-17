@@ -1,13 +1,13 @@
 #include "../main.h"
 
-void free_env_list(t_env_list *env)
+void free_env_list(t_env_list *env_list)
 {
     t_env_node *current;
     t_env_node *next;
 
-    if (!env)
+    if (!env_list)
         return ;
-    current = env->first;
+    current = env_list->first;
     while (current)
     {
         if (!current)
@@ -15,6 +15,28 @@ void free_env_list(t_env_list *env)
         next = current->next;
         free(current->key);
         free(current->value);
+        free(current);
+        current = next;
+    }
+}
+
+void free_cmd_list(t_cmd_list *cmd_list)
+{
+    t_cmd_node *current;
+    t_cmd_node *next;
+
+    if (!cmd_list)
+        return ;
+    current = cmd_list->first;
+    while (current)
+    {
+        if (!current)
+            break ;
+        next = current->next;
+        free(current->cmd);
+        free(current->args);
+        free(current->input_redir);
+        free(current->output_redir);
         free(current);
         current = next;
     }
@@ -38,7 +60,8 @@ void free_str_arr(char **str_arr)
 
 void free_shell_data(t_shell_data *data)
 {
-    free_env_list(&data->env);
+    free_cmd_list(&data->cmd_list);
+    free_env_list(&data->env_list);
     free_str_arr(data->paths);
     free_str_arr(data->envp);
     if (data->pwd)

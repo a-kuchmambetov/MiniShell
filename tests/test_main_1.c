@@ -17,9 +17,9 @@ int main(int argc, char **argv, char **envp)
     set_envp_from_env(&data);
 
     t_env_node *current;
-    current = data.env.first;
+    current = data.env_list.first;
     int i = 0;
-    while (i < data.env.len)
+    while (i < data.env_list.len)
     {
         printf("Key and value %s=%s\n", current->key, current->value);
         current = current->next;
@@ -36,7 +36,7 @@ int main(int argc, char **argv, char **envp)
     
     printf("\nENV:\n");
     i = 0;
-    while (i < data.env.len)
+    while (i < data.env_list.len)
     {
         printf("Env %s\n", data.envp[i]);
         i++;

@@ -12,14 +12,9 @@ SRC      = main.c \
 		src/exec_cmd.c \
 		src/free_utils.c \
 		src/ft_print_err.c \
-		src/set_shell_data.c \
-		src/tokenizer.c \
-		src/tokenizer_utils/tokenizer_chars.c \
-		src/tokenizer_utils/tokenizer_words.c \
-		src/tokenizer_utils/tokenizer_lengths.c \
-		src/tokenizer_utils/tokenizer_build.c \
+		src/print_prompt_header.c \
 		src/process_fd.c \
-		src/print_prompt_header.c
+		src/set_shell_data.c
 OBJS     = $(SRC:.c=.o)
 
 # Source files excluding main.c for tests
@@ -27,11 +22,6 @@ TEST_SRC_1 = src/exec_cmd.c \
 		src/free_utils.c \
 		src/ft_print_err.c \
 		src/set_shell_data.c \
-		src/tokenizer.c \
-		src/tokenizer_utils/tokenizer_chars.c \
-		src/tokenizer_utils/tokenizer_words.c \
-		src/tokenizer_utils/tokenizer_lengths.c \
-		src/tokenizer_utils/tokenizer_build.c \
 		src/process_fd.c \
 		src/print_prompt_header.c
 TEST_OBJS_1 = $(TEST_SRC_1:.c=.o)

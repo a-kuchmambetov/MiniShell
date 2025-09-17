@@ -65,12 +65,13 @@ int main(int argc, char **argv, char **envp)
         if (*input)  // Only process non-empty input
         {
             add_history(input);  // Add to readline history
-            char **cmds = split_by_delims(input);
-            for (int i = 0; cmds && cmds[i]; i++)
-            {
-                process_input(&data, cmds[i]);
-            }
-            free_str_arr(cmds);
+            // char **cmds = split_by_delims(input);
+            // for (int i = 0; cmds && cmds[i]; i++)
+            // {
+            //     process_input(&data, cmds[i]);
+            // }
+            process_input(&data, input);
+            // free_str_arr(cmds);
             free(input);
         }
     }
