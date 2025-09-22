@@ -13,9 +13,26 @@ int main(int argc, char **argv, char **envp)
     // parse_exec_folders(&data);
 
     parse_envp(&data, envp);
+    if (!data.env_list.first)
+    {
+        ft_print_err("Error: No environment variables found\n");
+        free_shell_data(&data);
+        return 1;
+    }
     parse_exec_folders(&data);
-    set_envp_from_env(&data);
-
+    if (!data.paths)
+    {
+        ft_print_err("Error: No PATH variable found in environment\n");
+        free_shell_data(&data);
+        return 1;
+    }
+    if (set_envp_from_env(&data))
+    {
+        ft_print_err("Error: No environment variables found\n");
+        free_shell_data(&data);
+        return 1;
+    }
+    
     t_env_node *current;
     current = data.env_list.first;
     int i = 0;

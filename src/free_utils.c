@@ -13,8 +13,10 @@ void free_env_list(t_env_list *env_list)
         if (!current)
             break ;
         next = current->next;
-        free(current->key);
-        free(current->value);
+        if (current->key)
+            free(current->key);
+        if (current->value)
+            free(current->value);
         free(current);
         current = next;
     }

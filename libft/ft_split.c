@@ -85,7 +85,7 @@ char	**ft_split(char const *s, char c)
 	char			**str;
 
 	str = check_edge_case(s, words);
-	if (!s || *s == '\0')
+	if (!s || *s == '\0' || str == NULL)
 		return (str);
 	index_c[0] = 0;
 	index_c[1] = 0;

@@ -2,29 +2,20 @@
 NAME    = minishell
 
 CC      = cc
-CFLAGS  = -Wall -Wextra -Werror
+CFLAGS  = -Wall -Wextra -Werror -g
 LIBS    = -lreadline
 
 LIBFTDIR = libft
 LIBFT    = $(LIBFTDIR)/libft.a
 
-SRC      = main.c \
-		src/exec_cmd.c \
+SRC = src/exec_cmd.c \
 		src/free_utils.c \
 		src/ft_print_err.c \
+		src/split_input_str.c \
 		src/print_prompt_header.c \
-		src/process_fd.c \
 		src/set_shell_data.c
-OBJS     = $(SRC:.c=.o)
 
-# Source files excluding main.c for tests
-TEST_SRC_1 = src/exec_cmd.c \
-		src/free_utils.c \
-		src/ft_print_err.c \
-		src/set_shell_data.c \
-		src/process_fd.c \
-		src/print_prompt_header.c
-TEST_OBJS_1 = $(TEST_SRC_1:.c=.o)
+OBJS     = $(SRC:.c=.o)
 
 all: $(NAME)
 
@@ -32,7 +23,7 @@ $(LIBFT):
 	$(MAKE) -C $(LIBFTDIR)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(OBJS) $(LIBFT) $(LIBS) -o $(NAME)
+	$(CC) $(CFLAGS) main.c $(OBJS) $(LIBFT) $(LIBS) -o $(NAME)
 
 clean:
 	rm -rf $(OBJS)
@@ -46,11 +37,16 @@ fclean:
 mlxDel:
 	rm -rf mlx
 
-allClean: fclean mlxDel
+allClean: fclean 
+	rm -rf test_minishell_1 test_minishell_2 \
+	tests/test_main_1 tests/test_main_2
 
-re: fclean all
+re: fclean all 
 
-compileTest1: all
-	$(CC) tests/test_main_1.c $(TEST_OBJS_1) $(LIBFT) $(LIBS) -o test_minishell_1
+compileTest1: $(LIBFT) $(OBJS)
+	$(CC) $(CFLAGS) tests/test_main_1.c $(OBJS) $(LIBFT) $(LIBS) -o test_minishell_1
+
+compileTest2: $(LIBFT) $(OBJS)
+	$(CC) $(CFLAGS) tests/test_main_2.c $(OBJS) $(LIBFT) $(LIBS) -o test_minishell_2
 
 .PHONY: all clean fclean mlxDel allClean re
