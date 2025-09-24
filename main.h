@@ -59,7 +59,6 @@ void free_str_arr(char **paths);
 void free_shell_data(t_shell_data *data);
 
 void set_envp_from_env(t_shell_data *data);
-void init_shell_data(t_shell_data *data, char **envp);
 
 void exec_cmd(t_shell_data *data, char *command, char *argv_str);
 void exec_cmd_2(t_shell_data *data, char *command, char **str_arr);
@@ -69,12 +68,4 @@ int ft_print_err(const char *format, ...);
 char *read_input();
 void process_input(t_shell_data *data, char *input);
 
-// Tokenizer: splits by < << > >> | and includes delimiters
-char **split_by_delims(const char *s);
-
-void print_prompt_header(void);
-///
-
-int     is_builtin(char *cmd);
-int     exec_builtin(t_shell_data *data, char **args);
 #endif

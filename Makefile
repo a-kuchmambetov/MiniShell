@@ -12,30 +12,18 @@ SRC      = main.c \
 		src/exec_cmd.c \
 		src/free_utils.c \
 		src/ft_print_err.c \
-		src/set_shell_data.c \
-		src/tokenizer.c \
-		src/tokenizer_utils/tokenizer_chars.c \
-		src/tokenizer_utils/tokenizer_words.c \
-		src/tokenizer_utils/tokenizer_lengths.c \
-		src/tokenizer_utils/tokenizer_build.c \
+		src/parse_input.c \
 		src/process_fd.c \
-		src/print_prompt_header.c\
-		src/built_in_comands/built_in_comands.c \
-		src/built_in_comands/echo_comand.c
+		src/set_envp_from_env.c 
 OBJS     = $(SRC:.c=.o)
 
 # Source files excluding main.c for tests
 TEST_SRC_1 = src/exec_cmd.c \
 		src/free_utils.c \
 		src/ft_print_err.c \
-		src/set_shell_data.c \
-		src/tokenizer.c \
-		src/tokenizer_utils/tokenizer_chars.c \
-		src/tokenizer_utils/tokenizer_words.c \
-		src/tokenizer_utils/tokenizer_lengths.c \
-		src/tokenizer_utils/tokenizer_build.c \
+		src/parse_input.c \
 		src/process_fd.c \
-		src/print_prompt_header.c
+		src/set_envp_from_env.c 
 TEST_OBJS_1 = $(TEST_SRC_1:.c=.o)
 
 all: $(NAME)
@@ -55,11 +43,14 @@ fclean:
 	rm -f $(NAME)
 	$(MAKE) -C $(LIBFTDIR) fclean
 
-allClean: fclean
+mlxDel:
+	rm -rf mlx
+
+allClean: fclean mlxDel
 
 re: fclean all
 
 compileTest1: all
 	$(CC) tests/test_main_1.c $(TEST_OBJS_1) $(LIBFT) $(LIBS) -o test_minishell_1
 
-.PHONY: all clean fclean allClean re
+.PHONY: all clean fclean mlxDel allClean re
