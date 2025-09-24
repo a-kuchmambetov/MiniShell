@@ -21,7 +21,8 @@ SRC      = main.c \
 		src/process_fd.c \
 		src/print_prompt_header.c\
 		src/built_in_comands/built_in_comands.c \
-		src/built_in_comands/echo_comand.c
+		src/built_in_comands/echo_comand.c \
+		src/built_in_comands/export.c
 OBJS     = $(SRC:.c=.o)
 
 # Source files excluding main.c for tests

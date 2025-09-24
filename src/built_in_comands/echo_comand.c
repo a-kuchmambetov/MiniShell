@@ -92,6 +92,8 @@ static char *parse_arg(const char *s, char **envp)
 {
     t_parser    p;
 
+    if (!s)
+    return NULL;
     p.bufsize = 64;
     p.res = malloc(p.bufsize);
     if (!p.res)
@@ -107,11 +109,26 @@ static char *parse_arg(const char *s, char **envp)
         else
             parse_double_or_plain(&p);
     }
-    append_char(&p, '\0');
-    return (p.res);    
+    if (!append_char(&p, '\0'))
+    {
+        free(p.res);
+        return NULL;
+    }
+    return (p.res);
+}
+int all_n(char *str)
+{
+    int j = 0;
+    while (str[j])
+    {
+        if (str[j] != 'n')
+            return 0;
+        j++;
+    }
+    return 1;
 }
 
-int builtin_echo(int argc, char **argv, char **envp)
+int builtin_echo(char **argv, char **envp)
 {
     int i;
     int n_flag;
@@ -119,19 +136,21 @@ int builtin_echo(int argc, char **argv, char **envp)
 
     n_flag = 0;
     i = 1;
-    if (argc > 1 && ft_strncmp(argv[1], "-n", 3) == 0)
+    while (argv[1] && ft_strncmp(argv[1], "-n", 2) == 0)
     {
+        if (!all_n(argv[i] + 1))
+            break ;
         n_flag = 1;
         i++;
     }
-    while (i < argc)
+    while (argv[i])
     {
         arg = parse_arg(argv[i], envp);
         if(!arg)
             return (1);
         write (1, arg, ft_strlen(arg));
         free(arg);
-        if(i + 1 < argc)
+        if(argv[i + 1])
             write(1, " ", 1);
         i++;
     }

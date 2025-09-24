@@ -14,7 +14,7 @@ typedef struct s_parser
 } t_parser;
 
 
-int	builtin_echo(int argc, char **argv, char **envp);
+int	builtin_echo(char **argv, char **envp);
 // int builtin_cd(t_shell_data *data, char **args);
 // int builtin_pwd(t_shell_data *data);
 int builtin_export(t_shell_data *data, char **args);

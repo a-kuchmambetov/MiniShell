@@ -28,7 +28,7 @@ int update_existing_env(t_env_list *env, const char *name, const char *arg)
         if (!ft_strncmp(current->key, name, len))
         {
             free(current->value);
-            current->value = ft_strdup(arg);
+            current->value = arg ? ft_strdup(arg) : NULL;
             return (1);
         }
         current = current->next;
@@ -36,22 +36,16 @@ int update_existing_env(t_env_list *env, const char *name, const char *arg)
     return(0);
 }
 
-void add_new_env(t_env_list *env, const char *arg)
+int add_new_env(t_env_list *env, const char *key, const char *value)
 {
     t_env_node *new_node;
     t_env_node *current;
-    char *equal;
 
     new_node = malloc(sizeof(t_env_node));
-    equal = ft_strchr(arg, '=');
     if (!new_node)
-        return;
-    if (equal)
-        new_node->key = ft_strndup(arg, equal - arg);
-    else
-        new_node->key = ft_strdup(arg);
-
-    new_node->value = ft_strdup(arg);
+        return(0);
+    new_node->key = ft_strdup(key);
+    new_node->value = value ? ft_strdup(value) : NULL;
     new_node->next = NULL;
 
     if (!env->first)
@@ -64,69 +58,72 @@ void add_new_env(t_env_list *env, const char *arg)
         current->next = new_node;
     }
     env->len++;
+    return(1);
 }
 
 int add_or_update_env(t_shell_data *data, const char *arg)
 {
-    char *equal;
-    char *name;
-    int size;
+    char *equal = ft_strchr(arg, '=');
+    char *key;
+    char *value = NULL;
 
-    equal = ft_strchr(arg, '=');
-   if (equal)
-        name = ft_strndup(arg, equal - arg);
+    if (equal)
+    {
+        key = ft_substr(arg, 0, equal - arg);
+        value = ft_strdup(equal + 1);
+    }
     else
-        name = ft_strdup(arg);
+        key = ft_strdup(arg);
+    if (!key) 
+        return (0);
 
-    if (!name)
-        return;
-
-    if (!update_existing_env(&data->env, name, arg))
-        add_new_env(&data->env, arg);
-
-    free(name);
+    if (!update_existing_env(&data->env, key, value))
+        add_new_env(&data->env, key, value);
+    free(key);
+    free(value);
+    return 1;
 }
 
-void sync_envp(t_shell_data *data)
+int sync_envp(t_shell_data *data)
 {
     t_env_node *current;
     int i;
-
-    // Спочатку видаляємо старий масив
-    free_str_arr(data->envp);
-
-    // Виділяємо пам'ять для нового масиву + NULL в кінці
+    char *tmp;
+    free_str_arr(data->envp); 
     data->envp = malloc(sizeof(char *) * (data->env.len + 1));
     if (!data->envp)
-        return;
-
+        return(0);
     current = data->env.first;
     i = 0;
     while (current)
     {
-        data->envp[i] = ft_strdup(current->value); // "KEY=VALUE"
+        if (current->value)
+        {
+            tmp = ft_strjoin(current->key, "=");            // key + "="
+            data->envp[i] = ft_strjoin(tmp, current->value); // (key + "=") + value
+            free(tmp);
+        }
+        else
+        {
+            data->envp[i] = ft_strdup(current->key);
+        }
         current = current->next;
         i++;
     }
     data->envp[i] = NULL;
+    return(1);
 }
 
 void print_export(t_env_list env)
 {
-    t_env_node *current;
-    char *equal;
+    t_env_node *current = env.first;
 
-    current = env.first;
     while (current)
     {
-        equal = ft_strchr(current->value, '=');
-        if (equal)
-            ft_printf("declare -x %.*s=\"%s\"\n",
-                      (int)(equal - current->value),
-                      current->value,
-                      equal + 1);
+        if (current->value)
+            ft_printf("declare -x %s=\"%s\"\n", current->key, current->value);
         else
-            ft_printf("declare -x %s\n", current->value);
+            ft_printf("declare -x %s\n", current->key);
         current = current->next;
     }
 }
@@ -155,25 +152,3 @@ int builtin_export(t_shell_data *data, char **args)
     }
     return (0);
 }
-
-// int builtin_export(t_shell_data *data, char **args)
-// {
-//     int i;
-
-//     if(!args[1])
-//     {
-//         print_export(data->env);
-//         return (0);
-//     }
-//     i = 1;
-//     while (args[i])
-//     {
-//         if (!is_valid_indentifier(args[i]))
-//             ft_printf(stderr,
-//                 "minishell: export: `%s': not a valid identifier\n", args[i]);
-//         else
-//             add_or_update_env(data, args[i]);
-//         i++;
-//     }
-//     return (0);
-// }
