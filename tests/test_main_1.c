@@ -71,7 +71,19 @@ int main(int argc, char **argv, char **envp)
 
     printf("Running nonexistentcommand: \n");
     exec_cmd(&data, "nonexistentcommand", "");
-    printf("Last exit status: %d\n", WEXITSTATUS(data.last_exit_status));
+    printf("Last exit status: %d\n\n", WEXITSTATUS(data.last_exit_status));
+
+    printf("Running echo \"Hello World\": \n");
+    exec_cmd(&data, "echo", "'Hello World'");
+    printf("Last exit status: %d\n\n", WEXITSTATUS(data.last_exit_status));
+
+    printf("Running cat test file.txt: \n");
+    exec_cmd(&data, "cat", "test file.txt");
+    printf("Last exit status: %d\n\n", WEXITSTATUS(data.last_exit_status));
+
+    printf("Running cat \"test file.txt\": \n");
+    exec_cmd(&data, "cat", "\"test file.txt\"");
+    printf("Last exit status: %d\n\n", WEXITSTATUS(data.last_exit_status));
 
     free_shell_data(&data);
     return 0;

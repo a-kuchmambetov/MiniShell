@@ -1,14 +1,28 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+typedef enum e_quote
+{
+    NO_QUOTE = 0,
+    YES_QUOTE = 1
+} t_quote;
+
+typedef enum e_redir
+{
+    REDIR_INPUT = 1,
+    REDIR_OUTPUT = 2,
+    REDIR_APPEND = 3,
+    REDIR_HEREDOC = 4,
+    REDIR_PIPE = 5
+} t_redir;
+
 typedef struct s_cmd_node
 {
     char *cmd;
     char *args;
+    t_redir redirs;
     char *input_redir;
-    int input_type; // 2: <<, 1: <, 0: |, -1: normal command
     char *output_redir;
-    int output_type; // 2: >>, 1: >, 0: |, -1: normal command
     struct s_cmd_node *prev;
     struct s_cmd_node *next;
 } t_cmd_node;
@@ -41,9 +55,7 @@ typedef struct s_shell_data
     char **envp;
     char *pwd;
     // File descriptors for input/output redirection and pipes
-    int fd_in;
-    int fd_out;
-    int pipefd1[2];
+    int pipefd[2];
     // Last command exit status
     int last_exit_status;
 } t_shell_data;
@@ -54,6 +66,7 @@ typedef struct s_split_data
     int l;
     int i;
     int row;
+    t_quote in_quote;
 } t_split_data;
 
 #endif // TYPES_H

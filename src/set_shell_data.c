@@ -69,12 +69,14 @@ int set_envp_from_env(t_shell_data *data)
     i = 0;
     while (i < data->env_list.len)
     {
-        data->envp[i] = ft_calloc(sizeof(char), (ft_strlen(current->key) + ft_strlen(current->value) + 2));
+        data->envp[i] = ft_calloc(sizeof(char), (ft_strlen(current->key)
+            + ft_strlen(current->value) + 2));
         if (!data->envp[i])
             return (1);
         ft_strlcat(data->envp[i], current->key, ft_strlen(current->key) + 1);
         ft_strlcat(data->envp[i], "=", ft_strlen(data->envp[i]) + 2);
-        ft_strlcat(data->envp[i], current->value, ft_strlen(data->envp[i]) + ft_strlen(current->value) + 1);
+        ft_strlcat(data->envp[i], current->value, ft_strlen(data->envp[i])
+            + ft_strlen(current->value) + 1);
         current = current->next;
         i++;
     }

@@ -1,4 +1,5 @@
 #include "../main.h"
+#include "split_input_str_utils/split_input_str_utils.h"
 // THAT IS HELL
 // Correct input:
 // cat<main.c>test - read from redirection file and write to output file
@@ -6,42 +7,60 @@
 // <Makefile cat main.c main.h|cat>test - read from files (main.c, main.h) (redirection ignored cause files names given) and redirect out to pipe and read from pipe and write to output file
 // <Makefile cat main.c main.h|>test - read from files (main.c, main.h) (redirection ignored cause files names given) and redirect out to pipe and read from pipe but ignored cause no cmd and write to output filem but no input so nothing happens (just create empty file)
 
-static int is_delimiter(const char *str)
+static int process_delimiter(const char *s, t_split_data *dt, int delim_len)
 {
-    if (ft_strncmp(str, "<<", 2) == 0 || ft_strncmp(str, ">>", 2) == 0)
-        return (2);
-    if (str[0] == '|' || str[0] == '>' || str[0] == '<' || str[0] == ' ')
-        return (1);
+    if (dt->i - dt->l > 0)
+        if (add_row(dt, ft_strndup(s + dt->l, dt->i - dt->l)))
+            return (ft_print_err("Error: split input failed\n"),
+                    free_str_arr(dt->arr), 1);
+    if (s[dt->i] != ' ')
+        if (add_row(dt, ft_strndup(s + dt->i, delim_len)))
+            return (ft_print_err("Error: split input failed\n"),
+                    free_str_arr(dt->arr), 1);
+    dt->l = dt->i + delim_len;
+    dt->i += delim_len;
     return (0);
 }
 
-static int add_row(t_split_data *dt, char *s)
+static int quote_parse(const char *s, t_split_data *dt, const char quote_char)
 {
-    char **new_arr;
-    int i;
-
-    if (!s)
-        return (1);
-    new_arr = ft_calloc(sizeof(char *), dt->row + 2);
-    if (!new_arr)
-        return (free(s),1);
-    i = 0;
-    while (i < dt->row)
+    dt->in_quote = YES_QUOTE;
+    if (dt->i - dt->l > 0)
     {
-        new_arr[i] = dt->arr[i];
-        i++;
+        if (handle_add_row(s, dt))
+            return (1);
+        dt->l = dt->i;
     }
-    new_arr[i] = s;
-    free(dt->arr);
-    dt->arr = new_arr;
-    dt->row++;
+    dt->i++;
+    while (s[dt->i] && dt->in_quote != NO_QUOTE)
+    {
+        if (s[dt->i] == quote_char)
+            dt->in_quote = NO_QUOTE;
+        dt->i++;
+    }
+    if (s[dt->i] == '\0' && dt->in_quote != NO_QUOTE)
+        return (ft_print_err("Error: Unclosed quote\n"),
+                free_str_arr(dt->arr), 1);
+    if (handle_add_row(s, dt))
+        return (1);
+    dt->l = dt->i;
+    if (s[dt->i] != '\0')
+        dt->i++;
     return (0);
 }
 
-static void skip_spaces(const char *s, t_split_data *dt)
+static int regular_parser(const char *s, t_split_data *dt, int delim_len)
 {
-    if (s[dt->i] == ' ' && dt->i - dt->l < 1)
-        dt->l = dt->i + 1;
+    skip_spaces(s, dt);
+    delim_len = is_delimiter(s + dt->i);
+    if (delim_len > 0)
+    {
+        if (process_delimiter(s, dt, delim_len))
+            return (1);
+    }
+    else
+        dt->i++;
+    return (0);
 }
 
 char **split_input_str(const char *s)
@@ -49,27 +68,20 @@ char **split_input_str(const char *s)
     t_split_data dt;
     int delim_len;
 
+    delim_len = 0;
     dt = (t_split_data){0};
     while (s[dt.i])
     {
-        skip_spaces(s, &dt);
-        delim_len = is_delimiter(s + dt.i);
-        if (delim_len > 0)
+        if (s[dt.i] == '\'' || s[dt.i] == '\"')
         {
-            if (dt.i - dt.l > 0)
-                if (add_row(&dt, ft_strndup(s + dt.l, dt.i - dt.l)))
-                    return (ft_print_err("Error: split input failed\n"), free_str_arr(dt.arr), NULL);
-            if (s[dt.i] != ' ')
-                if (add_row(&dt, ft_strndup(s + dt.i, delim_len)))
-                    return (ft_print_err("Error: split input failed\n"), free_str_arr(dt.arr), NULL);
-            dt.l = dt.i + delim_len;
-            dt.i += delim_len;
+            if (quote_parse(s, &dt, s[dt.i]))
+                return (NULL);
         }
-        else
-            dt.i++;
+        else if (regular_parser(s, &dt, delim_len))
+            return (NULL);
     }
     if (dt.i - dt.l > 0)
-        if (add_row(&dt, ft_strndup(s + dt.l, dt.i - dt.l)))
-            return (ft_print_err("Error: split input failed\n"), free_str_arr(dt.arr), NULL);
+        if (handle_add_row(s, &dt))
+            return (NULL);
     return (dt.arr);
 }

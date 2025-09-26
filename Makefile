@@ -13,7 +13,8 @@ SRC = src/exec_cmd.c \
 		src/ft_print_err.c \
 		src/split_input_str.c \
 		src/print_prompt_header.c \
-		src/set_shell_data.c
+		src/set_shell_data.c \
+		src/split_input_str_utils/split_input_str_utils.c \
 
 OBJS     = $(SRC:.c=.o)
 
