@@ -136,7 +136,7 @@ int builtin_echo(char **argv, char **envp)
 
     n_flag = 0;
     i = 1;
-    while (argv[1] && ft_strncmp(argv[1], "-n", 2) == 0)
+    while (argv[i] && ft_strncmp(argv[1], "-n", 2) == 0)
     {
         if (!all_n(argv[i] + 1))
             break ;

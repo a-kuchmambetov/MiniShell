@@ -25,10 +25,10 @@ int exec_builtin(t_shell_data *data, char **args)
 {
     if (!ft_strncmp(args[0], "echo", 5))
         return (builtin_echo(args, data->envp));
-    // else if (!ft_strcmp(args[0], "cd"))
-    //     return (builtin_cd(data, args));
-    // else if (!ft_strcmp(args[0], "pwd"))
-    //     return (builtin_pwd(data));
+    else if (!ft_strncmp(args[0], "cd", 3))
+        return (builtin_cd(data, args));
+     else if (!ft_strncmp(args[0], "pwd", 4))
+         return (builtin_pwd(data, args));
     else if (!ft_strncmp(args[0], "export", 7))
         return (builtin_export(data, args));
     // else if (!ft_strcmp(args[0], "unset"))
