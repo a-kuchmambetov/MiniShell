@@ -8,150 +8,106 @@ char	*get_env_value(char **envp, const char *name)
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
-			return (ft_strdup(envp[i] + len + 1));
+			return (envp[i] + len + 1);
 		i++;
 	}
 	return (NULL);
 }
 
-// int update_env(char **envp, const char *name, const char *value)
-// {
-//     int i = 0;
-//     int len = ft_strlen(name);
-//     char *new_var;
-
-//     size_t total_len = len + ft_strlen(value) + 2;
-//     new_var = malloc(total_len);
-//     if (!new_var)
-//         return 1;
-//     ft_strlcpy(new_var, name, total_len);
-//     ft_strlcat(new_var, "=", total_len);
-//     ft_strlcat(new_var, value, total_len);
-
-//     while (envp[i])
-//     {
-//         if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
-//         {
-//             free(envp[i]);
-//             envp[i] = new_var;
-//             return 0;
-//         }
-//         i++;
-//     }
-
-//     // без створення нового масиву — просто ігноруємо додавання
-//     free(new_var);
-//     return 0;
-// }
-
-// int update_env(char **envp, const char *name, const char *value)
-// {
-//     int i = 0;
-//     int len = ft_strlen(name);
-//     char *new_var;
-
-//     while (envp[i])
-//     {
-//         if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
-//         {
-//             // створюємо рядок name=value
-//             size_t total_len = len + ft_strlen(value) + 2;
-//             new_var = malloc(total_len);
-//             if (!new_var)
-//                 return 1;
-
-//             ft_strlcpy(new_var, name, total_len);
-//             ft_strlcat(new_var, "=", total_len);
-//             ft_strlcat(new_var, value, total_len);
-
-//             free(envp[i]);   // звільняємо старий рядок
-//             envp[i] = new_var;
-//             return 0;
-//         }
-//         i++;
-//     }
-
-//     // якщо змінної не існує, нічого не додаємо
-//     return 1;
-// }
-
-// Оновлює змінну, якщо вона є
-int update_env(char **envp, const char *name, const char *value)
+int update_existing_env(t_env_list *env, const char *name, const char *arg)
 {
-    int i = 0;
-    int len = ft_strlen(name);
-    char *new_var;
-    
-    while (envp[i])
+    t_env_node *current;
+    size_t len;
+
+    current = env->first;
+    len = ft_strlen(name);
+    while (current)
     {
-        if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
+        if (!ft_strncmp(current->key, name, len))
         {
-            size_t total_len = len + ft_strlen(value) + 2;
-            new_var = malloc(total_len);
-            if (!new_var)
-                return 1;
-            ft_strlcpy(new_var, name, total_len);
-            ft_strlcat(new_var, "=", total_len);
-            ft_strlcat(new_var, value, total_len);
-
-            free(envp[i]);
-            envp[i] = new_var;
-            return 0;
+            free(current->value);
+            current->value = arg ? ft_strdup(arg) : NULL;
+            return (1);
         }
-        i++;
+        current = current->next;
     }
-    return 1; // змінної не було
+    return(0);
 }
 
-// Додає нову змінну в кінець масиву
-int add_env(char ***envp, const char *name, const char *value)
+int add_new_env(t_env_list *env, const char *key, const char *value)
 {
-    int i = 0;
-    while ((*envp)[i])
-        i++;
+    t_env_node *new_node;
+    t_env_node *current;
 
-    char **tmp = malloc(sizeof(char*) * (i + 2)); // +1 для нової, +1 для NULL
-    if (!tmp)
-        return 1;
+    new_node = malloc(sizeof(t_env_node));
+    if (!new_node)
+        return(0);
+    new_node->key = ft_strdup(key);
+    new_node->value = value ? ft_strdup(value) : NULL;
+    new_node->next = NULL;
 
-    int j = 0;
-    while (j < i)
+    if (!env->first)
+        env->first = new_node;
+    else
     {
-        tmp[j] = (*envp)[j];
-        j++;
+        current = env->first;
+        while (current->next)
+            current = current->next;
+        current->next = new_node;
     }
-
-    size_t total_len = ft_strlen(name) + ft_strlen(value) + 2;
-    char *new_var = malloc(total_len);
-    if (!new_var)
-    {
-        free(tmp);
-        return 1;
-    }
-    ft_strlcpy(new_var, name, total_len);
-    ft_strlcat(new_var, "=", total_len);
-    ft_strlcat(new_var, value, total_len);
-
-    tmp[j++] = new_var;
-    tmp[j] = NULL;
-
-    free(*envp);
-    *envp = tmp;
-    return 0;
+    env->len++;
+    return(1);
 }
 
-
-
-
-char *ft_strjoin_free(char *s1, const char *sep, const char *s2)
+int add_or_update_env(t_shell_data *data, const char *arg)
 {
-    size_t len = ft_strlen(s1) + ft_strlen(sep) + ft_strlen(s2) + 1;
-    char *res = malloc(len);
-    if (!res)
-        return (NULL);
-    ft_strlcpy(res, s1, len);
-    ft_strlcat(res, sep, len);
-    ft_strlcat(res, s2, len);
-    free(s1);
-    return (res);
+    char *equal = ft_strchr(arg, '=');
+    char *key;
+    char *value = NULL;
+
+    if (equal)
+    {
+        key = ft_substr(arg, 0, equal - arg);
+        value = ft_strdup(equal + 1);
+    }
+    else
+        key = ft_strdup(arg);
+    if (!key) 
+        return (0);
+
+    if (!update_existing_env(&data->env, key, value))
+        add_new_env(&data->env, key, value);
+    free(key);
+    free(value);
+    return (1);
+}
+
+int sync_envp(t_shell_data *data)
+{
+    t_env_node *current;
+    int i;
+    char *tmp;
+    free_str_arr(data->envp); 
+    data->envp = malloc(sizeof(char *) * (data->env.len + 1));
+    if (!data->envp)
+        return(0);
+    current = data->env.first;
+    i = 0;
+    while (current)
+    {
+        if (current->value)
+        {
+            tmp = ft_strjoin(current->key, "=");            // key + "="
+            data->envp[i] = ft_strjoin(tmp, current->value); // (key + "=") + value
+            free(tmp);
+        }
+        else
+        {
+            data->envp[i] = ft_strdup(current->key);
+        }
+        current = current->next;
+        i++;
+    }
+    data->envp[i] = NULL;
+    return(1);
 }

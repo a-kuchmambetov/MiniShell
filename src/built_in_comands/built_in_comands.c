@@ -31,11 +31,11 @@ int exec_builtin(t_shell_data *data, char **args)
          return (builtin_pwd(data, args));
     else if (!ft_strncmp(args[0], "export", 7))
         return (builtin_export(data, args));
-    // else if (!ft_strcmp(args[0], "unset"))
-    //     return (builtin_unset(data, args));
-    // else if (!ft_strcmp(args[0], "env"))
-    //     return (builtin_env(data));
-    // else if (!ft_strcmp(args[0], "exit"))
-    //     return (builtin_exit(data, args));
+    else if (!ft_strncmp(args[0], "unset", 6))
+        return (builtin_unset(data, args));
+    else if (!ft_strncmp(args[0], "env", 4))
+        return (builtin_env(data, args));
+    else if (!ft_strncmp(args[0], "exit", 5))
+        return (builtin_exit(data));
     return (1);
 }

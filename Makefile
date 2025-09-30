@@ -25,7 +25,11 @@ SRC      = main.c \
 		src/built_in_comands/export.c \
 		src/built_in_comands/cd_comand.c \
 		src/built_in_comands/pwd_comand.c \
-		src/built_in_comands/env_utils.c
+		src/built_in_comands/env_utils.c \
+		src/built_in_comands/utils.c \
+		src/built_in_comands/env_comand.c \
+		src/built_in_comands/unset_comand.c \
+		src/built_in_comands/exit_comand.c
 OBJS     = $(SRC:.c=.o)
 
 # Source files excluding main.c for tests
