@@ -16,7 +16,17 @@ SRC = src/exec_cmd.c \
         src/print_prompt_header.c \
         src/set_shell_data.c \
         src/split_input_str_utils/split_input_str_utils.c \
-		src/create_cmd_list.c 
+		src/create_cmd_list.c \
+		src/built_in_comands/built_in_comands.c \
+		src/built_in_comands/echo_comand.c \
+		src/built_in_comands/export.c \
+		src/built_in_comands/cd_comand.c \
+		src/built_in_comands/pwd_comand.c \
+		src/built_in_comands/env_utils.c \
+		src/built_in_comands/utils.c \
+		src/built_in_comands/env_comand.c \
+		src/built_in_comands/unset_comand.c \
+		src/built_in_comands/exit_comand.c
 
 OBJS     = $(SRC:.c=.o)
 
@@ -30,7 +40,7 @@ $(LIB): $(OBJS)
 	ar rcs $(LIB) $(OBJS)
 
 $(NAME): $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) $(LIBS) main.c -o $(NAME)
+	$(CC) $(CFLAGS) main.c $(LIBS) -o $(NAME)
 
 clean:
 	rm -rf $(OBJS)
@@ -59,4 +69,4 @@ compileTest2: $(LIBFT) $(LIB)
 compileTest3: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_3.c $(LIBS) -o $(NAME)_test_3
 
-.PHONY: all clean fclean mlxDel allClean re compileTest1 compileTest2
+.PHONY: all clean fclean mlxDel allClean re compileTest1 compileTest2 compileTest3

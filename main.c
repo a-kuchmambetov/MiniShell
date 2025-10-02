@@ -31,15 +31,18 @@ char *read_input()
 
 void process_input(t_shell_data *data, char *input)
 {
-   
+    (void)input;
+    (void)data;
+    // Empty function for now
+    // Future implementation will parse and execute commands
 }
 
 int main(int argc, char **argv, char **envp)
-{    
+{
     t_shell_data data;
     char *input;
-    
-    (void)argc; 
+
+    (void)argc;
     (void)argv;
     setup_signals();
     init_shell_data(&data, envp);
@@ -48,14 +51,14 @@ int main(int argc, char **argv, char **envp)
         input = read_input();
         if (!input)
             break;
-        if (*input)  // Only process non-empty input
+        if (*input) // Only process non-empty input
         {
-            add_history(input);  // Add to readline history
+            add_history(input); // Add to readline history
             process_input(&data, input);
             free(input);
         }
     }
     free_shell_data(&data);
-    rl_clear_history();  // Clear readline history
+    rl_clear_history(); // Clear readline history
     return (0);
 }
