@@ -31,55 +31,34 @@ char *read_input()
 
 void process_input(t_shell_data *data, char *input)
 {
-    char **args;
-
-    if (ft_strncmp(input, "exit", 4) == 0)
-    {
-        free_shell_data(data);
-        free(input);
-        exit(0);
-    }
-    args = ft_split(input, ' ');
-    if (!args)
-        return;
-    if (ft_strncmp(args[0], "$?", 2) == 0)
-        return (ft_printf("%d: command not found\n", WEXITSTATUS(data->last_exit_status)), (void)0);
-    //exec_cmd_2(data, args[0], args);
-    if (is_builtin(args[0]))
-        data->last_exit_status = exec_builtin(data, args);
-    else
-        exec_cmd_2(data, args[0], args);
-
-    free_str_arr(args);
+    (void)input;
+    (void)data;
+    // Empty function for now
+    // Future implementation will parse and execute commands
 }
 
 int main(int argc, char **argv, char **envp)
-{    
+{
     t_shell_data data;
     char *input;
-    
-    (void)argc; 
+
+    (void)argc;
     (void)argv;
     setup_signals();
     init_shell_data(&data, envp);
     while (1)
     {
-        input = read_input(&data);
+        input = read_input();
         if (!input)
             break;
-        if (*input)  // Only process non-empty input
+        if (*input) // Only process non-empty input
         {
-            add_history(input);  // Add to readline history
-            char **cmds = split_by_delims(input);
-            for (int i = 0; cmds && cmds[i]; i++)
-            {
-                process_input(&data, cmds[i]);
-            }
-            free_str_arr(cmds);
+            add_history(input); // Add to readline history
+            process_input(&data, input);
             free(input);
         }
     }
     free_shell_data(&data);
-    rl_clear_history();  // Clear readline history
+    rl_clear_history(); // Clear readline history
     return (0);
 }

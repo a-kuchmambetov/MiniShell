@@ -15,7 +15,8 @@ static char *find_executable(t_shell_data *data, char *command)
             return (NULL);
         ft_strlcpy(full_path, data->paths[i], ft_strlen(data->paths[i]) + 1);
         ft_strlcat(full_path, "/", ft_strlen(full_path) + 2);
-        ft_strlcat(full_path, command, ft_strlen(full_path) + ft_strlen(command) + 1);
+        ft_strlcat(full_path, command, ft_strlen(full_path)
+            + ft_strlen(command) + 1);
         if (access(full_path, X_OK) == 0)
             return (full_path);
         free(full_path);
