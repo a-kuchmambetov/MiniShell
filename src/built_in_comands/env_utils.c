@@ -1,17 +1,17 @@
 #include "builtins.h"
 
-char	*get_env_value(char **envp, const char *name)
+char *get_env_value(char **envp, const char *name)
 {
-	int i = 0;
-	int len = ft_strlen(name);
+    int i = 0;
+    int len = ft_strlen(name);
 
-	while (envp[i])
-	{
-		if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
-			return (envp[i] + len + 1);
-		i++;
-	}
-	return (NULL);
+    while (envp[i])
+    {
+        if (ft_strncmp(envp[i], name, len) == 0 && envp[i][len] == '=')
+            return (envp[i] + len + 1);
+        i++;
+    }
+    return (NULL);
 }
 
 int update_existing_env(t_env_list *env, const char *name, const char *arg)
@@ -31,7 +31,7 @@ int update_existing_env(t_env_list *env, const char *name, const char *arg)
         }
         current = current->next;
     }
-    return(0);
+    return (0);
 }
 
 int add_new_env(t_env_list *env, const char *key, const char *value)
@@ -41,7 +41,7 @@ int add_new_env(t_env_list *env, const char *key, const char *value)
 
     new_node = malloc(sizeof(t_env_node));
     if (!new_node)
-        return(0);
+        return (0);
     new_node->key = ft_strdup(key);
     new_node->value = value ? ft_strdup(value) : NULL;
     new_node->next = NULL;
@@ -56,7 +56,7 @@ int add_new_env(t_env_list *env, const char *key, const char *value)
         current->next = new_node;
     }
     env->len++;
-    return(1);
+    return (1);
 }
 
 int add_or_update_env(t_shell_data *data, const char *arg)
@@ -72,11 +72,11 @@ int add_or_update_env(t_shell_data *data, const char *arg)
     }
     else
         key = ft_strdup(arg);
-    if (!key) 
+    if (!key)
         return (0);
 
-    if (!update_existing_env(&data->env, key, value))
-        add_new_env(&data->env, key, value);
+    if (!update_existing_env(&data->env_list, key, value))
+        add_new_env(&data->env_list, key, value);
     free(key);
     free(value);
     return (1);
@@ -87,17 +87,17 @@ int sync_envp(t_shell_data *data)
     t_env_node *current;
     int i;
     char *tmp;
-    free_str_arr(data->envp); 
-    data->envp = malloc(sizeof(char *) * (data->env.len + 1));
+    free_str_arr(data->envp);
+    data->envp = malloc(sizeof(char *) * (data->env_list.len + 1));
     if (!data->envp)
-        return(0);
-    current = data->env.first;
+        return (0);
+    current = data->env_list.first;
     i = 0;
     while (current)
     {
         if (current->value)
         {
-            tmp = ft_strjoin(current->key, "=");            // key + "="
+            tmp = ft_strjoin(current->key, "=");             // key + "="
             data->envp[i] = ft_strjoin(tmp, current->value); // (key + "=") + value
             free(tmp);
         }
@@ -109,5 +109,5 @@ int sync_envp(t_shell_data *data)
         i++;
     }
     data->envp[i] = NULL;
-    return(1);
+    return (1);
 }
