@@ -24,9 +24,9 @@ static void remove_env_node(t_env_list *env, const char *key)
 	}
 }
 
-int	builtin_unset(t_shell_data *data, char **args)
+int builtin_unset(t_shell_data *data, char **args)
 {
-	int	i;
+	int i;
 
 	i = 1;
 	while (args[i])
@@ -34,9 +34,9 @@ int	builtin_unset(t_shell_data *data, char **args)
 		if (!is_valid_identifier(args[i]))
 			ft_putstr_fd("minishell: unset: not a valid identifier\n", 2);
 		else
-			remove_env_node(&data->env, args[i]);
+			remove_env_node(&data->env_list, args[i]);
 		i++;
 	}
-    sync_envp(data);
+	sync_envp(data);
 	return (0);
 }
