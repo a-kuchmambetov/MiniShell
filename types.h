@@ -9,6 +9,7 @@ typedef enum e_quote
 
 typedef enum e_redir
 {
+    NO_REDIR = 0,
     REDIR_INPUT = 1,
     REDIR_OUTPUT = 2,
     REDIR_APPEND = 3,
@@ -20,10 +21,12 @@ typedef struct s_cmd_node
 {
     char *cmd;
     char *args;
-    t_redir redirs;
+    t_redir redir_input;
     char *input_redir;
+    t_redir redir_output;
     char *output_redir;
-    struct s_cmd_node *prev;
+    int is_pipe_in;
+    int is_pipe_out;
     struct s_cmd_node *next;
 } t_cmd_node;
 

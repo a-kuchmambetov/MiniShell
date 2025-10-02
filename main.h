@@ -50,4 +50,6 @@ char **split_input_str(const char *s);
 
 void print_prompt_header(void);
 
+int create_cmd_list(t_cmd_list *cmd_list, char **str_arr);
+
 #endif

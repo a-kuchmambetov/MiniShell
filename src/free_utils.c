@@ -6,12 +6,12 @@ void free_env_list(t_env_list *env_list)
     t_env_node *next;
 
     if (!env_list)
-        return ;
+        return;
     current = env_list->first;
     while (current)
     {
         if (!current)
-            break ;
+            break;
         next = current->next;
         if (current->key)
             free(current->key);
@@ -28,17 +28,19 @@ void free_cmd_list(t_cmd_list *cmd_list)
     t_cmd_node *next;
 
     if (!cmd_list)
-        return ;
+        return;
     current = cmd_list->first;
     while (current)
     {
         if (!current)
-            break ;
+            break;
         next = current->next;
         free(current->cmd);
         free(current->args);
-        free(current->input_redir);
-        free(current->output_redir);
+        if (current->input_redir)
+            free(current->input_redir);
+        if (current->output_redir)
+            free(current->output_redir);
         free(current);
         current = next;
     }
@@ -50,7 +52,7 @@ void free_str_arr(char **str_arr)
 
     i = 0;
     if (!str_arr)
-        return ;
+        return;
     while (str_arr[i])
     {
         if (str_arr[i])

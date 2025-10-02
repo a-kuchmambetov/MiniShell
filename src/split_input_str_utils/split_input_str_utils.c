@@ -13,6 +13,7 @@ void skip_spaces(const char *s, t_split_data *dt)
 {
     if (s[dt->i] == ' ' && dt->i - dt->l < 1)
         dt->l = dt->i + 1;
+    dt->i++;
 }
 
 int add_row(t_split_data *dt, char *s)

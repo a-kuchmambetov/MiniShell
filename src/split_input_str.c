@@ -13,10 +13,9 @@ static int process_delimiter(const char *s, t_split_data *dt, int delim_len)
         if (add_row(dt, ft_strndup(s + dt->l, dt->i - dt->l)))
             return (ft_print_err("Error: split input failed\n"),
                     free_str_arr(dt->arr), 1);
-    if (s[dt->i] != ' ')
-        if (add_row(dt, ft_strndup(s + dt->i, delim_len)))
-            return (ft_print_err("Error: split input failed\n"),
-                    free_str_arr(dt->arr), 1);
+    if (add_row(dt, ft_strndup(s + dt->i, delim_len)))
+        return (ft_print_err("Error: split input failed\n"),
+                free_str_arr(dt->arr), 1);
     dt->l = dt->i + delim_len;
     dt->i += delim_len;
     return (0);
@@ -44,14 +43,16 @@ static int quote_parse(const char *s, t_split_data *dt, const char quote_char)
     if (handle_add_row(s, dt))
         return (1);
     dt->l = dt->i;
-    if (s[dt->i] != '\0')
-        dt->i++;
     return (0);
 }
 
 static int regular_parser(const char *s, t_split_data *dt, int delim_len)
 {
-    skip_spaces(s, dt);
+    if (dt->i > 0 && s[dt->i - 1] == ' ' && s[dt->i] == ' ')
+    {
+        skip_spaces(s, dt);
+        return (0);
+    }
     delim_len = is_delimiter(s + dt->i);
     if (delim_len > 0)
     {
