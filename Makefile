@@ -40,7 +40,7 @@ $(LIB): $(OBJS)
 	ar rcs $(LIB) $(OBJS)
 
 $(NAME): $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) main.c $(LIBS) -o $(NAME)
+	$(CC) $(CFLAGS) $(LIBS) main.c $(LIBS) -o $(NAME)
 
 clean:
 	rm -rf $(OBJS)
@@ -61,12 +61,12 @@ allClean: fclean
 re: fclean all 
 
 compileTest1: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_1.c $(LIBS) -o $(NAME)_test_1
+	$(CC) $(CFLAGS) $(LIBS) tests/test_main_1.c $(LIBS) -o $(NAME)_test_1
 
 compileTest2: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_2.c $(LIBS) -o $(NAME)_test_2
+	$(CC) $(CFLAGS) $(LIBS) tests/test_main_2.c $(LIBS) -o $(NAME)_test_2
 
 compileTest3: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_3.c $(LIBS) -o $(NAME)_test_3
+	$(CC) $(CFLAGS) $(LIBS) tests/test_main_3.c $(LIBS) -o $(NAME)_test_3
 
 .PHONY: all clean fclean mlxDel allClean re compileTest1 compileTest2 compileTest3
