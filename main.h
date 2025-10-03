@@ -43,13 +43,15 @@ int ft_print_err(const char *format, ...);
 char *read_input();
 void process_input(t_shell_data *data, char *input);
 
+void print_prompt_header(void);
+/// Built-in commands
+int is_builtin(char *cmd);
+int exec_builtin(t_shell_data *data, char **args);
+
 // Command t_cmd_list list management
 void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
-
 char **split_input_str(const char *s);
-
 void print_prompt_header(void);
-
 int create_cmd_list(t_cmd_list *cmd_list, char **str_arr);
 
 #endif
