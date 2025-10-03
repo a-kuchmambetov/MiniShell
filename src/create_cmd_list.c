@@ -18,6 +18,7 @@ void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node)
     current->next = new_node;
     cmd_list->len++;
 }
+
 int malloc_cmd_node(t_cmd_node **new_node)
 {
     t_cmd_node *node;
@@ -27,9 +28,9 @@ int malloc_cmd_node(t_cmd_node **new_node)
         return (1);
     node->cmd = NULL;
     node->args = NULL;
-    node->redir_input = NO_REDIR;
+    node->input_redir_type = NO_REDIR;
     node->input_redir = NULL;
-    node->redir_output = NO_REDIR;
+    node->output_redir_type = NO_REDIR;
     node->output_redir = NULL;
     node->is_pipe_in = 0;
     node->is_pipe_out = 0;
@@ -53,6 +54,24 @@ static int delimiter_type(const char *str)
     return (NO_REDIR);
 }
 
+int check_file(const char *filename)
+{
+    const int fd = open(filename, O_RDONLY);
+
+    if ((*filename < 'A' || *filename > 'z') && (*filename < '0' || *filename > '9'))
+    {
+        ft_print_err("syntax error near unexpected token `%s'\n", filename);
+        return (close(fd), 1);
+    }
+    if (fd == -1)
+    {
+        ft_print_err("%s: No such file or directory\n", filename);
+        return (close(fd), 1);
+    }
+    close(fd);
+    return (0);
+}
+
 int process_input_redir(t_cmd_node *node, char **str_arr, int *i)
 {
     if (!node || !str_arr || !i)
@@ -60,14 +79,14 @@ int process_input_redir(t_cmd_node *node, char **str_arr, int *i)
     if (node->input_redir)
         free(node->input_redir);
     if (ft_strncmp(str_arr[*i], "<<", 2) == 0)
-        node->redir_input = REDIR_HEREDOC;
+        node->input_redir_type = REDIR_HEREDOC;
     else
-        node->redir_input = REDIR_INPUT;
+        node->input_redir_type = REDIR_INPUT;
     if (str_arr[*i + 1][0] == ' ')
         *i += 1;
-    if (!str_arr[*i + 1])
-        return (ft_print_err("Syntax error near unexpected token `newline'\n"), 1);
     *i += 1;
+    if (node->input_redir_type == REDIR_INPUT && check_file(str_arr[*i]))
+        return (1);
     node->input_redir = ft_strdup(str_arr[*i]);
     if (!node->input_redir)
         return (ft_print_err("Memory allocation error\n"), 1);
@@ -81,13 +100,14 @@ int process_output_redir(t_cmd_node *node, char **str_arr, int *i)
     if (node->output_redir)
         free(node->output_redir);
     if (ft_strncmp(str_arr[*i], ">>", 2) == 0)
-        node->redir_output = REDIR_APPEND;
+        node->output_redir_type = REDIR_APPEND;
     else
-        node->redir_output = REDIR_OUTPUT;
+        node->output_redir_type = REDIR_OUTPUT;
     if (str_arr[*i + 1][0] == ' ')
         *i += 1;
     if (!str_arr[*i + 1])
-        return (ft_print_err("Syntax error near unexpected token `newline'\n"), 1);
+        return (ft_print_err("syntax error near unexpected token `newline'\n"),
+                1);
     *i += 1;
     node->output_redir = ft_strdup(str_arr[*i]);
     if (!node->output_redir)
@@ -95,7 +115,8 @@ int process_output_redir(t_cmd_node *node, char **str_arr, int *i)
     return (0);
 }
 
-int process_pipe(t_cmd_list *cmd_list, t_cmd_node **node, char **str_arr, int *i)
+int process_pipe(t_cmd_list *cmd_list, t_cmd_node **node,
+                 char **str_arr, int *i)
 {
     if (!node || !str_arr || !i)
         return (1);
@@ -149,7 +170,8 @@ int process_cmd_args(t_cmd_node *node, char **str_arr, int *i)
     return (0);
 }
 
-static int process_str_arr(t_cmd_list *cmd_list, t_cmd_node **node, char **str_arr, int *i)
+static int process_str_arr(t_cmd_list *cmd_list, t_cmd_node **node,
+                           char **str_arr, int *i)
 {
     const int delim_type = delimiter_type(str_arr[*i]);
 
