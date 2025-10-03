@@ -46,19 +46,16 @@ clean:
 	rm -rf $(OBJS)
 	$(MAKE) -C $(LIBFTDIR) clean
 
-fclean: 
+fclean:
 	rm -rf $(OBJS)
 	rm -f $(NAME) $(LIB)
 	$(MAKE) -C $(LIBFTDIR) fclean
 
-mlxDel:
-	rm -rf mlx
-
-allClean: fclean 
+allClean: fclean
 	rm -rf $(NAME)_test_* \
 	tests/test_main_1 tests/test_main_2 tests/test_main_3
 
-re: fclean all 
+re: fclean all
 
 compileTest1: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) $(LIBS) tests/test_main_1.c $(LIBS) -o $(NAME)_test_1
@@ -69,4 +66,4 @@ compileTest2: $(LIBFT) $(LIB)
 compileTest3: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) $(LIBS) tests/test_main_3.c $(LIBS) -o $(NAME)_test_3
 
-.PHONY: all clean fclean mlxDel allClean re compileTest1 compileTest2 compileTest3
+.PHONY: all clean fclean allClean re compileTest1 compileTest2 compileTest3
