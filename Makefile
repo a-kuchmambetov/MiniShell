@@ -69,4 +69,9 @@ compileTest2: $(LIBFT) $(LIB)
 compileTest3: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_3.c $(LIBS) -o $(NAME)_test_3
 
-.PHONY: all clean fclean mlxDel allClean re compileTest1 compileTest2 compileTest3
+compileTest4: $(LIBFT) $(LIB)
+	$(CC) $(CFLAGS) tests/test_main_4.c $(LIB) -lreadline -lncurses -o $(NAME)_test_4
+compileTestExit: $(LIBFT) $(LIB)
+	$(CC) $(CFLAGS) tests/test_exit.c $(LIB) -lreadline -lncurses -o $(NAME)_test_exit
+
+.PHONY: all clean fclean mlxDel allClean re compileTest1 compileTest2 compileTest3 compileTest4 compileTestExit

@@ -4,7 +4,7 @@ int	builtin_env(t_shell_data *data, char **args)
 {
 	int	i;
 
-	if (args[1])
+	if (args[1] != NULL)
 	{
 		ft_putstr_fd("minishell: env: No such file or directory\n", 2);
 		return (1);
