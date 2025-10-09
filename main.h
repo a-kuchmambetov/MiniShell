@@ -15,6 +15,12 @@
 #include "types.h"
 #include "libft/libft.h"
 
+extern volatile sig_atomic_t g_signal_received;
+
+// Configuration
+#define HERE_DOC_DIR "./"
+#define HERE_DOC_PREFIX "here_doc_"
+
 // ANSI color codes
 #define COLOR_RESET "\033[0m"
 #define COLOR_RED "\033[31m"
@@ -30,6 +36,8 @@
 void parse_envp(t_shell_data *data, char **envp);
 void parse_exec_folders(t_shell_data *data);
 
+void free_cmd_node(t_cmd_node *node);
+void free_cmd_list(t_cmd_list *cmd_list);
 void free_env_list(t_env_list *env);
 void free_str_arr(char **paths);
 void free_shell_data(t_shell_data *data);
@@ -54,5 +62,8 @@ void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
 char **split_input_str(const char *s);
 void print_prompt_header(void);
 int create_cmd_list(t_cmd_list *cmd_list, char **str_arr);
+
+int start_here_doc(const char *eof_word, char **filename);
+// int delete_here_doc(char *filename);
 
 #endif

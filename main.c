@@ -1,20 +1,21 @@
 #include "main.h"
 
-static void handle_sigint(int sig)
+volatile sig_atomic_t g_signal_received = 0;
+
+static void handle_sigint_prompt(int sig)
 {
     (void)sig;
-    write(1, "\n", 1);
+    g_signal_received = 1;
+    write(STDOUT_FILENO, "\n", 1);
     print_prompt_header();
     rl_on_new_line();
     rl_replace_line("", 0);
     rl_redisplay();
 }
 
-static void setup_signals(void)
+static void setup_signals_prompt(void)
 {
-    // Handle Ctrl+C (SIGINT)
-    signal(SIGINT, handle_sigint);
-    // Ignore Ctrl+\ (SIGQUIT)
+    signal(SIGINT, handle_sigint_prompt);
     signal(SIGQUIT, SIG_IGN);
 }
 
@@ -44,7 +45,7 @@ int main(int argc, char **argv, char **envp)
 
     (void)argc;
     (void)argv;
-    setup_signals();
+    setup_signals_prompt();
     init_shell_data(&data, envp);
     while (1)
     {

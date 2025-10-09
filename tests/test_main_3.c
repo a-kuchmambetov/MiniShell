@@ -46,6 +46,7 @@ int test(char *input)
         printf(COLOR_RESET);
         fflush(stdout);
         printf("-------------------------------\n");
+
         free_str_arr(arr);
         return (1);
     }
@@ -70,6 +71,7 @@ int test(char *input)
         fflush(stdout);
         printf("-------------------------------\n");
         fflush(stdout);
+
         free_shell_data(&data);
         free_str_arr(arr);
         return (1);
@@ -98,11 +100,5 @@ int main()
     test("echo 'x -$PWD \"' || ><");
     test("echo 'x -$PWD \"' '|| ><'");
     test("echo 'x -$PWD \"' && '|| ><'");
-    // test("cat < file.txt");
-    // test("grep 'pattern' < input.txt > output.txt");
-    // test("sort < unsorted.txt | uniq > sorted_unique.txt");
-    // test("echo 'New Entry' >> log.txt");
-    // test("cat < input.txt | grep 'search' >> results.txt");
-    // test("ls -l | grep '^d' > directories.txt");
     return 0;
 }
