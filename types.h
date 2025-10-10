@@ -21,9 +21,9 @@ typedef struct s_cmd_node
 {
     char *cmd;
     char *args;
-    t_redir redir_input;
+    t_redir input_redir_type;
     char *input_redir;
-    t_redir redir_output;
+    t_redir output_redir_type;
     char *output_redir;
     int is_pipe_in;
     int is_pipe_out;

@@ -17,6 +17,7 @@ static char *find_executable(t_shell_data *data, char *command)
         ft_strlcat(full_path, "/", ft_strlen(full_path) + 2);
         ft_strlcat(full_path, command, ft_strlen(full_path)
             + ft_strlen(command) + 1);
+        printf("Checking path: %s\n", full_path);
         if (access(full_path, X_OK) == 0)
             return (full_path);
         free(full_path);
@@ -25,9 +26,8 @@ static char *find_executable(t_shell_data *data, char *command)
     return (NULL);
 }
 
-void exec_cmd(t_shell_data *data, char *command, char *argv_str)
+void exec_cmd(t_shell_data *data, char *command, char **argv_str)
 {
-    char * const args[] = {command, argv_str, NULL};
     char *executable;
     pid_t pid;
 
@@ -41,7 +41,7 @@ void exec_cmd(t_shell_data *data, char *command, char *argv_str)
     pid = fork();
     if (pid == 0)
     {
-        execve(executable, args, data->envp);
+        execve(executable, argv_str, data->envp);
         perror("execve");
         exit(EXIT_FAILURE);
     }

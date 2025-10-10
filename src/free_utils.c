@@ -22,28 +22,36 @@ void free_env_list(t_env_list *env_list)
     }
 }
 
+void free_cmd_node(t_cmd_node *node)
+{
+    if (!node)
+        return;
+    if (node->cmd)
+        free(node->cmd);
+    if (node->args)
+        free(node->args);
+    if (node->input_redir)
+        free(node->input_redir);
+    if (node->output_redir)
+        free(node->output_redir);
+    free(node);
+}
+
 void free_cmd_list(t_cmd_list *cmd_list)
 {
     t_cmd_node *current;
     t_cmd_node *next;
 
-    if (!cmd_list)
+    if (!cmd_list || !cmd_list->first)
         return;
     current = cmd_list->first;
     while (current)
     {
-        if (!current)
-            break;
         next = current->next;
-        free(current->cmd);
-        free(current->args);
-        if (current->input_redir)
-            free(current->input_redir);
-        if (current->output_redir)
-            free(current->output_redir);
-        free(current);
+        free_cmd_node(current);
         current = next;
     }
+    cmd_list = (t_cmd_list *){0};
 }
 
 void free_str_arr(char **str_arr)

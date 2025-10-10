@@ -26,20 +26,22 @@ int ft_print_err(const char *format, ...)
     va_start(args, format);
     len = 0;
     i = 0;
+
+    ft_print_str(COLOR_RED "\nminishell: ");
     while (format[i])
     {
         if (format[i] == '%')
         {
-            i++;
-            if (format[i] == 's')
+            if (format[++i] == 's')
                 len += ft_print_str(va_arg(args, char *));
             else if (format[i] == 'd')
                 len += ft_putnbr_base(va_arg(args, int), "0123456789");
         }
         else
-           len += ft_print_char(format[i]);
+            len += ft_print_char(format[i]);
         i++;
     }
+    ft_print_str(COLOR_RESET);
     va_end(args);
     return (len);
 }
