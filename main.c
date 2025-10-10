@@ -32,10 +32,19 @@ char *read_input()
 
 void process_input(t_shell_data *data, char *input)
 {
-    (void)input;
-    (void)data;
-    // Empty function for now
-    // Future implementation will parse and execute commands
+   char **args;
+
+    args = ft_split(input, ' ');
+    if (!args)
+        return;
+    if (ft_strncmp(args[0], "$?", 2) == 0)
+        return (ft_printf("%d: command not found\n", WEXITSTATUS(data->last_exit_status)), (void)0);
+    //exec_cmd_2(data, args[0], args);
+    if (is_builtin(args[0]))
+        data->last_exit_status = exec_builtin(data, args);
+    else
+        exec_cmd(data, args[0], args);
+    free_str_arr(args);
 }
 
 int main(int argc, char **argv, char **envp)
