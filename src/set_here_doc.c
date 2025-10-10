@@ -98,7 +98,7 @@ int write_here_doc(const char *eof_word, char **filename, int fd)
             free(input);
             break;
         }
-        process_expansion(&input);
+        //process_expansion(&input);
         write(fd, input, ft_strlen(input));
         write(fd, "\n", 1);
         free(input);

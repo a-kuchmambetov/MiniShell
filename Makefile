@@ -31,7 +31,7 @@ SRC = src/exec_cmd.c \
 		src/built_in_comands/env_comand.c \
 		src/built_in_comands/unset_comand.c \
 		src/built_in_comands/exit_comand.c \
-		src/set_here_doc.c 
+		src/set_here_doc.c
 
 OBJS     = $(SRC:.c=.o)
 
@@ -58,7 +58,9 @@ fclean:
 
 allClean: fclean
 	rm -rf $(NAME)_test_* \
-	tests/test_main_1 tests/test_main_2 tests/test_main_3
+	tests/test_main_1 tests/test_main_2 tests/test_main_3 \
+	here_doc_*
+
 
 re: fclean all
 
