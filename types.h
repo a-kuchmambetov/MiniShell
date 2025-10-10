@@ -57,9 +57,6 @@ typedef struct s_shell_data
     char **paths;
     char **envp;
     char *pwd;
-    char *oldpwd;
-    char *last_valid_dir;
-    char *home_dir;
     // File descriptors for input/output redirection and pipes
     int pipefd[2];
     // Last command exit status
