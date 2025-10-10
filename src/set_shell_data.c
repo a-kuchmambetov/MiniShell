@@ -92,6 +92,7 @@ void init_shell_data(t_shell_data *data, char **envp)
     if (data->pwd)
         free(data->pwd);
     data->pwd = ft_strdup(cwd);
+    data->last_valid_dir = ft_strdup(data->pwd);
     free(cwd);
     parse_envp(data, envp);
     parse_exec_folders(data);

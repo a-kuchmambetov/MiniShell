@@ -37,7 +37,7 @@ void free_shell_data(t_shell_data *data);
 int set_envp_from_env(t_shell_data *data);
 void init_shell_data(t_shell_data *data, char **envp);
 
-void exec_cmd(t_shell_data *data, char *command, char *argv_str);
+void exec_cmd(t_shell_data *data, char *command, char **argv_str);
 
 int ft_print_err(const char *format, ...);
 
