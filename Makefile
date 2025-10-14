@@ -31,7 +31,8 @@ SRC = src/exec_cmd.c \
 		src/built_in_comands/env_comand.c \
 		src/built_in_comands/unset_comand.c \
 		src/built_in_comands/exit_comand.c \
-		src/set_here_doc.c
+		src/set_here_doc.c \
+		src/process_expansion.c
 
 OBJS     = $(SRC:.c=.o)
 
@@ -57,10 +58,8 @@ fclean:
 	$(MAKE) -C $(LIBFTDIR) fclean
 
 allClean: fclean
-	rm -rf $(NAME)_test_* \
-	tests/test_main_1 tests/test_main_2 tests/test_main_3 \
-	here_doc_*
-
+	find -maxdepth 1 -type f \( -name '$(NAME)_test_*' -o -name 'here_doc_*' \) ! -name '*.c' ! -name '*.h' -delete
+	find tests -maxdepth 1 -type f -name 'test_main_*' ! -name '*.c' -delete
 
 re: fclean all
 
@@ -78,5 +77,9 @@ compileTest3: $(LIBFT) $(LIB)
 # set_here_doc tests
 compileTest4: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_4.c $(LIBS) $(LDLIBS) -o $(NAME)_test_4
+
+# expansion tests
+compileTest5: $(LIBFT) $(LIB)
+	$(CC) $(CFLAGS) tests/test_main_5.c $(LIBS) $(LDLIBS) -o $(NAME)_test_5
 
 .PHONY: all clean fclean allClean re compileTest1 compileTest2 compileTest3 compileTest4

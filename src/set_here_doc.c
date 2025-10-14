@@ -1,10 +1,19 @@
 #include "../main.h"
 
+static int check_signal_hook(void)
+{
+    if (g_signal_received)
+    {
+        rl_done = 1; // Tell readline to stop
+        return (0);
+    }
+    return (0);
+}
+
 static void handle_sigint_heredoc(int sig)
 {
     (void)sig;
     g_signal_received = 1;
-    rl_done = 1;
     write(STDOUT_FILENO, "\n", 1);
 }
 
@@ -45,6 +54,8 @@ int create_file(char **filename, int *fd)
     if (*fd < 0)
     {
         ft_print_err("Error: Unable to create here-document temp file\n");
+        free(*filename);
+        *filename = NULL;
         return (1);
     }
     return (0);
@@ -68,9 +79,12 @@ int delete_here_doc(const char *filename)
 
 static void cleanup_here_doc(char *input, int fd, char **filename)
 {
-    if (input)
-        free(input);
     close(fd);
+    if (input)
+    {
+        free(input);
+        input = NULL;
+    }
     if (filename && *filename)
     {
         delete_here_doc(*filename);
@@ -79,7 +93,7 @@ static void cleanup_here_doc(char *input, int fd, char **filename)
     }
 }
 
-int write_here_doc(const char *eof_word, char **filename, int fd)
+int write_here_doc(t_env_list env, const char *eof_word, char **filename, int fd)
 {
     char *input;
 
@@ -87,27 +101,26 @@ int write_here_doc(const char *eof_word, char **filename, int fd)
     {
         input = readline("> ");
         if (g_signal_received)
-            return (cleanup_here_doc(input, fd, filename), 130); // SIGINT exit code
+        {
+            cleanup_here_doc(input, fd, filename);
+            return (130); // SIGINT exit code
+        }
         if (!input)
-        {
-            cleanup_here_doc(NULL, fd, filename);
-            break;
-        }
+            return (ft_print_err("warning: here-document delimited by end-of-file (wanted `%s')\n", eof_word), 0);
         if (ft_strncmp(input, eof_word, ft_strlen(eof_word)) == 0)
-        {
-            free(input);
             break;
-        }
-        //process_expansion(&input);
+        process_expansion(env, &input);
         write(fd, input, ft_strlen(input));
         write(fd, "\n", 1);
         free(input);
     }
+    if (input)
+        free(input);
     close(fd);
     return (0);
 }
 
-int start_here_doc(const char *eof_word, char **filename)
+int start_here_doc(t_env_list env, const char *eof_word, char **filename)
 {
     int fd;
     int result;
@@ -123,15 +136,14 @@ int start_here_doc(const char *eof_word, char **filename)
     }
     g_signal_received = 0;
     rl_done = 0;
+    rl_event_hook = check_signal_hook;
     old_handler = signal(SIGINT, handle_sigint_heredoc);
     if (create_file(filename, &fd))
-    {
-        signal(SIGINT, old_handler);
-        return (1);
-    }
-    result = write_here_doc(eof_word, filename, fd);
+        return (signal(SIGINT, old_handler), 1);
+    result = write_here_doc(env, eof_word, filename, fd);
     g_signal_received = 0;
     rl_done = 0;
+    rl_event_hook = NULL;
     signal(SIGINT, old_handler);
     return (result);
 }

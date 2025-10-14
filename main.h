@@ -63,7 +63,9 @@ char **split_input_str(const char *s);
 void print_prompt_header(void);
 int create_cmd_list(t_cmd_list *cmd_list, char **str_arr);
 
-int start_here_doc(const char *eof_word, char **filename);
+int process_expansion(t_env_list env, char **input);
+int check_do_expansion(t_env_list env, char **input);
+int start_here_doc(t_env_list env, const char *eof_word, char **filename);
 // int delete_here_doc(char *filename);
 
 #endif
