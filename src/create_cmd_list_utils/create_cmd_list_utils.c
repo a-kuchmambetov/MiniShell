@@ -74,25 +74,14 @@ int set_cmd(t_cmd_node *node, char **str_arr, int *i)
     return (0);
 }
 
-int set_cmd_args(t_cmd_node *node, char **str_arr, int *i)
+int set_cmd_args(t_shell_data *dt, t_cmd_node *node, char **str_arr, int *i)
 {
-    int str_len;
-    int arg_len;
-    char *temp;
-
     if (!node || !str_arr || !i)
         return (1);
-    str_len = ft_strlen(str_arr[*i]);
     if (node->args)
     {
-        arg_len = ft_strlen(node->args);
-        temp = ft_calloc(sizeof(char), arg_len + str_len + 1);
-        if (!temp)
-            return (ft_print_err("Memory allocation error\n"), 1);
-        ft_strlcpy(temp, node->args, arg_len + 1);
-        ft_strlcat(temp, str_arr[*i], arg_len + str_len + 1);
-        free(node->args);
-        node->args = temp;
+        if (check_args_expansion(dt, node, node->args, str_arr[*i]))
+            return (1);
     }
     else
     {

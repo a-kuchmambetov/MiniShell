@@ -27,6 +27,7 @@ int main(int argc, char **argv, char **envp)
 
     test(data, "$HOME");
     test(data, "$PATH");
+    test(data, "$_");
     test(data, "$$");
     test(data, "$?");
     test(data, "$UNDEFINED_VAR");

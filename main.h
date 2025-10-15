@@ -61,7 +61,7 @@ int exec_builtin(t_shell_data *data, char **args);
 void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
 char **split_input_str(const char *s);
 void print_prompt_header(void);
-int create_cmd_list(t_cmd_list *cmd_list, char **str_arr);
+int create_cmd_list(t_shell_data *dt, char **str_arr);
 
 int process_expansion(t_env_list env, char **input);
 int check_do_expansion(t_env_list env, char **input);

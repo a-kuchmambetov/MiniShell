@@ -31,7 +31,10 @@ SRC = src/exec_cmd.c \
 		src/built_in_comands/env_comand.c \
 		src/built_in_comands/unset_comand.c \
 		src/built_in_comands/exit_comand.c \
-		src/set_here_doc.c \
+		src/start_here_doc_utils/file_utils.c \
+		src/start_here_doc_utils/start_here_doc_utils.c \
+		src/start_here_doc.c \
+		src/process_expansion_utils/process_expansion_utils.c \
 		src/process_expansion.c
 
 OBJS     = $(SRC:.c=.o)
