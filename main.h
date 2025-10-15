@@ -7,12 +7,19 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
 // Project custom headers
 #include "types.h"
 #include "libft/libft.h"
+
+extern volatile sig_atomic_t g_signal_received;
+
+// Configuration
+#define HERE_DOC_DIR "./"
+#define HERE_DOC_PREFIX "here_doc_"
 
 // ANSI color codes
 #define COLOR_RESET "\033[0m"
@@ -29,6 +36,8 @@
 void parse_envp(t_shell_data *data, char **envp);
 void parse_exec_folders(t_shell_data *data);
 
+void free_cmd_node(t_cmd_node *node);
+void free_cmd_list(t_cmd_list *cmd_list);
 void free_env_list(t_env_list *env);
 void free_str_arr(char **paths);
 void free_shell_data(t_shell_data *data);
@@ -36,7 +45,7 @@ void free_shell_data(t_shell_data *data);
 int set_envp_from_env(t_shell_data *data);
 void init_shell_data(t_shell_data *data, char **envp);
 
-void exec_cmd(t_shell_data *data, char *command, char *argv_str);
+void exec_cmd(t_shell_data *data, char *command, char **argv_str);
 
 int ft_print_err(const char *format, ...);
 
@@ -52,6 +61,11 @@ int exec_builtin(t_shell_data *data, char **args);
 void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
 char **split_input_str(const char *s);
 void print_prompt_header(void);
-int create_cmd_list(t_cmd_list *cmd_list, char **str_arr);
+int create_cmd_list(t_shell_data *dt, char **str_arr);
+
+int process_expansion(t_env_list env, char **input);
+int check_do_expansion(t_env_list env, char **input);
+int start_here_doc(t_env_list env, const char *eof_word, char **filename);
+// int delete_here_doc(char *filename);
 
 #endif

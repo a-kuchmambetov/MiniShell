@@ -1,20 +1,21 @@
 #include "main.h"
 
-static void handle_sigint(int sig)
+volatile sig_atomic_t g_signal_received = 0;
+
+static void handle_sigint_prompt(int sig)
 {
     (void)sig;
-    write(1, "\n", 1);
+    g_signal_received = 1;
+    write(STDOUT_FILENO, "\n", 1);
     print_prompt_header();
     rl_on_new_line();
     rl_replace_line("", 0);
     rl_redisplay();
 }
 
-static void setup_signals(void)
+static void setup_signals_prompt(void)
 {
-    // Handle Ctrl+C (SIGINT)
-    signal(SIGINT, handle_sigint);
-    // Ignore Ctrl+\ (SIGQUIT)
+    signal(SIGINT, handle_sigint_prompt);
     signal(SIGQUIT, SIG_IGN);
 }
 
@@ -31,10 +32,19 @@ char *read_input()
 
 void process_input(t_shell_data *data, char *input)
 {
-    (void)input;
-    (void)data;
-    // Empty function for now
-    // Future implementation will parse and execute commands
+   char **args;
+
+    args = ft_split(input, ' ');
+    if (!args)
+        return;
+    if (ft_strncmp(args[0], "$?", 2) == 0)
+        return (ft_printf("%d: command not found\n", WEXITSTATUS(data->last_exit_status)), (void)0);
+    //exec_cmd_2(data, args[0], args);
+    if (is_builtin(args[0]))
+        data->last_exit_status = exec_builtin(data, args);
+    else
+        exec_cmd(data, args[0], args);
+    free_str_arr(args);
 }
 
 int main(int argc, char **argv, char **envp)
@@ -44,7 +54,7 @@ int main(int argc, char **argv, char **envp)
 
     (void)argc;
     (void)argv;
-    setup_signals();
+    setup_signals_prompt();
     init_shell_data(&data, envp);
     while (1)
     {
