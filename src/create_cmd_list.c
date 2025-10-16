@@ -24,7 +24,7 @@ static int parsing_str_arr(t_shell_data *dt, t_cmd_node **node,
     if (!dt || !str_arr || !node || !i)
         return (1);
     if (delim_type == REDIR_INPUT || delim_type == REDIR_HEREDOC)
-        return (set_input_redir(*node, str_arr, i));
+        return (set_input_redir(dt, *node, str_arr, i));
     else if (delim_type == REDIR_OUTPUT || delim_type == REDIR_APPEND)
         return (set_output_redir(*node, str_arr, i));
     else if (delim_type == REDIR_PIPE)

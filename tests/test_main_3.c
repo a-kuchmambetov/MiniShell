@@ -1,5 +1,24 @@
 #include "../main.h"
 
+volatile sig_atomic_t g_signal_received = 0;
+
+static void handle_sigint_prompt(int sig)
+{
+    (void)sig;
+    g_signal_received = 1;
+    write(STDOUT_FILENO, "\n", 1);
+    print_prompt_header();
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
+}
+
+static void setup_signals_prompt(void)
+{
+    signal(SIGINT, handle_sigint_prompt);
+    signal(SIGQUIT, SIG_IGN);
+}
+
 int print_cmd_list(t_cmd_list *cmd_list, char *input)
 {
     const char **t_redir_types = (const char *[]){"No redir", "input", "output", "append", "heredoc", "pipe"};
@@ -93,6 +112,8 @@ int test(char *input)
 
 int main()
 {
+    setup_signals_prompt();
+
     test("echo hello | grep h >> output.txt");
     test("   ls           -la       /home/user/Documents  > result.txt  <             input.txt                   ");
     test("cat << EOF | grep \"pattern >> output.txt\"");

@@ -33,6 +33,8 @@ extern volatile sig_atomic_t g_signal_received;
 #define COLOR_BOLD "\033[1m"
 #define COLOR_DIM "\033[2m"
 
+int ft_print_err(const char *format, ...);
+
 void parse_envp(t_shell_data *data, char **envp);
 void parse_exec_folders(t_shell_data *data);
 
@@ -45,14 +47,11 @@ void free_shell_data(t_shell_data *data);
 int set_envp_from_env(t_shell_data *data);
 void init_shell_data(t_shell_data *data, char **envp);
 
-void exec_cmd(t_shell_data *data, char *command, char **argv_str);
-
-int ft_print_err(const char *format, ...);
-
+void print_prompt_header(void);
 char *read_input();
 void process_input(t_shell_data *data, char *input);
+void exec_cmd(t_shell_data *data, char *command, char **argv_str);
 
-void print_prompt_header(void);
 /// Built-in commands
 int is_builtin(char *cmd);
 int exec_builtin(t_shell_data *data, char **args);
@@ -60,12 +59,11 @@ int exec_builtin(t_shell_data *data, char **args);
 // Command t_cmd_list list management
 void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
 char **split_input_str(const char *s);
-void print_prompt_header(void);
 int create_cmd_list(t_shell_data *dt, char **str_arr);
 
 int process_expansion(t_env_list env, char **input);
 int check_do_expansion(t_env_list env, char **input);
 int start_here_doc(t_env_list env, const char *eof_word, char **filename);
-// int delete_here_doc(char *filename);
+int delete_here_doc(const char *filename);
 
 #endif
