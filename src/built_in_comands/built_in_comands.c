@@ -36,6 +36,6 @@ int exec_builtin(t_shell_data *data, char **args)
     else if (!ft_strncmp(args[0], "env", 4))
         return (builtin_env(data, args));
     else if (!ft_strncmp(args[0], "exit", 5))
-        return (builtin_exit(data));
+        return (builtin_exit(data, args));
     return (1);
 }

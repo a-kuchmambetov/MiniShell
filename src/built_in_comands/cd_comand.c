@@ -53,7 +53,6 @@ int builtin_cd(t_shell_data *data, char **args)
 		free(oldpwd);
 		return (1);
 	}
-	// Міняємо директорію
 	if (chdir(path) != 0)
 	{
 		ft_printf("cd: %s: %s\n", path, strerror(errno));
@@ -61,23 +60,17 @@ int builtin_cd(t_shell_data *data, char **args)
 		free(path);
 		return (1);
 	}
-	// Оновлюємо поточний шлях із системи (реальний canonical path)
 	cwd = getcwd(NULL, 0);
-    ft_printf("CWD- %s\n", cwd);
 	if (!cwd)
 	{
 		perror("minishell:  getcwd");
         cwd = ft_strdup(data->pwd ? data->pwd : "/");
 	}
-	// Виводимо новий шлях, якщо був `cd -`
 	if (args[1] && ft_strncmp(args[1], "-", 2) == 0)
 		ft_printf("%s\n", cwd);
-	//Оновлюємо змінні середовища
 	update_env_pwd(data, "OLDPWD=", oldpwd);
     update_env_pwd(data, "PWD=", cwd);
-
 	sync_envp(data);
-	// Оновлюємо локальні копії
 	free(data->pwd);
 	data->pwd = ft_strdup(cwd);
 	free(oldpwd);
