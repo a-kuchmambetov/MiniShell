@@ -1,5 +1,12 @@
 #include "builtins.h"
 
+/**
+ * @brief Parses the '-L' or '-P' flag for the 'pwd' command.
+ *
+ * @param args Command arguments array.
+ * @return Returns 1 for '-P' (physical), 0 for '-L' (logical),
+ *         or -1 for invalid option.
+ */
 static int	parse_pwd_flag(char **args)
 {
 	if (!args[1])
@@ -10,12 +17,21 @@ static int	parse_pwd_flag(char **args)
 			return (1);
 		else if (args[1][1] == 'L')
 			return (0);
-		fprintf(stderr, "pwd: invalid option: %s\n", args[1]);
+		ft_printf("pwd: invalid option: %s\n", args[1]);
 		return (-1);
 	}
 	return (0);
 }
 
+/**
+ * @brief Implements the 'pwd' builtin command.
+ *
+ * Supports '-L' (logical) and '-P' (physical) flags.
+ *
+ * @param data Pointer to shell data structure.
+ * @param args Command arguments array.
+ * @return Returns 0 on success, 1 on error or invalid option.
+ */
 int	builtin_pwd(t_shell_data *data, char **args)
 {
 	char	*pwd;
@@ -30,10 +46,7 @@ int	builtin_pwd(t_shell_data *data, char **args)
 	{
 		pwd = get_env_value(data->envp, "PWD");
 		if (pwd && *pwd)
-		{
-			printf("%s\n", pwd);
-			return (0);
-		}
+			return(ft_printf("%s\n", pwd),0);
 	}
 	cwd = getcwd(NULL, 0);
 	if (!cwd)

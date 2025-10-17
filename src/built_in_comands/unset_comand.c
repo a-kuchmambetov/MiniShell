@@ -1,10 +1,20 @@
 #include "builtins.h"
 
+/**
+ * @brief Removes an environment variable node by key from the linked list.
+ *
+ * Frees the memory of the removed node and updates list pointers.
+ *
+ * @param env Pointer to the environment list.
+ * @param key Key of the variable to remove.
+ */
 static void remove_env_node(t_env_list *env, const char *key)
 {
-	t_env_node *current = env->first;
-	t_env_node *prev = NULL;
+	t_env_node *current;
+	t_env_node *prev;
 
+	current = env->first;
+	prev = NULL;
 	while (current)
 	{
 		if (ft_strncmp(current->key, key, ft_strlen(key)) == 0)
@@ -24,6 +34,16 @@ static void remove_env_node(t_env_list *env, const char *key)
 	}
 }
 
+
+/**
+ * @brief Implements the 'unset' builtin command.
+ *
+ * Removes environment variables by key if identifiers are valid.
+ *
+ * @param data Pointer to shell data structure.
+ * @param args Command arguments array.
+ * @return Always returns 0.
+ */
 int builtin_unset(t_shell_data *data, char **args)
 {
 	int i;

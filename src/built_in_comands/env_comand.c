@@ -1,5 +1,15 @@
 #include "builtins.h"
 
+/**
+ * @brief Implements the 'env' builtin command.
+ *
+ * Prints all environment variables that contain '='.
+ * If any arguments are passed, prints an error message.
+ *
+ * @param data Pointer to shell data structure containing environment info.
+ * @param args Command arguments array.
+ * @return 0 on success, 1 if extra arguments are provided.
+ */
 int	builtin_env(t_shell_data *data, char **args)
 {
 	int	i;
@@ -13,7 +23,7 @@ int	builtin_env(t_shell_data *data, char **args)
 	while (data->envp[i])
 	{
 		if (ft_strchr(data->envp[i], '='))
-			ft_printf("%s\n", data->envp[i]);
+			ft_putendl_fd(data->envp[i], 1);
 		i++;
 	}
 	return (0);

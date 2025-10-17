@@ -1,5 +1,14 @@
 #include "builtins.h"
 
+/**
+ * @brief Checks if a given command is a builtin command.
+ *
+ * Supported builtin commands:
+ * echo, cd, pwd, export, unset, env, exit
+ *
+ * @param cmd Command string to check.
+ * @return 1 if cmd is a builtin, 0 otherwise.
+ */
 int is_builtin(char *cmd)
 {
     if (!cmd || !cmd[0])
@@ -21,6 +30,15 @@ int is_builtin(char *cmd)
     return (0);
 }
 
+/**
+ * @brief Executes the appropriate builtin command based on args[0].
+ *
+ * Maps command strings to their corresponding builtin functions.
+ *
+ * @param data Pointer to shell data structure containing environment info.
+ * @param args Command arguments array; args[0] is the command name.
+ * @return The return value of the executed builtin, or 1 if not recognized.
+ */
 int exec_builtin(t_shell_data *data, char **args)
 {
     if (!ft_strncmp(args[0], "echo", 5))
