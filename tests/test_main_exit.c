@@ -1,6 +1,11 @@
 #include "../main.h"
 #include "../src/built_in_comands/builtins.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
+/* Отримати код виходу Bash для аргументу */
 int get_bash_exit_code(const char *arg)
 {
     pid_t pid = fork();
@@ -30,9 +35,26 @@ void test_exit_vs_bash(t_shell_data *data, char *input)
     int my_exit;
     pid_t pid = fork();
     if (pid < 0) { perror("fork failed"); return; }
+
     if (pid == 0)
     {
-        char *args[] = {"exit", input, NULL};
+        // --- Розбиваємо input на аргументи, як Bash ---
+        char *args[10];
+        int i = 0;
+        char buf[256] = "";
+
+        if (input)
+            strncpy(buf, input, sizeof(buf)-1);
+        buf[sizeof(buf)-1] = '\0';
+
+        args[i++] = "exit";
+        char *token = strtok(buf, " \t");
+        while (token && i < 9) {
+            args[i++] = token;
+            token = strtok(NULL, " \t");
+        }
+        args[i] = NULL;
+
         builtin_exit(data, args);
         exit(1); // на випадок, якщо exit не спрацював
     }
@@ -45,7 +67,6 @@ void test_exit_vs_bash(t_shell_data *data, char *input)
 
     int bash_exit = get_bash_exit_code(input);
 
-    // кольоровий вивід
     printf("%-20s | my exit: %-3d | bash exit: %-3d | %s\n",
         input ? input : "NULL",
         my_exit,

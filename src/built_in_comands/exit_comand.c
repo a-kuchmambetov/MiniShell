@@ -1,15 +1,5 @@
 #include "builtins.h"
 
-// int builtin_exit(t_shell_data *data)
-// {
-//     if (data)
-//         free_shell_data(data);
-//     rl_clear_history();
-//     exit(0);
-// }
-#include <limits.h>
-#include <stdbool.h>
-
 static bool	check_out_of_range(int neg, unsigned long long num, bool *error)
 {
 	if ((neg == 1 && num > LONG_MAX)
@@ -39,57 +29,78 @@ static long	ft_atoi_long(const char *str, bool *error)
 	return ((long)(num * neg));
 }
 
-static int	get_exit_code(char *arg, bool *error)
+static bool	is_valid_numeric_arg(char *arg)
 {
-	int	i;
+	int i = 0;
+	bool has_digits = false;
 
 	if (!arg)
-		return (0);
-	i = 0;
-	while (arg[i] == ' ')
+		return (false);
+	while (arg[i] == ' ' || (arg[i] >= 9 && arg[i] <= 13))
 		i++;
-	if (arg[i] == '\0')
-		*error = true;
-	if (arg[i] == '-' || arg[i] == '+')
+	if (arg[i] == '+' || arg[i] == '-')
 		i++;
-	if (!ft_isdigit(arg[i]))
-		*error = true;
 	while (arg[i])
 	{
-		if (!ft_isdigit(arg[i]) && arg[i] != ' ')
-			*error = true;
+		if (ft_isdigit(arg[i]))
+			has_digits = true;
+		else if (arg[i] != ' ' && !(arg[i] >= 9 && arg[i] <= 13))
+			return (false);
 		i++;
 	}
-	return ((int)(ft_atoi_long(arg, error) % 256));
+	return (has_digits); // повертає false, якщо цифр нема взагалі
 }
 
 int	builtin_exit(t_shell_data *data, char **args)
 {
-	bool	error;
-	int		exit_code;
+	bool	overflow = false;
+	long	exit_value;
 
-	error = false;
 	ft_putendl_fd("exit", 1);
-	if (!args[1]) 
+
+	// No arguments
+	if (!args[1])
 	{
 		free_shell_data(data);
 		exit(data->last_exit_status);
 	}
-	exit_code = get_exit_code(args[1], &error);
-	if (error)
+
+	// Empty string or only spaces should be treated as no argument
+	if (args[1] && args[1][0] == '\0')
+	{
+		free_shell_data(data);
+		exit(0);
+	}
+
+	// Invalid numeric argument or overflow
+	if (!is_valid_numeric_arg(args[1]))
 	{
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(args[1], 2);
 		ft_putendl_fd(": numeric argument required", 2);
 		free_shell_data(data);
-		exit(255);
+		exit(2);
 	}
+
+	exit_value = ft_atoi_long(args[1], &overflow);
+	if (overflow)
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putendl_fd(": numeric argument required", 2);
+		free_shell_data(data);
+		exit(2);
+	}
+
+	// Too many arguments
 	if (args[2])
 	{
 		ft_putendl_fd("minishell: exit: too many arguments", 2);
-		return (1);
+		data->last_exit_status = 1;
+		return (1); // НЕ exit(), як у Bash
 	}
+
 	free_shell_data(data);
-	exit(exit_code);
-	return (exit_code);
+	exit((unsigned char)exit_value);
 }
+

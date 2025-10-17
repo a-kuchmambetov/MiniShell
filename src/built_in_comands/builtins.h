@@ -2,6 +2,8 @@
 # define BUILTINS_H
 
 #include "../../main.h"
+#include <limits.h>
+#include <stdbool.h>
 
 typedef struct s_parser
 {
