@@ -88,4 +88,14 @@ compileTest5: $(LIBFT) $(LIB)
 compileTestExit: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_exit.c $(LIBS) $(LDLIBS) -o $(NAME)_test_exit
 
-.PHONY: all clean fclean allClean re compileTest1 compileTest2 compileTest3 compileTest4 compileTestExit
+compileTestPipelineParser: $(LIBFT) $(LIB)
+	$(CC) $(CFLAGS) tests/test_main_pipeline_parser.c $(LIBS) $(LDLIBS) -o $(NAME)_test_pipeline_parser
+
+compileTestBuiltins: $(LIBFT) $(LIB)
+	$(CC) $(CFLAGS) tests/test_main_builtins.c $(LIBS) $(LDLIBS) -o $(NAME)_test_builtins
+
+compileTestFull: $(LIBFT) $(LIB)
+	$(CC) $(CFLAGS) tests/minishell_full_test.c $(LIBS) $(LDLIBS) -lreadline -o $(NAME)_test_full
+
+
+.PHONY: all clean fclean allClean re compileTest1 compileTest2 compileTest3 compileTest4 compileTestExit compileTestPipelineParser compileTestBuiltins compileTestFull

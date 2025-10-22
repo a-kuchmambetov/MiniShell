@@ -32,7 +32,24 @@ void test_exit_vs_bash(t_shell_data *data, char *input)
     if (pid < 0) { perror("fork failed"); return; }
     if (pid == 0)
     {
-        char *args[] = {"exit", input, NULL};
+        // --- Розбиваємо input на аргументи ---
+        char *args[10] = {"exit", NULL};
+        if (input && *input)
+        {
+            char buf[128];
+            strncpy(buf, input, sizeof(buf));
+            buf[sizeof(buf) - 1] = '\0';
+
+            int i = 1;
+            char *token = strtok(buf, " \t");
+            while (token && i < 9)
+            {
+                args[i++] = token;
+                token = strtok(NULL, " \t");
+            }
+            args[i] = NULL;
+        }
+
         builtin_exit(data, args);
         exit(1); // на випадок, якщо exit не спрацював
     }
@@ -45,13 +62,13 @@ void test_exit_vs_bash(t_shell_data *data, char *input)
 
     int bash_exit = get_bash_exit_code(input);
 
-    // кольоровий вивід
-    printf("%-20s | my exit: %-3d | bash exit: %-3d | %s\n",
+    printf("%-20s | my exit: %-3d | bash exit: %-3d | %s\n\n",
         input ? input : "NULL",
         my_exit,
         bash_exit,
         (my_exit == bash_exit ? "\033[0;32mPASS\033[0m" : "\033[0;31mFAIL\033[0m"));
 }
+
 
 int main(void)
 {
