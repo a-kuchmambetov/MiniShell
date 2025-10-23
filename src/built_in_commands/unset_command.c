@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset_command.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: unadoroz <unadoroz@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/23 13:46:28 by unadoroz          #+#    #+#             */
+/*   Updated: 2025/10/23 13:46:40 by unadoroz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtins.h"
 
 /**
@@ -8,10 +20,10 @@
  * @param env Pointer to the environment list.
  * @param key Key of the variable to remove.
  */
-static void remove_env_node(t_env_list *env, const char *key)
+static void	remove_env_node(t_env_list *env, const char *key)
 {
-	t_env_node *current;
-	t_env_node *prev;
+	t_env_node	*current;
+	t_env_node	*prev;
 
 	current = env->first;
 	prev = NULL;
@@ -27,13 +39,12 @@ static void remove_env_node(t_env_list *env, const char *key)
 			free(current->value);
 			free(current);
 			env->len--;
-			return;
+			return ;
 		}
 		prev = current;
 		current = current->next;
 	}
 }
-
 
 /**
  * @brief Implements the 'unset' builtin command.
@@ -44,9 +55,9 @@ static void remove_env_node(t_env_list *env, const char *key)
  * @param args Command arguments array.
  * @return Always returns 0.
  */
-int builtin_unset(t_shell_data *data, char **args)
+int	builtin_unset(t_shell_data *data, char **args)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (args[i])

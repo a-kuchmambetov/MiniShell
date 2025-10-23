@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd_command.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: unadoroz <unadoroz@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/23 13:44:26 by unadoroz          #+#    #+#             */
+/*   Updated: 2025/10/23 13:44:40 by unadoroz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtins.h"
 
 /**
@@ -46,7 +58,7 @@ int	builtin_pwd(t_shell_data *data, char **args)
 	{
 		pwd = get_env_value(data->envp, "PWD");
 		if (pwd && *pwd)
-			return(ft_printf("%s\n", pwd),0);
+			return (ft_printf("%s\n", pwd), 0);
 	}
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
@@ -54,7 +66,7 @@ int	builtin_pwd(t_shell_data *data, char **args)
 		perror("pwd");
 		return (1);
 	}
-	printf("%s\n", cwd);
+	ft_printf("%s\n", cwd);
 	free(cwd);
 	return (0);
 }

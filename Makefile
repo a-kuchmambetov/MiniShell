@@ -21,16 +21,18 @@ SRC = src/exec_cmd.c \
 		src/create_cmd_list_utils/create_cmd_list_utils.c \
 		src/create_cmd_list_utils/check_file.c \
 		src/create_cmd_list_utils/cmd_node_utils.c \
-		src/built_in_comands/built_in_comands.c \
-		src/built_in_comands/echo_comand.c \
-		src/built_in_comands/export.c \
-		src/built_in_comands/cd_comand.c \
-		src/built_in_comands/pwd_comand.c \
-		src/built_in_comands/env_utils.c \
-		src/built_in_comands/utils.c \
-		src/built_in_comands/env_comand.c \
-		src/built_in_comands/unset_comand.c \
-		src/built_in_comands/exit_comand.c \
+		src/built_in_commands/built_in_commands.c \
+		src/built_in_commands/echo_command.c \
+		src/built_in_commands/echo_command_utils.c \
+		src/built_in_commands/export_command.c \
+		src/built_in_commands/cd_command.c \
+		src/built_in_commands/cd_command_utils.c \
+		src/built_in_commands/pwd_command.c \
+		src/built_in_commands/env_command_utils.c \
+		src/built_in_commands/utils.c \
+		src/built_in_commands/env_command.c \
+		src/built_in_commands/unset_command.c \
+		src/built_in_commands/exit_command.c \
 		src/start_here_doc_utils/file_utils.c \
 		src/start_here_doc_utils/start_here_doc_utils.c \
 		src/start_here_doc.c \
@@ -97,5 +99,8 @@ compileTestBuiltins: $(LIBFT) $(LIB)
 compileTestFull: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/minishell_full_test.c $(LIBS) $(LDLIBS) -lreadline -o $(NAME)_test_full
 
+valgrind:
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+	--trace-children=yes ./minishell
 
 .PHONY: all clean fclean allClean re compileTest1 compileTest2 compileTest3 compileTest4 compileTestExit compileTestPipelineParser compileTestBuiltins compileTestFull
