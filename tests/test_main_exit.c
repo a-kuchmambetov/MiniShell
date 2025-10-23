@@ -74,6 +74,7 @@ void test_exit_vs_bash(t_shell_data *data, char *input)
         (my_exit == bash_exit ? "\033[0;32mPASS\033[0m" : "\033[0;31mFAIL\033[0m"));
 }
 
+
 int main(void)
 {
     t_shell_data data = {0};

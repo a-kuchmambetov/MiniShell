@@ -29,7 +29,7 @@ static bool	check_out_of_range(int neg, unsigned long long num, bool *error)
  * @param error Pointer to overflow error flag.
  * @return Converted long value.
  */
-static long	ft_atoi_long(const char *str, bool *error)
+static long	ft_atoi_long(const char *str, bool *overflow)
 {
 	unsigned long long	num;
 	int					neg;
@@ -48,6 +48,7 @@ static long	ft_atoi_long(const char *str, bool *error)
 		num = (num * 10) + (str[i] - '0');
 		if (check_out_of_range(neg, num, error))
 			break ;
+		}
 		i++;
 	}
 	return ((long)(num * neg));
@@ -69,7 +70,10 @@ static bool	is_valid_numeric_arg(char *arg)
 	if (!arg)
 		return (false);
 	while (arg[i] == ' ' || (arg[i] >= 9 && arg[i] <= 13))
+		return (false);
+	while (arg[i] == ' ' || (arg[i] >= 9 && arg[i] <= 13))
 		i++;
+	if (arg[i] == '+' || arg[i] == '-')
 	if (arg[i] == '+' || arg[i] == '-')
 		i++;
 	while (arg[i])
