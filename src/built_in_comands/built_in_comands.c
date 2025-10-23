@@ -4,7 +4,7 @@
  * @brief Checks if a given command is a builtin command.
  *
  * Supported builtin commands:
- * echo, cd, pwd, export, unset, env, exit
+ * echo, cd, pwd, export, рunset, env, exit
  *
  * @param cmd Command string to check.
  * @return 1 if cmd is a builtin, 0 otherwise.
@@ -30,8 +30,10 @@ int is_builtin(char *cmd)
     return (0);
 }
 
+
+
 /**
- * @brief Executes the appropriate builtin command based on args[0].
+ * @brief Executes   the appropriate builtin command based on args[0].
  *
  * Maps command strings to their corresponding builtin functions.
  *
