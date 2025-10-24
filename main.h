@@ -20,7 +20,7 @@ extern volatile sig_atomic_t g_signal_received;
 // Configuration
 #define HERE_DOC_DIR "./"
 #define HERE_DOC_PREFIX "here_doc_"
-
+#define PATH_MAX 4096
 // ANSI color codes
 #define COLOR_RESET "\033[0m"
 #define COLOR_RED "\033[31m"
