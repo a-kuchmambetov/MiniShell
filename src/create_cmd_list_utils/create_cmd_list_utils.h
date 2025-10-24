@@ -5,15 +5,16 @@
 
 void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
 int malloc_cmd_node(t_cmd_node **new_node);
+int check_args_expansion(t_shell_data *dt, t_cmd_node *node, char *args, char *str);
 
 int check_file_open(const char *filename);
 int check_file_create(const char *filename, const int redir_type);
 
-int set_input_redir(t_cmd_node *node, char **str_arr, int *i);
+int set_input_redir(t_shell_data *data, t_cmd_node *node, char **str_arr, int *i);
 int set_output_redir(t_cmd_node *node, char **str_arr, int *i);
 int set_pipe(t_cmd_list *cmd_list, t_cmd_node **node,
              char **str_arr, int *i);
 int set_cmd(t_cmd_node *node, char **str_arr, int *i);
-int set_cmd_args(t_cmd_node *node, char **str_arr, int *i);
+int set_cmd_args(t_shell_data *dt, t_cmd_node *node, char **str_arr, int *i);
 
 #endif

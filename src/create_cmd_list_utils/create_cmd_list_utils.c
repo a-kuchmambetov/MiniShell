@@ -1,8 +1,12 @@
 #include "create_cmd_list_utils.h"
 
-int set_input_redir(t_cmd_node *node, char **str_arr, int *i)
+int set_input_redir(t_shell_data *data, t_cmd_node *node, char **str_arr, int *i)
 {
+    int errno;
+
     if (!node || !str_arr || !i)
+        return (1);
+    if (node->input_redir_type == REDIR_HEREDOC && delete_here_doc(node->input_redir))
         return (1);
     if (ft_strncmp(str_arr[*i], "<<", 2) == 0)
         node->input_redir_type = REDIR_HEREDOC;
@@ -18,7 +22,10 @@ int set_input_redir(t_cmd_node *node, char **str_arr, int *i)
     node->input_redir = ft_strdup(str_arr[*i]);
     if (!node->input_redir)
         return (ft_print_err("Memory allocation error\n"), 1);
-    return (0);
+    errno = 0;
+    if (node->input_redir_type == REDIR_HEREDOC)
+        errno = start_here_doc(data->env_list, str_arr[*i], &node->input_redir);
+    return (errno);
 }
 
 int set_output_redir(t_cmd_node *node, char **str_arr, int *i)
@@ -74,25 +81,14 @@ int set_cmd(t_cmd_node *node, char **str_arr, int *i)
     return (0);
 }
 
-int set_cmd_args(t_cmd_node *node, char **str_arr, int *i)
+int set_cmd_args(t_shell_data *dt, t_cmd_node *node, char **str_arr, int *i)
 {
-    int str_len;
-    int arg_len;
-    char *temp;
-
     if (!node || !str_arr || !i)
         return (1);
-    str_len = ft_strlen(str_arr[*i]);
     if (node->args)
     {
-        arg_len = ft_strlen(node->args);
-        temp = ft_calloc(sizeof(char), arg_len + str_len + 1);
-        if (!temp)
-            return (ft_print_err("Memory allocation error\n"), 1);
-        ft_strlcpy(temp, node->args, arg_len + 1);
-        ft_strlcat(temp, str_arr[*i], arg_len + str_len + 1);
-        free(node->args);
-        node->args = temp;
+        if (check_args_expansion(dt, node, node->args, str_arr[*i]))
+            return (1);
     }
     else
     {
