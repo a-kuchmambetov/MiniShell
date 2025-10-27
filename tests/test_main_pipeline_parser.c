@@ -1,5 +1,5 @@
 #include "../main.h"
-#include "../src/built_in_comands/builtins.h"
+#include "../src/built_in_commands/builtins.h"
 
 // ===========================================================
 // Helper: Print parsed command list (for visual verification)

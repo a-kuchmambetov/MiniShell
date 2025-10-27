@@ -17,6 +17,7 @@ SRC = src/exec_cmd.c \
         src/print_prompt_header.c \
         src/set_shell_data.c \
         src/split_input_str_utils/split_input_str_utils.c \
+		src/expande_input_arr.c \
 		src/create_cmd_list.c \
 		src/create_cmd_list_utils/create_cmd_list_utils.c \
 		src/create_cmd_list_utils/check_file.c \
@@ -87,6 +88,10 @@ compileTest4: $(LIBFT) $(LIB)
 compileTest5: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_5.c $(LIBS) $(LDLIBS) -o $(NAME)_test_5
 
+# expansion tests
+compileTest6: $(LIBFT) $(LIB)
+	$(CC) $(CFLAGS) tests/test_main_6.c $(LIBS) $(LDLIBS) -o $(NAME)_test_6
+
 compileTestExit: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_exit.c $(LIBS) $(LDLIBS) -o $(NAME)_test_exit
 
@@ -103,4 +108,6 @@ valgrind:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
 	--trace-children=yes ./minishell
 
-.PHONY: all clean fclean allClean re compileTest1 compileTest2 compileTest3 compileTest4 compileTestExit compileTestPipelineParser compileTestBuiltins compileTestFull
+.PHONY: all clean fclean allClean re \
+	compileTest1 compileTest2 compileTest3 compileTest4 compileTest5 compileTest6 \
+	 compileTestExit compileTestPipelineParser compileTestBuiltins compileTestFull
