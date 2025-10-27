@@ -21,20 +21,21 @@
  * @param str The string to validate.
  * @return 1 if the identifier is valid, 0 otherwise.
  */
-int	is_valid_identifier(const char *str)
+int is_valid_identifier(const char *str)
 {
-	int	i;
+    int i;
 
-	if (!str || (!ft_isalpha(str[0]) && str[0] != '_'))
-		return (0);
-	i = 0;
-	while (str[i] && str[i] != '=')
-	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
-			return (0);
-		i++;
-	}
-	return (1);
+    if (!str || (!ft_isalpha(str[0]) && str[0] != '_'))
+        return (0);
+    i = 0;
+    while (str[i] && str[i] != '=')
+        i++;
+    while (--i > 0)
+    {
+        if (!ft_isalnum(str[i]) && str[i] != '_')
+            return (0);
+    }
+    return (1);
 }
 
 /**

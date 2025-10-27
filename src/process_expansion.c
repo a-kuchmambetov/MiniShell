@@ -89,29 +89,76 @@ int process_expansion(t_env_list env, char **input)
     return (0);
 }
 
+// int check_do_expansion(t_env_list env, char **input)
+// {
+//     char *value;
+
+//     value = NULL;
+//     if (!input || !*input)
+//         return (0);
+//     if ((*input)[0] == '"')
+//     {
+//         value = ft_strtrim(*input, "\"");
+//         free(*input);
+//         *input = value;
+//     }
+//     else if ((*input)[0] == '\'')
+//     {
+//         value = ft_strtrim(*input, "\'");
+//         free(*input);
+//         *input = value;
+//         return (0);
+//     }
+//     if (!input || !*input)
+//         return (1);
+//     if (process_expansion(env, input))
+//         return (1);
+//     return (0);
+// }
+
 int check_do_expansion(t_env_list env, char **input)
 {
     char *value;
 
-    value = NULL;
     if (!input || !*input)
-        return (0);
+        return 0;
+
+    // Якщо токен у подвійних лапках — просто знімаємо ЗОВНІШНІ лапки і ВИХОДИМО.
+    // НІЯКОГО process_expansion тут, щоб не чіпати пробіли всередині!
     if ((*input)[0] == '"')
     {
-        value = ft_strtrim(*input, "\"");
-        free(*input);
-        *input = value;
+        size_t n = ft_strlen(*input);
+        if (n >= 2 && (*input)[n - 1] == '"')
+        {
+            value = ft_substr(*input, 1, n - 2);
+            if (!value) return 1;
+            free(*input);
+            *input = value;
+        }
+        return 0;
     }
-    else if ((*input)[0] == '\'')
+
+    // Якщо одинарні лапки — теж тільки зняти зовнішні і вийти
+    if ((*input)[0] == '\'')
     {
-        value = ft_strtrim(*input, "\'");
-        free(*input);
-        *input = value;
-        return (0);
+        size_t n = ft_strlen(*input);
+        if (n >= 2 && (*input)[n - 1] == '\'')
+        {
+            value = ft_substr(*input, 1, n - 2);
+            if (!value) return 1;
+            free(*input);
+            *input = value;
+        }
+        return 0;
     }
-    if (!input || !*input)
-        return (1);
+
+    // Якщо немає змінних — нічого не робимо
+    if (!ft_strchr(*input, '$'))
+        return 0;
+
+    // Інакше робимо expansion
     if (process_expansion(env, input))
-        return (1);
-    return (0);
+        return 1;
+
+    return 0;
 }
