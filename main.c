@@ -30,52 +30,22 @@ char *read_input()
     return (input);
 }
 
-// void process_input(t_shell_data *data, char *input)
-// {
-//    char **args;
-
-//     args = split_input_str(input);
-//     if (!args)
-//         return;
-//     if (ft_strncmp(args[0], "$?", 2) == 0)
-//         return (ft_printf("%d: command not found\n", WEXITSTATUS(data->last_exit_status)), (void)0);
-//     //exec_cmd_2(data, args[0], args);
-//     if (is_builtin(args[0]))
-//         data->last_exit_status = exec_builtin(data, args);
-//     else
-//         exec_cmd(data, args[0], args);
-//     free_str_arr(args);
-// }
-
 void process_input(t_shell_data *data, char *input)
 {
-    char **args;
+   char **args;
 
-    args = split_input_str(input); // <-- ВАЖЛИВО
-    if (!args || !args[0])
-        return (free_str_arr(args), (void)0);
-
-    int k = 0;
-    while (args[k])
-    {
-        fprintf(stderr, "DEBUG ARG[%d] = <%s>\n", k, args[k]);
-        k++;
-    }
-
-    if (ft_strncmp(args[0], "$?", 3) == 0)
-    {
-        ft_printf("%d: command not found\n", WEXITSTATUS(data->last_exit_status));
-        return (free_str_arr(args), (void)0);
-    }
-
+    args = split_input_str(input);
+    if (!args)
+        return;
+    if (ft_strncmp(args[0], "$?", 2) == 0)
+        return (ft_printf("%d: command not found\n", WEXITSTATUS(data->last_exit_status)), (void)0);
+    //exec_cmd_2(data, args[0], args);
     if (is_builtin(args[0]))
         data->last_exit_status = exec_builtin(data, args);
     else
         exec_cmd(data, args[0], args);
-
     free_str_arr(args);
 }
-
 
 int main(int argc, char **argv, char **envp)
 {
