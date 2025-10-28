@@ -91,26 +91,10 @@ int process_expansion(t_env_list env, char **input)
 
 int check_do_expansion(t_env_list env, char **input)
 {
-    char *value;
-
-    value = NULL;
-    if (!input || !*input)
-        return (0);
-    if ((*input)[0] == '"')
-    {
-        value = ft_strtrim(*input, "\"");
-        free(*input);
-        *input = value;
-    }
-    else if ((*input)[0] == '\'')
-    {
-        value = ft_strtrim(*input, "\'");
-        free(*input);
-        *input = value;
-        return (0);
-    }
     if (!input || !*input)
         return (1);
+    if ((*input)[0] == '\'' || ft_strncmp(*input, " ", 1) == 0)
+        return (0);
     if (process_expansion(env, input))
         return (1);
     return (0);
