@@ -21,10 +21,10 @@
  * @param s Input string.
  * @return Newly allocated unquoted string.
  */
-char	*strip_outer_quotes(const char *s)
+char *strip_outer_quotes(const char *s)
 {
-	size_t	len;
-	char	q;
+	size_t len;
+	char q;
 
 	if (!s)
 		return (NULL);
@@ -33,7 +33,7 @@ char	*strip_outer_quotes(const char *s)
 		return (ft_strdup(s));
 	q = s[0];
 	if ((q == '\'' || q == '"') && s[len - 1] == q)
-		return (ft_substr(s, 1, len - 2));  // зберігає всі пробіли всередині
+		return (ft_substr(s, 1, len - 2)); // зберігає всі пробіли всередині
 	return (ft_strdup(s));
 }
 
@@ -43,7 +43,7 @@ char	*strip_outer_quotes(const char *s)
  * @param s Pointer to string.
  * @return Quote character, or 0 if none.
  */
-char	get_opening_quote(const char *s)
+char get_opening_quote(const char *s)
 {
 	if (!s || !*s)
 		return (0);
@@ -60,9 +60,9 @@ char	get_opening_quote(const char *s)
  * @param i Pointer to current index in args.
  * @param quote Opening quote character.
  */
-void	join_quoted_parts(char **res, char **args, int *i, char quote)
+void join_quoted_parts(char **res, char **args, int *i, char quote)
 {
-	char	*tmp;
+	char *tmp;
 
 	while (args[*i + 1])
 	{
@@ -72,9 +72,9 @@ void	join_quoted_parts(char **res, char **args, int *i, char quote)
 		*res = ft_strjoin(tmp, args[*i]);
 		free(tmp);
 		if (!*res)
-			return ;
+			return;
 		if (ft_strrchr(args[*i], quote))
-			break ;
+			break;
 	}
 }
 
@@ -85,12 +85,12 @@ void	join_quoted_parts(char **res, char **args, int *i, char quote)
  * @param i Pointer to current argument index.
  * @return Newly allocated value string.
  */
-char	*collect_value_after_equal(char **args, int *i)
+char *collect_value_after_equal(char **args, int *i)
 {
-	char	*start;
-	char	*res;
-	char	*clean;
-	char	quote;
+	char *start;
+	char *res;
+	char *clean;
+	char quote;
 
 	start = ft_strchr(args[*i], '=');
 	if (!start)
@@ -125,8 +125,6 @@ char	*collect_value_after_equal(char **args, int *i)
 	return (clean);
 }
 
-
-
 /**
  * @brief Builds a "KEY=VALUE" string for environment storage.
  *
@@ -134,10 +132,10 @@ char	*collect_value_after_equal(char **args, int *i)
  * @param clean Variable value without quotes.
  * @return Allocated "KEY=VALUE" string.
  */
-char	*build_final_pair(char *name, char *clean)
+char *build_final_pair(char *name, char *clean)
 {
-	char	*pair;
-	char	*final;
+	char *pair;
+	char *final;
 
 	pair = ft_strjoin(name, "=");
 	if (!pair)
