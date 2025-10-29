@@ -1,0 +1,133 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_command_utils.c                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: unadoroz <unadoroz@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/29 19:45:00 by unadoroz          #+#    #+#             */
+/*   Updated: 2025/10/29 19:45:00 by unadoroz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "builtins.h"
+
+/**
+ * @brief Removes outer quotes from a string, if present.
+ *
+ * Supports both single and double quotes. If only the opening
+ * quote is found, removes it safely without crashing.
+ *
+ * @param s Input string.
+ * @return Newly allocated unquoted string.
+ */
+char	*strip_outer_quotes(const char *s)
+{
+	size_t	len;
+	char	q;
+	int		open;
+	int		close;
+
+	if (!s)
+		return (NULL);
+	len = ft_strlen(s);
+	if (len == 0)
+		return (ft_strdup(""));
+	q = s[0];
+	open = (q == '\'' || q == '"');
+	close = (len >= 2 && s[len - 1] == q);
+	if (open && close)
+		return (ft_substr(s, 1, len - 2));
+	else if (open && !close)
+		return (ft_substr(s, 1, len - 1));
+	return (ft_strdup(s));
+}
+
+/**
+ * @brief Returns quote char if found at string start (' or ").
+ *
+ * @param s Pointer to string.
+ * @return Quote character, or 0 if none.
+ */
+char	get_opening_quote(const char *s)
+{
+	if (!s || !*s)
+		return (0);
+	if (*s == '\'' || *s == '"')
+		return (*s);
+	return (0);
+}
+
+/**
+ * @brief Concatenates arguments until closing quote is found.
+ *
+ * @param res Pointer to result string (modified in-place).
+ * @param args Command arguments array.
+ * @param i Pointer to current index in args.
+ * @param quote Opening quote character.
+ */
+void	join_quoted_parts(char **res, char **args, int *i, char quote)
+{
+	char	*tmp;
+
+	while (args[*i + 1])
+	{
+		(*i)++;
+		tmp = ft_strjoin(*res, " ");
+		free(*res);
+		*res = ft_strjoin(tmp, args[*i]);
+		free(tmp);
+		if (!*res)
+			return ;
+		if (ft_strrchr(args[*i], quote))
+			break ;
+	}
+}
+
+/**
+ * @brief Collects the value part of "KEY=VALUE", merging quoted tokens.
+ *
+ * @param args Command arguments array.
+ * @param i Pointer to current argument index.
+ * @return Newly allocated value string.
+ */
+char	*collect_value_after_equal(char **args, int *i)
+{
+	char	*res;
+	char	*start;
+	char	quote;
+
+	start = ft_strchr(args[*i], '=');
+	if (!start)
+		return (ft_strdup(""));
+	start++;
+	quote = get_opening_quote(start);
+	res = ft_strdup(start);
+	if (!res)
+		return (NULL);
+	if (quote && !ft_strrchr(start + 1, quote))
+		join_quoted_parts(&res, args, i, quote);
+	return (res);
+}
+
+
+
+/**
+ * @brief Builds a "KEY=VALUE" string for environment storage.
+ *
+ * @param name Variable name.
+ * @param clean Variable value without quotes.
+ * @return Allocated "KEY=VALUE" string.
+ */
+char	*build_final_pair(char *name, char *clean)
+{
+	char	*pair;
+	char	*final;
+
+	pair = ft_strjoin(name, "=");
+	if (!pair)
+		return (NULL);
+	final = ft_strjoin(pair, clean);
+	free(pair);
+	return (final);
+}
