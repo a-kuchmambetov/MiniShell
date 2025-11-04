@@ -20,13 +20,18 @@
  */
 static int	validate_cd_args(char **args)
 {
-	if (args[2])
+	int count = 0;
+
+	while (args[count])
+		count++;
+	if (count > 2)
 	{
 		ft_printf("cd: too many arguments\n");
 		return (1);
 	}
 	return (0);
 }
+
 
 /**
  * @brief Returns the target path for the cd command.

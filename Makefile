@@ -68,7 +68,7 @@ allClean: fclean
 	find -maxdepth 1 -type f \( -name '$(NAME)_test_*' -o -name 'here_doc_*' \) ! -name '*.c' ! -name '*.h' -delete
 	find tests -maxdepth 1 -type f -name 'test_main_*' ! -name '*.c' -delete
 
-re: fclean all
+re: fclean all clean
 
 compileTest1: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_1.c $(LIBS) $(LDLIBS) -o $(NAME)_test_1
@@ -106,8 +106,9 @@ compileTestFull: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/minishell_full_test.c $(LIBS) $(LDLIBS) -lreadline -o $(NAME)_test_full
 
 valgrind:
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
-	--trace-children=yes ./minishell
+	PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+	valgrind --leak-check=full --show-leak-kinds=all \
+	--track-origins=yes --trace-children=yes ./minishell
 
 .PHONY: all clean fclean allClean re \
 	compileTest1 compileTest2 compileTest3 compileTest4 compileTest5 compileTest6 \

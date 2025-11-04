@@ -62,8 +62,22 @@ static int	process_assignment(t_shell_data *data, char **args, int *i)
  */
 int	builtin_export(t_shell_data *data, char **args)
 {
-	int	i;
+	int			i;
+	t_env_node	*node;
 
+	if (!args[1])
+	{
+		node = data->env_list.first;
+		while (node)
+		{
+			if (node->value)
+				ft_printf("declare -x %s=\"%s\"\n", node->key, node->value);
+			else
+				ft_printf("declare -x %s\n", node->key);
+			node = node->next;
+		}
+		return (0);
+	}
 	i = 1;
 	while (args[i])
 	{

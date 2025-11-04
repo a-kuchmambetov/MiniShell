@@ -25,21 +25,15 @@ char	*strip_outer_quotes(const char *s)
 {
 	size_t	len;
 	char	q;
-	int		open;
-	int		close;
 
 	if (!s)
 		return (NULL);
 	len = ft_strlen(s);
-	if (len == 0)
-		return (ft_strdup(""));
+	if (len < 2)
+		return (ft_strdup(s));
 	q = s[0];
-	open = (q == '\'' || q == '"');
-	close = (len >= 2 && s[len - 1] == q);
-	if (open && close)
-		return (ft_substr(s, 1, len - 2));
-	else if (open && !close)
-		return (ft_substr(s, 1, len - 1));
+	if ((q == '\'' || q == '"') && s[len - 1] == q)
+		return (ft_substr(s, 1, len - 2));  // зберігає всі пробіли всередині
 	return (ft_strdup(s));
 }
 
@@ -105,9 +99,13 @@ char	*collect_value_after_equal(char **args, int *i)
 	res = ft_strdup(start);
 	if (!res)
 		return (NULL);
+	// Якщо лапки відкриті, але не закриті — об'єднати решту токенів
 	if (quote && !ft_strrchr(start + 1, quote))
 		join_quoted_parts(&res, args, i, quote);
-	return (res);
+	// не чіпаємо пробіли, лише видаляємо зовнішні лапки
+	char *clean = strip_outer_quotes(res);
+	free(res);
+	return (clean);
 }
 
 

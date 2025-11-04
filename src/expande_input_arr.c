@@ -75,6 +75,7 @@ char **expande_input_arr(t_shell_data *data, char **arr)
 
     if (!data || !arr || !*arr)
         return (NULL);
+    i = 0;
     while ((*arr)[i])
     {
         new_arr = expande_input_str(data, arr, i);
