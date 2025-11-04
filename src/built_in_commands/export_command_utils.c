@@ -23,8 +23,13 @@
  */
 char *strip_outer_quotes(const char *s)
 {
+<<<<<<< HEAD
 	size_t len;
 	char q;
+=======
+	size_t	len;
+	char	q;
+>>>>>>> f4d4f8a (export has ann issue with space)
 
 	if (!s)
 		return (NULL);
@@ -33,7 +38,11 @@ char *strip_outer_quotes(const char *s)
 		return (ft_strdup(s));
 	q = s[0];
 	if ((q == '\'' || q == '"') && s[len - 1] == q)
+<<<<<<< HEAD
 		return (ft_substr(s, 1, len - 2)); // зберігає всі пробіли всередині
+=======
+		return (ft_substr(s, 1, len - 2));  // зберігає всі пробіли всередині
+>>>>>>> f4d4f8a (export has ann issue with space)
 	return (ft_strdup(s));
 }
 
@@ -107,6 +116,7 @@ char *collect_value_after_equal(char **args, int *i)
 	res = ft_strdup(start);
 	if (!res)
 		return (NULL);
+<<<<<<< HEAD
 
 	if (quote && !ft_strrchr(start + 1, quote))
 		join_quoted_parts(&res, args, i, quote);
@@ -122,6 +132,14 @@ char *collect_value_after_equal(char **args, int *i)
 		clean = trimmed;
 	}
 
+=======
+	// Якщо лапки відкриті, але не закриті — об'єднати решту токенів
+	if (quote && !ft_strrchr(start + 1, quote))
+		join_quoted_parts(&res, args, i, quote);
+	// не чіпаємо пробіли, лише видаляємо зовнішні лапки
+	char *clean = strip_outer_quotes(res);
+	free(res);
+>>>>>>> f4d4f8a (export has ann issue with space)
 	return (clean);
 }
 
