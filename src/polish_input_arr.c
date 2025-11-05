@@ -2,9 +2,10 @@
 
 int is_delim(const char *str)
 {
+    const int str_len = ft_strlen(str);
     if (ft_strncmp(str, "<<", 2) == 0 || ft_strncmp(str, ">>", 2) == 0)
         return (2);
-    if (str[0] == '|' || str[0] == '>' || str[0] == '<' || str[0] == ' ')
+    if ((str[0] == '|' || str[0] == '>' || str[0] == '<' || str[0] == ' ') && str_len == 1)
         return (1);
     return (0);
 }
@@ -20,72 +21,212 @@ int is_quoted(const char *str)
     return (0);
 }
 
-int array_size(char **arr)
+int arr_size(char **arr)
 {
     int size;
 
     size = 0;
-    if (!arr)
+    if (!arr || !*arr)
         return (0);
     while (arr[size])
         size++;
     return (size);
 }
 
-int split_add_to_arr(char ***arr, const char *str, int index)
+static int join_value(char **dest, const char *src)
 {
-    char **new_array;
+    char *new_str;
 
-    if (!arr || !str)
+    if (!dest || !src)
         return (1);
-    new_array = ft_calloc(sizeof(char *), array_size(*arr) + 2);
-    
-};
-
-int split_unquoted_space(char ***arr)
-{
-    char **new_arr;
-    int i;
-    int status_code;
-
-    if (!arr || !*arr)
+    if (!*dest)
+        *dest = ft_calloc(1, 1);
+    new_str = ft_strjoin(*dest, src);
+    if (!new_str)
         return (1);
-    new_arr = NULL;
-    i = 0;
-    while ((*arr)[i])
-    {
-        if (!is_quoted((*arr)[i]) && ft_strchr((*arr)[i], ' '))
-        {
-            status_code = split_and_insert_at(&new_arr, (*arr)[i], i);
-            i++;
-        }
-        else
-            status_code = rm_quotes_add_to_arr(&new_arr, (*arr)[i]);
-        if (status_code != 0)
-            return (status_code);
-        i++;
-    }
-    free_str_arr(*arr);
-    *arr = new_arr;
+    my_free(*dest);
+    *dest = new_str;
     return (0);
 }
 
-int polish_input_arr(char **arr)
+char *join_from_to(char **arr, int from, int to)
+{
+    char *joined;
+    int i;
+    size_t total_length;
+
+    if (!arr || from < 0 || to < from)
+        return (NULL);
+    total_length = 0;
+    i = from;
+    while (i < to)
+        total_length += ft_strlen(arr[i++]);
+    joined = ft_calloc(sizeof(char), total_length + 1);
+    if (!joined)
+        return (NULL);
+    i = from;
+    while (i < to)
+        if (join_value(&joined, arr[i++]))
+        {
+            my_free(joined);
+            return (NULL);
+        }
+    return (joined);
+}
+
+static int append_arr(char ***arr, char *input)
 {
     char **new_arr;
     int i;
 
-    if (!arr || !*arr)
+    if (!arr || !*arr || !input || !*input)
+        return (1);
+    new_arr = ft_calloc(sizeof(char *), arr_size(*arr) + 2);
+    if (!new_arr)
         return (1);
     i = 0;
-    while (arr[i])
+    while ((*arr)[i])
     {
-        if (is_delim(arr[i]) && (is_delim(arr[i + 1]) || arr[i + 1]))
-        {
-            i++;
-            continue;
-        }
+        new_arr[i] = ft_strdup((*arr)[i]);
+        if (!new_arr[i])
+            return (free_str_arr(new_arr), 1);
         i++;
     }
+    new_arr[i] = ft_strdup(input);
+    if (!new_arr[i])
+        return (free_str_arr(new_arr), 1);
+    free_str_arr(*arr);
+    // my_free(input);
+    *arr = new_arr;
+    return (0);
+}
+int dup_arr(char ***dest, char **src)
+{
+    int i;
+
+    i = 0;
+    while (src[i])
+    {
+        if (append_arr(dest, src[i]))
+            return (1);
+        i++;
+    }
+    return (0);
+}
+
+int protect_delim(char **arr)
+{
+    char *tmp;
+
+    tmp = ft_strdup("\a");
+    if (!join_value(&tmp, arr[0]))
+        return (1);
+    my_free(arr[0]);
+    arr[0] = tmp;
+    return (0);
+}
+
+int merge_splited_space(char ***dst_a, char **src_arr)
+{
+    const int src_size = arr_size(src_arr);
+    t_polish_data dt;
+
+    dt = (t_polish_data){0};
+    if (!dst_a || !*dst_a || !src_arr)
+        return (1);
+    if (is_delim(src_arr[0]) && protect_delim(src_arr))
+        return (1);
+    while (dt.i < src_size)
+    {
+        if (src_arr[dt.i][0] == ' ' || src_arr[dt.i][0] == '\0')
+        {
+            dt.to = dt.i;
+            if (append_arr(dst_a, join_from_to(src_arr, dt.from, dt.to)))
+                return (1);
+            if (dt.i + 1 < src_size)
+            {
+                if (append_arr(dst_a, ft_strdup(" ")) ||
+                    append_arr(dst_a, join_from_to(src_arr, dt.i + 1, src_size)))
+                    return (1);
+                break;
+            }
+        }
+        dt.i++;
+    }
+    free_str_arr(src_arr);
+    return (0);
+}
+
+int final_merge(char ***dst_a, char **src_arr)
+{
+    const int src_size = arr_size(src_arr);
+    t_polish_data dt;
+
+    dt = (t_polish_data){0};
+    if (!dst_a || !*dst_a || !src_arr)
+        return (1);
+    while (dt.i < src_size)
+    {
+        if (is_delim(src_arr[dt.i]) || src_arr[dt.i][0] == '\0')
+        {
+            dt.to = dt.i;
+            if (append_arr(dst_a, join_from_to(src_arr, dt.from, dt.to)))
+                return (1);
+            dt.from = dt.i + 1;
+        }
+        dt.i++;
+    }
+    free_str_arr(src_arr);
+    return (0);
+}
+
+char **split_space(t_polish_data dt)
+{
+    char **new_arr;
+    char *trimmed_str;
+    int code;
+
+    new_arr = ft_calloc(sizeof(char *), 1);
+    while (dt.arr[dt.i])
+    {
+        if (is_delim(dt.arr[dt.i]) && !is_quoted(dt.arr[dt.i]))
+            code = append_arr(&new_arr, dt.arr[dt.i]);
+        else if (is_quoted(dt.arr[dt.i]))
+            code = append_arr(&new_arr, ft_strtrim(dt.arr[dt.i], "'\""));
+        else
+        {
+            trimmed_str = ft_strtrim(dt.arr[dt.i], " ");
+            if (!trimmed_str)
+                return (free_str_arr(new_arr), NULL);
+            code = merge_splited_space(&new_arr, split_input_str(trimmed_str));
+            my_free(trimmed_str);
+        }
+        if (code)
+            return (free_str_arr(new_arr), NULL);
+        dt.i++;
+    }
+    return (new_arr);
+}
+
+int polish_input_arr(char ***arr)
+{
+    char **new_arr;
+    t_polish_data dt;
+
+    dt = (t_polish_data){0};
+    if (!arr || !*arr)
+        return (1);
+    dt.arr = ft_calloc(sizeof(char *), 1);
+    if (dup_arr(&dt.arr, *arr))
+        return (free_str_arr(new_arr), free_str_arr(dt.arr), 1);
+    new_arr = split_space(dt);
+    if (!new_arr)
+        return (1);
+    if (dup_arr(&dt.arr, new_arr))
+        return (free_str_arr(new_arr), free_str_arr(dt.arr), 1);
+    final_merge(&new_arr, dt.arr);
+    free_str_arr(dt.arr);
+    free_str_arr(*arr);
+    *arr = new_arr;
     return (0);
 }
