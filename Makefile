@@ -11,6 +11,7 @@ LIBFTDIR = libft
 LIBFT    = $(LIBFTDIR)/libft.a
 
 SRC = src/exec_cmd.c \
+		src/my_free.c \
         src/free_utils.c \
         src/ft_print_err.c \
         src/split_input_str.c \
@@ -18,6 +19,7 @@ SRC = src/exec_cmd.c \
         src/set_shell_data.c \
         src/split_input_str_utils/split_input_str_utils.c \
 		src/expande_input_arr.c \
+		src/polish_input_arr.c \
 		src/create_cmd_list.c \
 		src/create_cmd_list_utils/create_cmd_list_utils.c \
 		src/create_cmd_list_utils/check_file.c \

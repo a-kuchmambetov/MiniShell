@@ -5,7 +5,7 @@ int main()
     char **arr;
     char *input;
 
-    input = "echo hello | grep h >> output.txt";
+    input = "echo hello some text and other stuff | grep h >> output.txt";
     arr = split_input_str(input);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);

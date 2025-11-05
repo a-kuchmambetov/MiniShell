@@ -51,7 +51,8 @@ void free_cmd_list(t_cmd_list *cmd_list)
         free_cmd_node(current);
         current = next;
     }
-    cmd_list = (t_cmd_list *){0};
+    cmd_list->len = 0;
+    cmd_list->first = NULL;
 }
 
 void free_str_arr(char **str_arr)
@@ -64,10 +65,10 @@ void free_str_arr(char **str_arr)
     while (str_arr[i])
     {
         if (str_arr[i])
-            free(str_arr[i]);
+            my_free(str_arr[i]);
         i++;
     }
-    free(str_arr);
+    my_free(str_arr);
 }
 
 void free_shell_data(t_shell_data *data)

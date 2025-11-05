@@ -7,7 +7,9 @@ int test(t_shell_data data, char *input)
     arr = split_input_str(input);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
-    arr = expande_input_arr(&data, arr);
+    expande_input_arr(&data, arr);
+    // split_space(&arr);
+    polish_input_arr(&arr);
     ft_printf("INPUT:\n%s", input);
     ft_printf("\nRESULT:\n");
     for (int i = 0; arr[i]; i++)
@@ -28,13 +30,20 @@ int main(int argc, char **argv, char **envp)
     data = (t_shell_data){0};
 
     // Check with empty envp
-    // char *envp2[] = {"PATH=/home/artem/.nvm/versions/node/v22.19.0/bin:/home/artem/.local/funcheck/host:/home/artem/.npm-global/bin:/home/artem/bin:/home/artem/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin", "HOME=/home/artem", NULL};
-    // parse_envp(&data, envp2);
-    parse_envp(&data, envp);
+    char *envp2[] = {"PATH=/home/artem/bin:/bin", "HOME=/home/artem", "CMD=o hello world > res.txt", "TEST=something inside my head", "COM= <\a Makefile'something' c", NULL};
+    parse_envp(&data, envp2);
+    // parse_envp(&data, envp);
     set_envp_from_env(&data);
     parse_exec_folders(&data);
 
-    test(data, "cat<<'EOF'<Makefile < Test");
+    test(data, "<Makefile$TEST cat");
+    // test(data, "<Makefile'some' cat");
+    // test(data, "ech$CMD");
+    // test(data, "'$COM'");
+    ft_printf("Command not found: <\a;\n");
+
+    int str_len = ft_strlen(" ");
+    (void)str_len;
 
     free_shell_data(&data);
     return (data.last_exit_status);
