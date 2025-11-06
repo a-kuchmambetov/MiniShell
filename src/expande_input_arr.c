@@ -12,7 +12,7 @@ int expande_input_arr(t_shell_data *data, char **arr)
         input = ft_strdup(arr[i]);
         if (!input)
             return (1);
-        if (process_expansion(data->env_list, &input))
+        if (check_do_expansion(data->env_list, &input))
             return (free(input), 1);
         free(arr[i]);
         arr[i] = input;

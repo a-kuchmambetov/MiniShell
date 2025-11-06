@@ -30,17 +30,19 @@ int main(int argc, char **argv, char **envp)
     data = (t_shell_data){0};
 
     // Check with empty envp
-    char *envp2[] = {"PATH=/home/artem/bin:/bin", "HOME=/home/artem", "CMD=o hello world > res.txt", "TEST=something inside my head", "COM= <\a Makefile'something' c", NULL};
+    char *envp2[] = {"PATH=/home/artem/bin:/bin", "HOME=/home/artem", "CMD=o hello world > res.txt", "TEST=something inside my head", "COM= < Makefile'something'           c", NULL};
     parse_envp(&data, envp2);
     // parse_envp(&data, envp);
     set_envp_from_env(&data);
     parse_exec_folders(&data);
 
     test(data, "<Makefile$TEST cat");
-    // test(data, "<Makefile'some' cat");
-    // test(data, "ech$CMD");
-    // test(data, "'$COM'");
-    ft_printf("Command not found: <\a;\n");
+    test(data, "<Makefile'some' cat");
+    test(data, "<< Makefile$TEST cat");
+    test(data, "<< Makefile'some' cat");
+    test(data, "ech$CMD");
+    test(data, "$COM");
+    test(data, "'$COM'");
 
     int str_len = ft_strlen(" ");
     (void)str_len;

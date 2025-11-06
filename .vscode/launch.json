@@ -22,70 +22,11 @@
                     "description": "Set Disassembly Flavor to Intel",
                     "text": "-gdb-set disassembly-flavor intel",
                     "ignoreFailures": true
-                },
-                {
-                    "text": "-interpreter-exec console \"source ${workspaceFolder}/.gdbinit\""
                 }
             ],
             "preLaunchTask": "build test_main_6",
             "miDebuggerPath": "/usr/bin/gdb",
             "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-            "name": "Debug main",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${workspaceFolder}/minishell",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "description": "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
-                },
-                {
-                    "text": "-interpreter-exec console \"source ${workspaceFolder}/.gdbinit\""
-                }
-            ],
-            "preLaunchTask": "build main",
-            "miDebuggerPath": "/usr/bin/gdb",
-            "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-            "name": "C/C++: gcc-12 build and debug active file",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${fileDirname}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "description": "Set Disassembly Flavor to Intel",
-                    "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "C/C++: gcc-12 build active file",
-            "miDebuggerPath": "/usr/bin/gdb"
         }
     ]
 }

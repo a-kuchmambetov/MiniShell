@@ -16,19 +16,6 @@
                 "$gcc"
             ],
             "detail": "Build test_main_6 executable"
-        },
-        {
-            "label": "build main",
-            "type": "shell",
-            "command": "make",
-            "group": {
-                "kind": "build",
-                "isDefault": false
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "detail": "Build main executable"
         }
     ]
 }
