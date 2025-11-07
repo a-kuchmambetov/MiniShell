@@ -36,7 +36,7 @@ extern volatile sig_atomic_t g_signal_received;
 int ft_print_err(const char *format, ...);
 
 void parse_envp(t_shell_data *data, char **envp);
-void parse_exec_folders(t_shell_data *data);
+int parse_exec_folders(t_shell_data *data);
 
 void my_free(void *ptr);
 void free_cmd_node(t_cmd_node *node);

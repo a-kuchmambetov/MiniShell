@@ -7,6 +7,7 @@ int expande_input_arr(t_shell_data *data, char **arr)
 
     if (!data || !arr || !*arr)
         return (1);
+    i = 0;
     while (arr[i])
     {
         input = ft_strdup(arr[i]);

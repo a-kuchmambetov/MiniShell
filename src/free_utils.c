@@ -52,7 +52,8 @@ void free_cmd_list(t_cmd_list *cmd_list)
         current = next;
     }
     cmd_list->len = 0;
-    cmd_list->first = NULL;
+    my_free(cmd_list->first);
+    // cmd_list->first = NULL;
 }
 
 void free_str_arr(char **str_arr)
@@ -74,8 +75,8 @@ void free_str_arr(char **str_arr)
 void free_shell_data(t_shell_data *data)
 {
     free_cmd_list(&data->cmd_list);
-    free_env_list(&data->env_list);
     free_str_arr(data->paths);
+    free_env_list(&data->env_list);
     free_str_arr(data->envp);
     if (data->pwd)
         my_free(data->pwd);

@@ -25,7 +25,7 @@ int add_row(t_split_data *dt, char *s)
         return (1);
     new_arr = ft_calloc(sizeof(char *), dt->row + 2);
     if (!new_arr)
-        return (free(s), 1);
+        return (1);
     i = 0;
     while (i < dt->row)
     {
@@ -33,7 +33,7 @@ int add_row(t_split_data *dt, char *s)
         i++;
     }
     new_arr[i] = s;
-    free(dt->arr);
+    my_free(dt->arr);
     dt->arr = new_arr;
     dt->row++;
     return (0);
@@ -41,8 +41,13 @@ int add_row(t_split_data *dt, char *s)
 
 int handle_add_row(const char *s, t_split_data *dt)
 {
-    if (add_row(dt, ft_strndup(s + dt->l, dt->i - dt->l)))
+    char *slice;
+
+    slice = ft_strndup(s + dt->l, dt->i - dt->l);
+    if (!slice)
+        return (free_str_arr(dt->arr), dt->arr = NULL, 1);
+    if (add_row(dt, slice))
         return (ft_print_err("Error: split input failed\n"),
-                free_str_arr(dt->arr), 1);
+                my_free(slice), free_str_arr(dt->arr), dt->arr = NULL, 1);
     return (0);
 }

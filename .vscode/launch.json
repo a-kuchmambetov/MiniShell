@@ -22,7 +22,8 @@
                     "description": "Set Disassembly Flavor to Intel",
                     "text": "-gdb-set disassembly-flavor intel",
                     "ignoreFailures": true
-                }
+                },
+                { "text": "-interpreter-exec console \"source ${workspaceFolder}/.gdbinit\"" }
             ],
             "preLaunchTask": "build test_main_6",
             "miDebuggerPath": "/usr/bin/gdb",

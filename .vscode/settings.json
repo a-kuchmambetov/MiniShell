@@ -1,0 +1,16 @@
+{
+    "[c]": {
+        "editor.formatOnSave": true
+    },
+    "files.associations": {
+        "*.dbclient-js": "javascript",
+        "*.ejs": "html",
+        "readline.h": "c",
+        "libft.h": "c",
+        "types.h": "c",
+        "split_input_str_utils.h": "c",
+        "start_here_doc_utils.h": "c",
+        "main.h": "c",
+        "create_cmd_list_utils.h": "c"
+    }
+}
