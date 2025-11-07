@@ -11,36 +11,25 @@ static void free_node(t_env_node *node)
     free(node);
 }
 
-static void abort_parse_envp(t_shell_data *data,
-                             t_env_node *new_node,
-                             char **res)
-{
-    free_node(new_node);
-    free_str_arr(res);
-    free_env_list(&data->env_list);
-    data->env_list.first = NULL;
-    data->env_list.len = 0;
-}
-
 void parse_envp(t_shell_data *data, char **envp)
 {
     t_env_node *new_node;
     t_env_node *current;
     char **res;
-    int i;
 
+    if (!envp || !envp[0])
+        return;
     current = data->env_list.first;
-    i = -1;
-    while (envp[++i] != NULL)
+    for (int i = 0; envp[i] != NULL; i++)
     {
         new_node = ft_calloc(sizeof(t_env_node), 1);
         res = ft_split(envp[i], '=');
         if (!new_node || !res)
-            return (abort_parse_envp(data, new_node, res));
+            return (free_node(new_node), free_str_arr(res));
         new_node->key = ft_strdup(res[0]);
         new_node->value = ft_strdup(res[1]);
         if (!new_node->key || !new_node->value)
-            return (abort_parse_envp(data, new_node, res));
+            return (free_node(new_node), free_str_arr(res));
         free_str_arr(res);
         if (current)
             current->next = new_node;
@@ -51,32 +40,20 @@ void parse_envp(t_shell_data *data, char **envp)
     }
 }
 
-int parse_exec_folders(t_shell_data *data)
+void parse_exec_folders(t_shell_data *data)
 {
-    t_env_node *current = data->env_list.first;
-    char **paths;
+    t_env_node *current;
 
+    current = data->env_list.first;
     while (current)
     {
         if (ft_strncmp(current->key, "PATH", 4) == 0)
         {
-            paths = ft_split(current->value, ':');
-            if (!paths)
-                return (1);
-            free_str_arr(data->paths);
-            data->paths = paths;
-            return (0);
+            data->paths = ft_split(current->value, ':');
+            break;
         }
         current = current->next;
     }
-    return (0);
-}
-
-static void free_partial_envp(char **envp, int count)
-{
-    while (count-- > 0)
-        free(envp[count]);
-    free(envp);
 }
 
 int set_envp_from_env(t_shell_data *data)
@@ -92,9 +69,9 @@ int set_envp_from_env(t_shell_data *data)
     i = 0;
     while (i < data->env_list.len)
     {
-        data->envp[i] = ft_calloc(sizeof(char), ft_strlen(current->key) + ft_strlen(current->value) + 2);
+        data->envp[i] = ft_calloc(sizeof(char), (ft_strlen(current->key) + ft_strlen(current->value) + 2));
         if (!data->envp[i])
-            return (free_partial_envp(data->envp, i), data->envp = NULL, 1);
+            return (1);
         ft_strlcat(data->envp[i], current->key, ft_strlen(current->key) + 1);
         ft_strlcat(data->envp[i], "=", ft_strlen(data->envp[i]) + 2);
         ft_strlcat(data->envp[i], current->value, ft_strlen(data->envp[i]) + ft_strlen(current->value) + 1);

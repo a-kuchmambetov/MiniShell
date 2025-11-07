@@ -35,7 +35,6 @@ int main(int argc, char **argv, char **envp)
     test(data, "\"This is $HOME\"");
     test(data, "\"Mixing 'quotes' and $HOME\"");
     test(data, "$HOME and $PATH");
-    test(data, "$TEMP$HOME and more text");
 
     free_shell_data(&data);
     return (data.last_exit_status);

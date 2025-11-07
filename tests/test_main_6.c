@@ -58,12 +58,15 @@ int main(int argc, char **argv, char **envp)
         return (1);
     }
 
-    // test(data, "<Makefile$TEST cat");
+    // test(data, "<Makefile$TEST cat|grep something");
+    // test(data, "<Makefile $TEST cat|grep something");
+    // test(data, "<Makefile\"$TEST\" cat|grep something");
+    // test(data, "<Makefile\'$TEST\' cat|grep something");
     // test(data, "<Makefile'some' cat");
     // test(data, "<< Makefile$TEST cat");
     // test(data, "<< Makefile'some' cat");
-    // test(data, "ech$CMD");
-    test(data, "$COM");
+    test(data, "ech$CMD");
+    // test(data, "$COM");
     // test(data, "'$COM'");
 
     free_shell_data(&data);

@@ -49,3 +49,27 @@ void exec_cmd(t_shell_data *data, char *command, char **argv_str)
         waitpid(pid, &data->last_exit_status, 0);
     free(executable);
 }
+
+void exec_cmd_2(t_shell_data *data, char *command, char **str_arr)
+{
+    char *executable;
+    pid_t pid;
+
+    executable = find_executable(data, command);
+    if (!executable)
+    {
+        data->last_exit_status = 127 << 8;
+        ft_print_err("%s: command not found\n", command);
+        return ;
+    }
+    pid = fork();
+    if (pid == 0)
+    {
+        execve(executable, str_arr, data->envp);
+        perror("execve");
+        exit(EXIT_FAILURE);
+    }
+    else if (pid > 0)
+        waitpid(pid, &data->last_exit_status, 0);
+    free(executable);
+}

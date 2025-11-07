@@ -9,18 +9,13 @@
 
 static int process_delimiter(const char *s, t_split_data *dt, int delim_len)
 {
-    char *temp;
     if (dt->i - dt->l > 0)
-    {
-        temp = ft_strndup(s + dt->l, dt->i - dt->l);
-        if (!temp || add_row(dt, temp))
+        if (add_row(dt, ft_strndup(s + dt->l, dt->i - dt->l)))
             return (ft_print_err("Error: split input failed\n"),
-                    free_str_arr(dt->arr), my_free(temp), 1);
-    }
-    temp = ft_strndup(s + dt->i, delim_len);
-    if (!temp || add_row(dt, temp))
+                    free_str_arr(dt->arr), 1);
+    if (add_row(dt, ft_strndup(s + dt->i, delim_len)))
         return (ft_print_err("Error: split input failed\n"),
-                free_str_arr(dt->arr), my_free(temp), 1);
+                free_str_arr(dt->arr), 1);
     dt->l = dt->i + delim_len;
     dt->i += delim_len;
     return (0);
@@ -88,6 +83,6 @@ char **split_input_str(const char *s)
     }
     if (dt.i - dt.l > 0)
         if (handle_add_row(s, &dt))
-            return (free_str_arr(dt.arr), NULL);
+            return (NULL);
     return (dt.arr);
 }

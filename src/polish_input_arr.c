@@ -3,6 +3,7 @@
 int is_delim(const char *str)
 {
     const int str_len = ft_strlen(str);
+    
     if (ft_strncmp(str, "<<", 2) == 0 || ft_strncmp(str, ">>", 2) == 0)
         return (2);
     if ((str[0] == '|' || str[0] == '>' || str[0] == '<' || str[0] == ' ') && str_len == 1)
