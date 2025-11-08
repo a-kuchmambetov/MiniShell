@@ -82,11 +82,9 @@ int process_expansion(t_env_list env, char **input)
         if (add_row(&dt, ft_strndup(s + dt.l, dt.i - dt.l)))
             return (ft_print_err("error: expanding input failed\n"),
                     free_str_arr(dt.arr), 1);
-    free(*input);
+    my_free(*input);
     *input = NULL;
-    if (join_arr(&dt, input))
-        return (1);
-    return (0);
+    return (join_arr(&dt, input));
 }
 
 int check_do_expansion(t_env_list env, char **input)

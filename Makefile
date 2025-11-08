@@ -14,12 +14,20 @@ SRC = src/exec_cmd.c \
 		src/my_free.c \
         src/free_utils.c \
         src/ft_print_err.c \
-        src/split_input_str.c \
         src/print_prompt_header.c \
         src/set_shell_data.c \
-        src/split_input_str_utils/split_input_str_utils.c \
-		src/expande_input_arr.c \
-		src/polish_input_arr.c \
+		src/split_input_str_utils/split_input_str_utils.c \
+        src/split_input_str.c \
+		src/process_expansion_utils/process_expansion_utils.c \
+		src/process_expansion.c \
+		src/start_here_doc_utils/file_utils.c \
+		src/start_here_doc_utils/start_here_doc_utils.c \
+		src/start_here_doc.c \
+		src/parse_input_utils/expand_input_arr.c \
+		src/parse_input_utils/polish_input_arr_utils_small.c \
+		src/parse_input_utils/polish_input_arr_utils_arr.c \
+		src/parse_input_utils/polish_input_arr.c \
+		src/parse_input.c \
 		src/create_cmd_list.c \
 		src/create_cmd_list_utils/create_cmd_list_utils.c \
 		src/create_cmd_list_utils/check_file.c \
@@ -35,12 +43,7 @@ SRC = src/exec_cmd.c \
 		src/built_in_commands/utils.c \
 		src/built_in_commands/env_command.c \
 		src/built_in_commands/unset_command.c \
-		src/built_in_commands/exit_command.c \
-		src/start_here_doc_utils/file_utils.c \
-		src/start_here_doc_utils/start_here_doc_utils.c \
-		src/start_here_doc.c \
-		src/process_expansion_utils/process_expansion_utils.c \
-		src/process_expansion.c
+		src/built_in_commands/exit_command.c 
 
 OBJS     = $(SRC:.c=.o)
 

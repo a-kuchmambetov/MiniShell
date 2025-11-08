@@ -34,7 +34,7 @@ static int parsing_str_arr(t_shell_data *dt, t_cmd_node **node,
         if (!(*node)->cmd)
             return (set_cmd(*node, str_arr, i));
         else
-            return (set_cmd_args(dt, *node, str_arr, i));
+            return (set_cmd_args(*node, str_arr, i));
     }
     return (0);
 }

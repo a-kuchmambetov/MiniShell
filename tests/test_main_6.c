@@ -1,4 +1,5 @@
 #include "../main.h"
+#include "../src/parse_input_utils/parse_input_utils.h"
 
 int test(t_shell_data data, char *input)
 {
@@ -7,7 +8,7 @@ int test(t_shell_data data, char *input)
     arr = split_input_str(input);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
-    if (expande_input_arr(&data, arr))
+    if (expand_input_arr(&data, arr))
     {
         free_str_arr(arr);
         return (ft_print_err("Error: Failed to expand input array\n"), 1);
@@ -58,16 +59,16 @@ int main(int argc, char **argv, char **envp)
         return (1);
     }
 
-    // test(data, "<Makefile$TEST cat|grep something");
-    // test(data, "<Makefile $TEST cat|grep something");
-    // test(data, "<Makefile\"$TEST\" cat|grep something");
-    // test(data, "<Makefile\'$TEST\' cat|grep something");
-    // test(data, "<Makefile'some' cat");
-    // test(data, "<< Makefile$TEST cat");
-    // test(data, "<< Makefile'some' cat");
+    test(data, "<Makefile$TEST cat|grep something");
+    test(data, "<Makefile $TEST cat|grep something");
+    test(data, "<Makefile\"$TEST\" cat|grep something");
+    test(data, "<Makefile\'$TEST\' cat|grep something");
+    test(data, "<Makefile'some' cat");
+    test(data, "<< Makefile$TEST cat");
+    test(data, "<< Makefile'some' cat");
     test(data, "ech$CMD");
-    // test(data, "$COM");
-    // test(data, "'$COM'");
+    test(data, "$COM");
+    test(data, "'$COM'");
 
     free_shell_data(&data);
     return (data.last_exit_status);

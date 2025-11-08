@@ -52,8 +52,7 @@ void free_cmd_list(t_cmd_list *cmd_list)
         current = next;
     }
     cmd_list->len = 0;
-    my_free(cmd_list->first);
-    // cmd_list->first = NULL;
+    cmd_list->first = NULL;
 }
 
 void free_str_arr(char **str_arr)

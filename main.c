@@ -2,16 +2,6 @@
 
 volatile sig_atomic_t g_signal_received = 0;
 
-static void temp_parse_input(t_shell_data *data, char *input)
-{
-    char **args;
-
-    args = split_input_str(input);
-    free_cmd_list(&data->cmd_list);
-    create_cmd_list(data, args);
-    free_str_arr(args);
-}
-
 static void handle_sigint_prompt(int sig)
 {
     (void)sig;
@@ -72,7 +62,7 @@ int main(int argc, char **argv, char **envp)
         if (*input) // Only process non-empty input
         {
             add_history(input); // Add to readline history
-            temp_parse_input(&data, input);
+            parse_input(&data, input);
             t_cmd_node *current = data.cmd_list.first;
             while (current)
             {

@@ -81,19 +81,22 @@ int set_envp_from_env(t_shell_data *data)
     return (0);
 }
 
-void init_shell_data(t_shell_data *data, char **envp)
+int init_shell_data(t_shell_data *data, char **envp)
 {
     char *cwd;
 
     *data = (t_shell_data){0};
     cwd = getcwd(NULL, 0);
     if (!cwd)
-        return (free_shell_data(data), (void)0);
+        return (free_shell_data(data), 1);
     if (data->pwd)
         free(data->pwd);
     data->pwd = ft_strdup(cwd);
+    if (!data->pwd)
+        return (free_shell_data(data), free(cwd), 1);
     free(cwd);
     parse_envp(data, envp);
     parse_exec_folders(data);
     set_envp_from_env(data);
+    return (0);
 }
