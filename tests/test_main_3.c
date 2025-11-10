@@ -114,7 +114,7 @@ int main()
 {
     setup_signals_prompt();
 
-    test("echo hello | grep h >> output.txt");
+    test("echo hello some text and other stuff | grep h >> output.txt");
     test("   ls           -la       /home/user/Documents  > result.txt  <             input.txt                   ");
     test("cat << EOF | grep \"pattern >> output.txt\"");
     test("cat << \"EOF\"");
