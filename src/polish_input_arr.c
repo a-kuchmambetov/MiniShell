@@ -214,6 +214,7 @@ int polish_input_arr(char ***arr)
     t_polish_data dt;
 
     dt = (t_polish_data){0};
+    new_arr = NULL;
     if (!arr || !*arr)
         return (1);
     dt.arr = ft_calloc(sizeof(char *), 1);

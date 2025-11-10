@@ -27,7 +27,6 @@ static int	process_assignment(t_shell_data *data, char **args, int *i)
 {
 	char	*name;
 	char	*val;
-	char	*clean;
 	char	*final;
 	char	*eq;
 
@@ -42,12 +41,10 @@ static int	process_assignment(t_shell_data *data, char **args, int *i)
 		return (1);
 	}
 	val = collect_value_after_equal(args, i);
-	clean = strip_outer_quotes(val);
-	final = build_final_pair(name, clean);
+	final = build_final_pair(name, val);
 	add_or_update_env(data, final);
 	free(name);
 	free(val);
-	free(clean);
 	free(final);
 	return (0);
 }
@@ -65,7 +62,7 @@ int	builtin_export(t_shell_data *data, char **args)
 	int			i;
 	t_env_node	*node;
 
-	if (!args[1])
+	if (!args[1] || (args[1][0] == '\0'))
 	{
 		node = data->env_list.first;
 		while (node)
@@ -81,13 +78,25 @@ int	builtin_export(t_shell_data *data, char **args)
 	i = 1;
 	while (args[i])
 	{
-		if (!ft_strchr(args[i], '='))
+		char *trimmed = ft_strtrim(args[i], " \t");
+		if (!trimmed || trimmed[0] == '\0')
 		{
-			ft_printf("export: ignoring '%s' (no assignment)\n", args[i]);
+			free(trimmed);
+			i++;
+			continue ;
+		}
+		if (!ft_strchr(trimmed, '='))
+		{
+			if (!is_valid_identifier(trimmed))
+				ft_print_err("export: not a valid identifier\n");
+			else
+				add_or_update_env(data, trimmed);
+			free(trimmed);
 			i++;
 			continue ;
 		}
 		process_assignment(data, args, &i);
+		free(trimmed);
 		i++;
 	}
 	sync_envp(data);

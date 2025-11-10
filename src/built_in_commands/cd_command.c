@@ -49,7 +49,7 @@ static char	*get_target_path(t_shell_data *data, char **args)
 {
 	char	*value;
 
-	if (!args[1] || ft_strncmp(args[1], "~", 2) == 0)
+	if (!args[1] || args[1][0] == '\0' || ft_strncmp(args[1], "~", 2) == 0)
 	{
 		value = get_env_value(data->envp, "HOME");
 		if (value)

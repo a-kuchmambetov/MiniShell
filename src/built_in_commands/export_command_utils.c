@@ -87,24 +87,41 @@ void	join_quoted_parts(char **res, char **args, int *i, char quote)
  */
 char	*collect_value_after_equal(char **args, int *i)
 {
-	char	*res;
 	char	*start;
+	char	*res;
+	char	*clean;
 	char	quote;
 
 	start = ft_strchr(args[*i], '=');
 	if (!start)
 		return (ft_strdup(""));
-	start++;
+
+	start++; // move past '='
+
+	// 🔸 1. Якщо після '=' ідуть лише пробіли → значення порожнє
+	if (*start == '\0' || *start == ' ')
+		return (ft_strdup(""));
+
+	// 🔸 2. Якщо після '=' відкриваються лапки — беремо усе всередині лапок
 	quote = get_opening_quote(start);
 	res = ft_strdup(start);
 	if (!res)
 		return (NULL);
-	// Якщо лапки відкриті, але не закриті — об'єднати решту токенів
+
 	if (quote && !ft_strrchr(start + 1, quote))
 		join_quoted_parts(&res, args, i, quote);
-	// не чіпаємо пробіли, лише видаляємо зовнішні лапки
-	char *clean = strip_outer_quotes(res);
+
+	clean = strip_outer_quotes(res);
 	free(res);
+
+	// 🔸 3. Якщо лапок немає — прибираємо крайні пробіли
+	if (!quote)
+	{
+		char *trimmed = ft_strtrim(clean, " \t");
+		free(clean);
+		clean = trimmed;
+	}
+
 	return (clean);
 }
 
