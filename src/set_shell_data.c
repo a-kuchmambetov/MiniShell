@@ -20,10 +20,10 @@ void parse_envp(t_shell_data *data, char **envp)
     if (!envp || !envp[0])
         return;
     current = data->env_list.first;
-    for (int i = 0; envp[i] != NULL; i++)
+    while (envp[data->env_list.len])
     {
         new_node = ft_calloc(sizeof(t_env_node), 1);
-        res = ft_split(envp[i], '=');
+        res = ft_split(envp[data->env_list.len], '=');
         if (!new_node || !res)
             return (free_node(new_node), free_str_arr(res));
         new_node->key = ft_strdup(res[0]);
@@ -98,5 +98,6 @@ int init_shell_data(t_shell_data *data, char **envp)
     parse_envp(data, envp);
     parse_exec_folders(data);
     set_envp_from_env(data);
+    update_last_cmd_code(data, 0);
     return (0);
 }

@@ -47,6 +47,7 @@ void free_shell_data(t_shell_data *data);
 
 int set_envp_from_env(t_shell_data *data);
 int init_shell_data(t_shell_data *data, char **envp);
+int update_last_cmd_code(t_shell_data *dt, int last_cmd_code);
 
 void print_prompt_header(void);
 char *read_input();

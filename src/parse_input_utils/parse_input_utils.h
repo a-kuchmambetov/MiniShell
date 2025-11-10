@@ -19,4 +19,7 @@ int append_arr(char ***arr, char *input);
 int append_arr_f(char ***arr, char *input);
 int protect_delim(char **arr);
 
+// trim_quote.c
+char *trim_quote(const char *str);
+
 #endif

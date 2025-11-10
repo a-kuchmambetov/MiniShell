@@ -52,9 +52,12 @@
                     "description": "Set Disassembly Flavor to Intel",
                     "text": "-gdb-set disassembly-flavor intel",
                     "ignoreFailures": true
+                },
+                {
+                    "text": "-interpreter-exec console \"source ${workspaceFolder}/.gdbinit\""
                 }
             ],
-            "preLaunchTask": "C/C++: gcc-13 build active file",
+            "preLaunchTask": "C/C++: gcc build active file",
             "miDebuggerPath": "/usr/bin/gdb"
         }
     ]

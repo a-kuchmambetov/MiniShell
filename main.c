@@ -70,7 +70,6 @@ int main(int argc, char **argv, char **envp)
                 current = current->next;
             }
             free(input);
-            // free_cmd_list(&data.cmd_list);
         }
     }
     free_shell_data(&data);

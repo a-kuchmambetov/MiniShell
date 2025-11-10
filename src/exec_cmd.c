@@ -47,6 +47,7 @@ void exec_cmd(t_shell_data *data, char *command, char **argv_str)
     }
     else if (pid > 0)
         waitpid(pid, &data->last_exit_status, 0);
+    update_last_cmd_code(data, data->last_exit_status >> 8);
     free(executable);
 }
 

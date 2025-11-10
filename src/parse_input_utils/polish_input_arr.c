@@ -88,7 +88,7 @@ static char **split_space(t_polish_data dt)
         if (is_delim(dt.arr[dt.i]) && !is_quoted(dt.arr[dt.i]))
             code = append_arr(&new_arr, dt.arr[dt.i]);
         else if (is_quoted(dt.arr[dt.i]))
-            code = append_arr_f(&new_arr, ft_strtrim(dt.arr[dt.i], "'\""));
+            code = append_arr_f(&new_arr, trim_quote(dt.arr[dt.i]));
         else
         {
             trimmed_str = ft_strtrim(dt.arr[dt.i], " ");
