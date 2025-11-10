@@ -116,30 +116,12 @@ char *collect_value_after_equal(char **args, int *i)
 	res = ft_strdup(start);
 	if (!res)
 		return (NULL);
-<<<<<<< HEAD
-
+	// Якщо лапки відкриті, але не закриті — об'єднати решту токенів
 	if (quote && !ft_strrchr(start + 1, quote))
 		join_quoted_parts(&res, args, i, quote);
 
 	clean = strip_outer_quotes(res);
 	free(res);
-
-	// 🔸 3. Якщо лапок немає — прибираємо крайні пробіли
-	if (!quote)
-	{
-		char *trimmed = ft_strtrim(clean, " \t");
-		free(clean);
-		clean = trimmed;
-	}
-
-=======
-	// Якщо лапки відкриті, але не закриті — об'єднати решту токенів
-	if (quote && !ft_strrchr(start + 1, quote))
-		join_quoted_parts(&res, args, i, quote);
-	// не чіпаємо пробіли, лише видаляємо зовнішні лапки
-	char *clean = strip_outer_quotes(res);
-	free(res);
->>>>>>> f4d4f8a (export has ann issue with space)
 	return (clean);
 }
 
