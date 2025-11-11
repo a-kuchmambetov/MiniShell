@@ -14,12 +14,22 @@ SRC = src/exec_cmd.c \
 		src/my_free.c \
         src/free_utils.c \
         src/ft_print_err.c \
-        src/split_input_str.c \
         src/print_prompt_header.c \
+		src/update_last_cmd_code.c \
         src/set_shell_data.c \
-        src/split_input_str_utils/split_input_str_utils.c \
-		src/expande_input_arr.c \
-		src/polish_input_arr.c \
+		src/split_input_str_utils/split_input_str_utils.c \
+        src/split_input_str.c \
+		src/process_expansion_utils/process_expansion_utils.c \
+		src/process_expansion.c \
+		src/start_here_doc_utils/file_utils.c \
+		src/start_here_doc_utils/start_here_doc_utils.c \
+		src/start_here_doc.c \
+		src/parse_input_utils/trim_quote.c \
+		src/parse_input_utils/expand_input_arr.c \
+		src/parse_input_utils/polish_input_arr_utils_small.c \
+		src/parse_input_utils/polish_input_arr_utils_arr.c \
+		src/parse_input_utils/polish_input_arr.c \
+		src/parse_input.c \
 		src/create_cmd_list.c \
 		src/create_cmd_list_utils/create_cmd_list_utils.c \
 		src/create_cmd_list_utils/check_file.c \
@@ -28,6 +38,7 @@ SRC = src/exec_cmd.c \
 		src/built_in_commands/echo_command.c \
 		src/built_in_commands/echo_command_utils.c \
 		src/built_in_commands/export_command.c \
+		src/built_in_commands/export_command_utils.c \
 		src/built_in_commands/cd_command.c \
 		src/built_in_commands/cd_command_utils.c \
 		src/built_in_commands/pwd_command.c \
@@ -35,12 +46,7 @@ SRC = src/exec_cmd.c \
 		src/built_in_commands/utils.c \
 		src/built_in_commands/env_command.c \
 		src/built_in_commands/unset_command.c \
-		src/built_in_commands/exit_command.c \
-		src/start_here_doc_utils/file_utils.c \
-		src/start_here_doc_utils/start_here_doc_utils.c \
-		src/start_here_doc.c \
-		src/process_expansion_utils/process_expansion_utils.c \
-		src/process_expansion.c
+		src/built_in_commands/exit_command.c 
 
 OBJS     = $(SRC:.c=.o)
 
@@ -69,7 +75,7 @@ allClean: fclean
 	find -maxdepth 1 -type f \( -name '$(NAME)_test_*' -o -name 'here_doc_*' \) ! -name '*.c' ! -name '*.h' -delete
 	find tests -maxdepth 1 -type f -name 'test_main_*' ! -name '*.c' -delete
 
-re: fclean all
+re: fclean all clean
 
 compileTest1: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_1.c $(LIBS) $(LDLIBS) -o $(NAME)_test_1
@@ -101,14 +107,15 @@ compileTestPipelineParser: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_pipeline_parser.c $(LIBS) $(LDLIBS) -o $(NAME)_test_pipeline_parser
 
 compileTestBuiltins: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_builtins.c $(LIBS) $(LDLIBS) -o $(NAME)_test_builtins
+	$(CC) $(CFLAGS) tests/test_main_builtins.c tests/process_input_for_tests.c $(LIBS) $(LDLIBS) -o $(NAME)_test_builtins
 
 compileTestFull: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/minishell_full_test.c $(LIBS) $(LDLIBS) -lreadline -o $(NAME)_test_full
 
 valgrind:
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
-	--trace-children=yes ./minishell
+	PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+	valgrind --leak-check=full --show-leak-kinds=all \
+	--track-origins=yes --trace-children=yes ./minishell
 
 .PHONY: all clean fclean allClean re \
 	compileTest1 compileTest2 compileTest3 compileTest4 compileTest5 compileTest6 \

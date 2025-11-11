@@ -81,13 +81,13 @@ int set_cmd(t_cmd_node *node, char **str_arr, int *i)
     return (0);
 }
 
-int set_cmd_args(t_shell_data *dt, t_cmd_node *node, char **str_arr, int *i)
+int set_cmd_args(t_cmd_node *node, char **str_arr, int *i)
 {
     if (!node || !str_arr || !i)
         return (1);
     if (node->args)
     {
-        if (check_args_expansion(dt, node, node->args, str_arr[*i]))
+        if (join_args(node, node->args, str_arr[*i]))
             return (1);
     }
     else

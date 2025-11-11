@@ -1,63 +1,106 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   export_command.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: unadoroz <unadoroz@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/23 13:41:20 by unadoroz          #+#    #+#             */
-/*   Updated: 2025/10/23 13:41:25 by unadoroz         ###   ########.fr       */
+/*   Created: 2025/10/29 15:45:00 by unadoroz          #+#    #+#             */
+/*   Updated: 2025/10/29 15:45:00 by unadoroz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
 /**
- * @brief Prints the environment variables in 'export' format.
- * @param env_list The environment list structure.
+ * @brief Processes a single "KEY=VALUE" assignment for export.
+ *
+ * Validates the key name, collects and cleans the value, and
+ * adds or updates it in the environment list.
+ *
+ * @param data Pointer to the shell data.
+ * @param args Command arguments array.
+ * @param i Pointer to current argument index.
+ * @return 0 on success, 1 if invalid identifier.
  */
-void	print_export(t_env_list env_list)
+static int	process_assignment(t_shell_data *data, char **args, int *i)
 {
-	t_env_node	*current;
+	char	*name;
+	char	*val;
+	char	*final;
+	char	*eq;
 
-	current = env_list.first;
-	while (current)
+	eq = ft_strchr(args[*i], '=');
+	if (!eq)
+		return (0);
+	name = ft_substr(args[*i], 0, eq - args[*i]);
+	if (!is_valid_identifier(name))
 	{
-		if (current->value)
-			ft_printf("declare -x %s=\"%s\"\n", current->key, current->value);
-		else
-			ft_printf("declare -x %s\n", current->key);
-		current = current->next;
+		ft_print_err("export: not a valid identifier\n");
+		free(name);
+		return (1);
 	}
+	val = collect_value_after_equal(args, i);
+	final = build_final_pair(name, val);
+	add_or_update_env(data, final);
+	free(name);
+	free(val);
+	free(final);
+	return (0);
 }
 
 /**
- * @brief Processes a single export argument.
- * Checks if the identifier is valid and adds/updates it in the environment.
- *
- * @param data Pointer to shell data structure.
- * @param arg The argument string.
+ * @brief Handles the 'export' builtin command.
+ * Iterates over arguments, validates each variable name, and
+ * updates or adds the variable to the environment list.
+ * @param data Pointer to the shell data.
+ * @param args Command arguments (e.g., export VAR=value).
+ * @return Always 0 (success).
  */
 int	builtin_export(t_shell_data *data, char **args)
 {
-	int	i;
+	int			i;
+	t_env_node	*node;
 
-	if (!args[1])
+	if (!args[1] || (args[1][0] == '\0'))
 	{
-		print_export(data->env_list);
+		node = data->env_list.first;
+		while (node)
+		{
+			if (node->value)
+				ft_printf("declare -x %s=\"%s\"\n", node->key, node->value);
+			else
+				ft_printf("declare -x %s\n", node->key);
+			node = node->next;
+		}
 		return (0);
 	}
 	i = 1;
 	while (args[i])
 	{
-		if (!is_valid_identifier(args[i]))
-			ft_printf("export: `%s': not a valid identifier\n", args[i]);
-		else
+		char *trimmed = ft_strtrim(args[i], " \t");
+		if (!trimmed || trimmed[0] == '\0')
 		{
-			add_or_update_env(data, args[i]);
-			sync_envp(data);
+			free(trimmed);
+			i++;
+			continue ;
 		}
+		if (!ft_strchr(trimmed, '='))
+		{
+			if (!is_valid_identifier(trimmed))
+				ft_print_err("export: not a valid identifier\n");
+			else
+				add_or_update_env(data, trimmed);
+			free(trimmed);
+			i++;
+			continue ;
+		}
+		process_assignment(data, args, &i);
+		free(trimmed);
 		i++;
 	}
+	sync_envp(data);
 	return (0);
 }
+
+

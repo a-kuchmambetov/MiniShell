@@ -72,7 +72,7 @@ int main(int argc, char **argv, char **envp)
         if (*input) // Only process non-empty input
         {
             add_history(input); // Add to readline history
-            temp_parse_input(&data, input);
+            parse_input(&data, input);
             t_cmd_node *current = data.cmd_list.first;
             while (current)
             {

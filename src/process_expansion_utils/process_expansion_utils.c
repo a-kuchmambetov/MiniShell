@@ -7,6 +7,8 @@ static int find_key_len(const char *str)
     len = 0;
     if (!str || !*str)
         return (0);
+    if (str[len] == '?')
+        return (1);
     while (str[len] && (ft_isalnum(str[len]) || str[len] == '_'))
         len++;
     return (len);

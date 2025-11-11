@@ -46,7 +46,8 @@ void free_str_arr(char **paths);
 void free_shell_data(t_shell_data *data);
 
 int set_envp_from_env(t_shell_data *data);
-void init_shell_data(t_shell_data *data, char **envp);
+int init_shell_data(t_shell_data *data, char **envp);
+int update_last_exit_status(t_shell_data *dt, int last_cmd_code);
 
 void print_prompt_header(void);
 char *read_input();
@@ -60,10 +61,9 @@ int exec_builtin(t_shell_data *data, char **args);
 // Command t_cmd_list list management
 void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
 char **split_input_str(const char *s);
-int expande_input_arr(t_shell_data *data, char **arr);
-// int split_space(char ***arr);
 int polish_input_arr(char ***arr);
 int create_cmd_list(t_shell_data *dt, char **str_arr);
+int parse_input(t_shell_data *data, char *input);
 
 int process_expansion(t_env_list env, char **input);
 int check_do_expansion(t_env_list env, char **input);

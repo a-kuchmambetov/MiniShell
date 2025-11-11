@@ -15,8 +15,7 @@ static char *find_executable(t_shell_data *data, char *command)
             return (NULL);
         ft_strlcpy(full_path, data->paths[i], ft_strlen(data->paths[i]) + 1);
         ft_strlcat(full_path, "/", ft_strlen(full_path) + 2);
-        ft_strlcat(full_path, command, ft_strlen(full_path)
-            + ft_strlen(command) + 1);
+        ft_strlcat(full_path, command, ft_strlen(full_path) + ft_strlen(command) + 1);
         printf("Checking path: %s\n", full_path);
         if (access(full_path, X_OK) == 0)
             return (full_path);
@@ -36,7 +35,7 @@ void exec_cmd(t_shell_data *data, char *command, char **argv_str)
     {
         data->last_exit_status = 127 << 8;
         ft_print_err("%s: command not found\n", command);
-        return ;
+        return;
     }
     pid = fork();
     if (pid == 0)
@@ -47,5 +46,6 @@ void exec_cmd(t_shell_data *data, char *command, char **argv_str)
     }
     else if (pid > 0)
         waitpid(pid, &data->last_exit_status, 0);
+    update_last_exit_status(data, data->last_exit_status >> 8);
     free(executable);
 }
