@@ -2,16 +2,6 @@
 
 volatile sig_atomic_t g_signal_received = 0;
 
-static void temp_parse_input(t_shell_data *data, char *input)
-{
-    char **args;
-
-    args = split_input_str(input);
-    free_cmd_list(&data->cmd_list);
-    create_cmd_list(data, args);
-    free_str_arr(args);
-}
-
 static void handle_sigint_prompt(int sig)
 {
     (void)sig;
