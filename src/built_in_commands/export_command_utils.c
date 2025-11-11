@@ -23,13 +23,8 @@
  */
 char *strip_outer_quotes(const char *s)
 {
-<<<<<<< HEAD
 	size_t len;
 	char q;
-=======
-	size_t	len;
-	char	q;
->>>>>>> f4d4f8a (export has ann issue with space)
 
 	if (!s)
 		return (NULL);
@@ -38,11 +33,7 @@ char *strip_outer_quotes(const char *s)
 		return (ft_strdup(s));
 	q = s[0];
 	if ((q == '\'' || q == '"') && s[len - 1] == q)
-<<<<<<< HEAD
 		return (ft_substr(s, 1, len - 2)); // зберігає всі пробіли всередині
-=======
-		return (ft_substr(s, 1, len - 2));  // зберігає всі пробіли всередині
->>>>>>> f4d4f8a (export has ann issue with space)
 	return (ft_strdup(s));
 }
 
