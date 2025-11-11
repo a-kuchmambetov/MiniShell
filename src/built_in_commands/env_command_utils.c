@@ -123,8 +123,8 @@ int	add_or_update_env(t_shell_data *data, const char *arg)
 	}
 	else
 		key = ft_strdup(arg);
-	if (!key)
-		return (0);
+	if (!key || !value)
+		return (my_free(key), my_free(value), 0);
 	if (!update_existing_env(&data->env_list, key, value))
 		add_new_env(&data->env_list, key, value);
 	free(key);

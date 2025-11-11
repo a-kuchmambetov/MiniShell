@@ -48,12 +48,10 @@ int	builtin_echo(char **argv, char **envp)
 	char	**split_args;
 	char	*arg;
 
-	/* якщо argv[1] містить пробіли — розділяємо */
 	if (argv[1] && ft_strchr(argv[1], ' '))
 		split_args = ft_split(argv[1], ' ');
 	else
 		split_args = &argv[1];
-
 	i = 0;
 	no_newline = 0;
 	while (split_args[i] && all_n(split_args[i]))
