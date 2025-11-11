@@ -39,7 +39,7 @@ static int create_new(t_shell_data *dt, char *code_str)
     return (0);
 }
 
-int update_last_cmd_code(t_shell_data *dt, int last_cmd_code)
+int update_last_exit_status(t_shell_data *dt, int last_cmd_code)
 {
     t_env_node *current;
     char *code_str;

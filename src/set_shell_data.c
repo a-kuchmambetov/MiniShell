@@ -98,6 +98,6 @@ int init_shell_data(t_shell_data *data, char **envp)
     parse_envp(data, envp);
     parse_exec_folders(data);
     set_envp_from_env(data);
-    update_last_cmd_code(data, 0);
+    update_last_exit_status(data, 0);
     return (0);
 }
