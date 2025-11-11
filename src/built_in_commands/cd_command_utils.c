@@ -12,12 +12,6 @@
 
 #include "builtins.h"
 
-/**
- * @brief Prints the current directory if cd argument is "-".
- *
- * @param args Command arguments array.
- * @param cwd Current working directory string.
- */
 static void	print_dash_if_needed(char **args, char *cwd)
 {
 	if (args[1] && ft_strncmp(args[1], "-", 2) == 0)
@@ -64,6 +58,13 @@ void	update_env_pwd(t_shell_data *data, char *key, char *value)
 	free(tmp);
 }
 
+static int	cleanup_cd_error(char *oldpwd, char *path)
+{
+	free(oldpwd);
+	free(path);
+	return (1);
+}
+
 /**
  * @brief Changes directory and updates environment variables PWD and OLDPWD.
  *
@@ -84,16 +85,17 @@ int	change_dir_update(t_shell_data *data, char *pa, char *old, char **args)
 	if (chdir(path) != 0)
 	{
 		ft_printf("cd: %s: %s\n", path, strerror(errno));
-		free(old);
-		free(path);
-		return (1);
+		return (cleanup_cd_error(old, path));
 	}
 	cwd = get_current_dir_or_fallback(data);
+	if (!cwd)
+		return (cleanup_cd_error(old, path));
 	print_dash_if_needed(args, cwd);
 	update_env_pwd(data, "OLDPWD=", old);
 	update_env_pwd(data, "PWD=", cwd);
 	sync_envp(data);
-	free(data->pwd);
+	if (data->pwd)
+		free(data->pwd);
 	data->pwd = ft_strdup(cwd);
 	free(old);
 	free(cwd);

@@ -17,37 +17,22 @@
  * @param str Input string.
  * @return 1 if only 'n', 0 otherwise.
  */
-int	all_n(char *str)
-{
-	int	j;
-
-	j = 0;
-	while (str[j])
-	{
-		if (str[j] != 'n')
-			return (0);
-		j++;
-	}
-	return (1);
-}
-
-/**
- * @brief Skips all '-n' flags in echo arguments.
- * @param argv Command arguments.
- * @return Index of the first non-flag argument.
- */
-static int	skip_n_flags(char **argv)
+static int	all_n(const char *str)
 {
 	int	i;
 
+	if (!str || str[0] != '-')
+		return (0);
 	i = 1;
-	while (argv[i] && !ft_strncmp(argv[i], "-n", 2))
+	if (!str[i])
+		return (0);
+	while (str[i])
 	{
-		if (!all_n(argv[i] + 1))
-			break ;
+		if (str[i] != 'n')
+			return (0);
 		i++;
 	}
-	return (i);
+	return (i > 1);
 }
 
 /**
@@ -59,22 +44,37 @@ static int	skip_n_flags(char **argv)
 int	builtin_echo(char **argv, char **envp)
 {
 	int		i;
-	int		n_flag;
+	int		no_newline;
+	char	**split_args;
 	char	*arg;
 
-	i = skip_n_flags(argv);
-	n_flag = (i > 1);
-	while (argv[i])
+	/* якщо argv[1] містить пробіли — розділяємо */
+	if (argv[1] && ft_strchr(argv[1], ' '))
+		split_args = ft_split(argv[1], ' ');
+	else
+		split_args = &argv[1];
+
+	i = 0;
+	no_newline = 0;
+	while (split_args[i] && all_n(split_args[i]))
 	{
-		arg = parse_arg(argv[i], envp);
+		no_newline = 1;
+		i++;
+	}
+	while (split_args[i])
+	{
+		arg = parse_arg(split_args[i], envp);
 		if (!arg)
 			return (1);
 		write(1, arg, ft_strlen(arg));
 		free(arg);
-		if (argv[++i])
+		if (split_args[i + 1])
 			write(1, " ", 1);
+		i++;
 	}
-	if (!n_flag)
+	if (!no_newline)
 		write(1, "\n", 1);
+	if (argv[1] && ft_strchr(argv[1], ' '))
+		free_str_arr(split_args);
 	return (0);
 }

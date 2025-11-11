@@ -52,7 +52,7 @@ int	update_existing_env(t_env_list *env, const char *name, const char *arg)
 	len = ft_strlen(name);
 	while (current)
 	{
-		if (!ft_strncmp(current->key, name, len))
+		if (!ft_strncmp(current->key, name, len) && current->key[len] == '\0')
 		{
 			free(current->value);
 			if (arg)
