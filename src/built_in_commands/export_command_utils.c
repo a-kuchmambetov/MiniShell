@@ -13,35 +13,25 @@
 #include "builtins.h"
 
 /**
- * @brief Removes outer quotes from a string, if present.
- *
- * Supports both single and double quotes. If only the opening
- * quote is found, removes it safely without crashing.
- *
- * @param s Input string.
- * @return Newly allocated unquoted string.
+ * @brief Removes outer quotes from a string (single or double), preserving spaces inside.
  */
 char *strip_outer_quotes(const char *s)
 {
 	size_t len;
-	char q;
 
 	if (!s)
 		return (NULL);
 	len = ft_strlen(s);
 	if (len < 2)
 		return (ft_strdup(s));
-	q = s[0];
-	if ((q == '\'' || q == '"') && s[len - 1] == q)
+	if (len >= 2 && ((s[0] == '"' && s[len - 1] == '"')
+			|| (s[0] == '\'' && s[len - 1] == '\'')))
 		return (ft_substr(s, 1, len - 2)); // зберігає всі пробіли всередині
 	return (ft_strdup(s));
 }
 
 /**
  * @brief Returns quote char if found at string start (' or ").
- *
- * @param s Pointer to string.
- * @return Quote character, or 0 if none.
  */
 char get_opening_quote(const char *s)
 {
@@ -53,12 +43,7 @@ char get_opening_quote(const char *s)
 }
 
 /**
- * @brief Concatenates arguments until closing quote is found.
- *
- * @param res Pointer to result string (modified in-place).
- * @param args Command arguments array.
- * @param i Pointer to current index in args.
- * @param quote Opening quote character.
+ * @brief Concatenates tokens until closing quote found.
  */
 void join_quoted_parts(char **res, char **args, int *i, char quote)
 {
@@ -68,9 +53,9 @@ void join_quoted_parts(char **res, char **args, int *i, char quote)
 	{
 		(*i)++;
 		tmp = ft_strjoin(*res, " ");
-		free(*res);
+		my_free(*res);
 		*res = ft_strjoin(tmp, args[*i]);
-		free(tmp);
+		my_free(tmp);
 		if (!*res)
 			return;
 		if (ft_strrchr(args[*i], quote))
@@ -79,11 +64,7 @@ void join_quoted_parts(char **res, char **args, int *i, char quote)
 }
 
 /**
- * @brief Collects the value part of "KEY=VALUE", merging quoted tokens.
- *
- * @param args Command arguments array.
- * @param i Pointer to current argument index.
- * @return Newly allocated value string.
+ * @brief Collects the value part of "KEY=VALUE", merging quoted tokens if needed.
  */
 char *collect_value_after_equal(char **args, int *i)
 {
@@ -97,11 +78,9 @@ char *collect_value_after_equal(char **args, int *i)
 		return (ft_strdup(""));
 
 	start++; // move past '='
-
 	// 🔸 1. Якщо після '=' ідуть лише пробіли → значення порожнє
-	if (*start == '\0' || *start == ' ')
+	if (*start == '\0')
 		return (ft_strdup(""));
-
 	// 🔸 2. Якщо після '=' відкриваються лапки — беремо усе всередині лапок
 	quote = get_opening_quote(start);
 	res = ft_strdup(start);
@@ -110,18 +89,13 @@ char *collect_value_after_equal(char **args, int *i)
 	// Якщо лапки відкриті, але не закриті — об'єднати решту токенів
 	if (quote && !ft_strrchr(start + 1, quote))
 		join_quoted_parts(&res, args, i, quote);
-
 	clean = strip_outer_quotes(res);
-	free(res);
+	my_free(res);
 	return (clean);
 }
 
 /**
- * @brief Builds a "KEY=VALUE" string for environment storage.
- *
- * @param name Variable name.
- * @param clean Variable value without quotes.
- * @return Allocated "KEY=VALUE" string.
+ * @brief Builds "KEY=VALUE" pair for adding to env list.
  */
 char *build_final_pair(char *name, char *clean)
 {
@@ -132,6 +106,6 @@ char *build_final_pair(char *name, char *clean)
 	if (!pair)
 		return (NULL);
 	final = ft_strjoin(pair, clean);
-	free(pair);
+	my_free(pair);
 	return (final);
 }

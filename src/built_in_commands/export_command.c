@@ -13,16 +13,9 @@
 #include "builtins.h"
 
 /**
- * @brief Processes a single "KEY=VALUE" assignment for export.
- *
- * Validates the key name, collects and cleans the value, and
- * adds or updates it in the environment list.
- *
- * @param data Pointer to the shell data.
- * @param args Command arguments array.
- * @param i Pointer to current argument index.
- * @return 0 on success, 1 if invalid identifier.
+ * @brief Adds or updates an environment variable from assignment.
  */
+
 static int	process_assignment(t_shell_data *data, char **args, int *i)
 {
 	char	*name;
@@ -32,75 +25,122 @@ static int	process_assignment(t_shell_data *data, char **args, int *i)
 
 	eq = ft_strchr(args[*i], '=');
 	if (!eq)
-		return (0);
+		return (2); // некоректний синтаксис, bash би пропустив, але ставимо 2
+
 	name = ft_substr(args[*i], 0, eq - args[*i]);
+	if (!name)
+		return (1); // malloc fail
 	if (!is_valid_identifier(name))
 	{
-		ft_print_err("export: not a valid identifier\n");
+		ft_print_err("export: `%s' not a valid identifier\n", args[1]);
+		free(name);
+		return (2);
+	}
+	val = collect_value_after_equal(args, i);
+	if (!val)
+	{
 		free(name);
 		return (1);
 	}
-	val = collect_value_after_equal(args, i);
 	final = build_final_pair(name, val);
-	add_or_update_env(data, final);
+	if (!final)
+	{
+		free(name);
+		free(val);
+		return (1);
+	}
+	if (!add_or_update_env(data, final))
+	{
+		free(name);
+		free(val);
+		free(final);
+		return (1);
+	}
 	free(name);
 	free(val);
 	free(final);
 	return (0);
 }
 
+
 /**
- * @brief Handles the 'export' builtin command.
- * Iterates over arguments, validates each variable name, and
- * updates or adds the variable to the environment list.
- * @param data Pointer to the shell data.
- * @param args Command arguments (e.g., export VAR=value).
- * @return Always 0 (success).
+ * @brief Prints the environment in declare -x format.
+ */
+static void	print_export_list(t_env_node *node)
+{
+	while (node)
+	{
+		if (node->value)
+			ft_printf("declare -x %s=\"%s\"\n", node->key, node->value);
+		else
+			ft_printf("declare -x %s\n", node->key);
+		node = node->next;
+	}
+}
+
+/**
+ * @brief Builtin: export command.
+ *
+ * Supports:
+ * - export               → prints all variables
+ * - export VAR           → adds VAR if valid
+ * - export VAR=VALUE     → adds or updates with value (supports quotes/spaces)
  */
 int	builtin_export(t_shell_data *data, char **args)
 {
-	int			i;
-	t_env_node	*node;
+	int		i;
+	char	*trimmed;
+	int		exit_code;
+	int		res;
 
-	if (!args[1] || (args[1][0] == '\0'))
-	{
-		node = data->env_list.first;
-		while (node)
-		{
-			if (node->value)
-				ft_printf("declare -x %s=\"%s\"\n", node->key, node->value);
-			else
-				ft_printf("declare -x %s\n", node->key);
-			node = node->next;
-		}
-		return (0);
-	}
+	exit_code = 0;
+	if (!args[1] || args[1][0] == '\0')
+		return (print_export_list(data->env_list.first), 0);
+
 	i = 1;
 	while (args[i])
 	{
-		char *trimmed = ft_strtrim(args[i], " \t");
-		if (!trimmed || trimmed[0] == '\0')
+		// 🔹 копіюємо або трімимо, щоб не втратити пробіли в значеннях
+		if (ft_strchr(args[i], '='))
+			trimmed = ft_strdup(args[i]);
+		else
+			trimmed = ft_strtrim(args[i], " \t");
+		if (!trimmed)
+			return (1); // malloc error
+		// 🔹 якщо порожній аргумент — пропускаємо
+		if (trimmed[0] == '\0')
 		{
-			free(trimmed);
+			my_free(trimmed);
 			i++;
-			continue ;
+			return (0);
 		}
+			
+		// 🔹 без '=' → просто ім'я
 		if (!ft_strchr(trimmed, '='))
 		{
 			if (!is_valid_identifier(trimmed))
+			{
 				ft_print_err("export: not a valid identifier\n");
-			else
-				add_or_update_env(data, trimmed);
-			free(trimmed);
-			i++;
-			continue ;
+				exit_code = 2; // позначаємо логічну помилку, але не перериваємо
+			}
+			else if (!add_or_update_env(data, trimmed))
+				return (1);
 		}
-		process_assignment(data, args, &i);
-		free(trimmed);
+		// 🔹 з '=' → повне присвоєння
+		else
+		{
+			res = process_assignment(data, args, &i);
+			if (res == 1)
+				return (1); //parcing problem
+			if (res == 2)
+				exit_code = 2;
+		}
+		my_free(trimmed);
 		i++;
 	}
 	sync_envp(data);
-	return (0);
+	return (exit_code);
 }
+
 
 
