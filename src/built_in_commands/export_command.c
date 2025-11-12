@@ -124,14 +124,14 @@ int	builtin_export(t_shell_data *data, char **args)
 				exit_code = 2; // позначаємо логічну помилку, але не перериваємо
 			}
 			else if (!add_or_update_env(data, trimmed))
-				return (1);
+				return (my_free(trimmed), 1);
 		}
 		// 🔹 з '=' → повне присвоєння
 		else
 		{
 			res = process_assignment(data, args, &i);
 			if (res == 1)
-				return (1); //parcing problem
+				return (my_free(trimmed), 1); //parcing problem
 			if (res == 2)
 				exit_code = 2;
 		}

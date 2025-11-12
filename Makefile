@@ -36,7 +36,6 @@ SRC = src/exec_cmd.c \
 		src/create_cmd_list_utils/cmd_node_utils.c \
 		src/built_in_commands/built_in_commands.c \
 		src/built_in_commands/echo_command.c \
-		src/built_in_commands/echo_command_utils.c \
 		src/built_in_commands/export_command.c \
 		src/built_in_commands/export_command_utils.c \
 		src/built_in_commands/cd_command.c \

@@ -36,43 +36,29 @@ static int	all_n(const char *str)
 }
 
 /**
- * @brief Implements echo builtin with '-n' option and variable expansion.
- * @param argv Command arguments.
- * @param envp Environment variables.
+ * @brief Implements echo builtin with '-n' option and variable expansion
  * @return 0 on success, 1 on failure.
  */
-int	builtin_echo(char **argv, char **envp)
+int	builtin_echo(char **argv)
 {
-	int		i;
-	int		no_newline;
-	char	**split_args;
-	char	*arg;
+	int	i;
+	int	no_newline;
 
-	if (argv[1] && ft_strchr(argv[1], ' '))
-		split_args = ft_split(argv[1], ' ');
-	else
-		split_args = &argv[1];
-	i = 0;
+	i = 1;
 	no_newline = 0;
-	while (split_args[i] && all_n(split_args[i]))
+	while (argv[i] && all_n(argv[i]))
 	{
 		no_newline = 1;
 		i++;
 	}
-	while (split_args[i])
+	while (argv[i])
 	{
-		arg = parse_arg(split_args[i], envp);
-		if (!arg)
-			return (1);
-		write(1, arg, ft_strlen(arg));
-		free(arg);
-		if (split_args[i + 1])
+		write(1, argv[i], ft_strlen(argv[i]));
+		if (argv[i + 1])
 			write(1, " ", 1);
 		i++;
 	}
 	if (!no_newline)
 		write(1, "\n", 1);
-	if (argv[1] && ft_strchr(argv[1], ' '))
-		free_str_arr(split_args);
 	return (0);
 }

@@ -40,7 +40,7 @@ void process_input(t_shell_data *data, t_cmd_node *cmd_data)
         return (ft_printf("%d: command not found\n", WEXITSTATUS(data->last_exit_status)), (void)0);
     if (is_builtin(cmd_data->cmd))
     {
-        data->last_exit_status = exec_builtin(data, args);
+        update_last_exit_status(data, exec_builtin(data, args));
         ft_printf("exit code - %d", data->last_exit_status);
     }
         else

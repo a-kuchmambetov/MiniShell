@@ -63,7 +63,7 @@ int process_expansion(t_env_list env, char **input)
 {
     const char *s = *input;
     t_split_data dt;
-
+    
     dt = (t_split_data){0};
     while (s[dt.i])
     {
