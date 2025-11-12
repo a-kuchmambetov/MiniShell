@@ -46,7 +46,7 @@ int append_arr(char ***arr, char *input)
     char **new_arr;
     int i;
 
-    if (!arr || !*arr || !input || !*input)
+    if (!arr || !*arr || !input)
         return (1);
     new_arr = ft_calloc(sizeof(char *), arr_size(*arr) + 2);
     if (!new_arr)
