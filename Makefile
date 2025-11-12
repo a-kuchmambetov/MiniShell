@@ -11,6 +11,7 @@ LIBFTDIR = libft
 LIBFT    = $(LIBFTDIR)/libft.a
 
 SRC = src/exec_cmd.c \
+		src/executor/executor.c \
 		src/my_free.c \
         src/free_utils.c \
         src/ft_print_err.c \

@@ -30,21 +30,6 @@ char *read_input()
     return (input);
 }
 
-void process_input(t_shell_data *data, t_cmd_node *cmd_data)
-{
-    char **args = (char *[]){cmd_data->cmd, cmd_data->args, NULL};
-
-    if (!args)
-        return;
-    if (ft_strncmp(cmd_data->cmd, "$?", 2) == 0)
-        return (ft_printf("%d: command not found\n", WEXITSTATUS(data->last_exit_status)), (void)0);
-    if (is_builtin(cmd_data->cmd))
-        data->last_exit_status = exec_builtin(data, args);
-    else
-        exec_cmd(data, cmd_data->cmd, args);
-    // free_str_arr(args);
-}
-
 int main(int argc, char **argv, char **envp)
 {
     t_shell_data data;
@@ -62,15 +47,10 @@ int main(int argc, char **argv, char **envp)
         if (*input) // Only process non-empty input
         {
             add_history(input); // Add to readline history
-            parse_input(&data, input);
-            t_cmd_node *current = data.cmd_list.first;
-            while (current)
-            {
-                process_input(&data, current);
-                current = current->next;
-            }
+            if (parse_input(&data, input) == 0 && data.cmd_list.first)
+                execute_command_list(&data);
+            free_cmd_list(&data.cmd_list);
             free(input);
-            // free_cmd_list(&data.cmd_list);
         }
     }
     free_shell_data(&data);
