@@ -12,7 +12,6 @@ LIBFT    = $(LIBFTDIR)/libft.a
 
 SRC = src/exec_cmd.c \
 		src/executor/executor_command_info.c \
-		src/executor/executor_split_args.c \
 		src/executor/executor_build_argv.c \
 		src/executor/executor_io.c \
 		src/executor/executor_child.c \
@@ -27,7 +26,7 @@ SRC = src/exec_cmd.c \
         src/ft_print_err.c \
         src/print_prompt_header.c \
 		src/update_last_cmd_code.c \
-        src/set_shell_data.c \
+        src/init_shell_data.c \
 		src/split_input_str_utils/split_input_str_utils.c \
         src/split_input_str.c \
 		src/process_expansion_utils/process_expansion_utils.c \

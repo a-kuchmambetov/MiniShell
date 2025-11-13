@@ -44,7 +44,7 @@ int get_value_from_str(t_env_list env, t_split_data *dt, const char *input, char
         return (1);
     if (key_len < 1)
     {
-        *value = ft_calloc(1, 1);
+        *value = ft_strdup("$");
         if (!*value)
             return (1);
         return (0);

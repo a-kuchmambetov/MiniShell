@@ -27,7 +27,10 @@ void parse_envp(t_shell_data *data, char **envp)
         if (!new_node || !res)
             return (free_node(new_node), free_str_arr(res));
         new_node->key = ft_strdup(res[0]);
-        new_node->value = ft_strdup(res[1]);
+        if (!res[1])
+            new_node->value = ft_strdup("");
+        else
+            new_node->value = ft_strdup(res[1]);
         if (!new_node->key || !new_node->value)
             return (free_node(new_node), free_str_arr(res));
         free_str_arr(res);

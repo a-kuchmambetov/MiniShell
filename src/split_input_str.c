@@ -7,20 +7,6 @@
 // <Makefile cat main.c main.h|cat>test - read from files (main.c, main.h) (redirection ignored cause files names given) and redirect out to pipe and read from pipe and write to output file
 // <Makefile cat main.c main.h|>test - read from files (main.c, main.h) (redirection ignored cause files names given) and redirect out to pipe and read from pipe but ignored cause no cmd and write to output filem but no input so nothing happens (just create empty file)
 
-static int process_delimiter(const char *s, t_split_data *dt, int delim_len)
-{
-    if (dt->i - dt->l > 0)
-        if (add_row(dt, ft_strndup(s + dt->l, dt->i - dt->l)))
-            return (ft_print_err("Error: split input failed\n"),
-                    free_str_arr(dt->arr), 1);
-    if (add_row(dt, ft_strndup(s + dt->i, delim_len)))
-        return (ft_print_err("Error: split input failed\n"),
-                free_str_arr(dt->arr), 1);
-    dt->l = dt->i + delim_len;
-    dt->i += delim_len;
-    return (0);
-}
-
 static int quote_parse(const char *s, t_split_data *dt, const char quote_char)
 {
     dt->in_quote = YES_QUOTE;
