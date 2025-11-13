@@ -13,7 +13,7 @@ static int prepare_pipe(int pipefd[2], t_cmd_node *cmd)
     }
     return (0);
 }
-
+//in case of error closing pipes, sets to structure variables info about error
 static int handle_iter_error(t_exec_ctx *ctx, int pipefd[2], int input_fd)
 {
     if (pipefd[0] != -1)
@@ -26,7 +26,7 @@ static int handle_iter_error(t_exec_ctx *ctx, int pipefd[2], int input_fd)
     ctx->had_error = true;
     return (1);
 }
-
+//fork and call of child_execute
 int spawn_child_process(t_shell_data *data, t_exec_ctx *ctx,
         t_cmd_node *cmd, int pipefd[2])
 {
@@ -61,7 +61,7 @@ static void update_pipe_links(t_exec_ctx *ctx, t_cmd_node *cmd, int pipefd[2])
         ctx->prev_pipe_read = -1;
     }
 }
-
+// pipe init, check for builtin,
 int process_command_node(t_shell_data *data, t_exec_ctx *ctx, t_cmd_node *cmd)
 {
     int pipefd[2];

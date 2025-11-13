@@ -98,7 +98,7 @@ static char **split_space(t_polish_data dt)
 		{
 			trimmed_str = ft_strtrim(dt.arr[dt.i], " ");
 			code = !trimmed_str ||
-				   merge_splited_space(&new_arr, split_input_str(trimmed_str));
+				   merge_splited_space(&new_arr, split_input_str_relaxed(trimmed_str));
 			my_free(trimmed_str);
 		}
 		if (code)

@@ -46,3 +46,17 @@ int handle_add_row(const char *s, t_split_data *dt)
                 free_str_arr(dt->arr), 1);
     return (0);
 }
+
+int process_delimiter(const char *s, t_split_data *dt, int delim_len)
+{
+    if (dt->i - dt->l > 0)
+        if (add_row(dt, ft_strndup(s + dt->l, dt->i - dt->l)))
+            return (ft_print_err("Error: split input failed\n"),
+                    free_str_arr(dt->arr), 1);
+    if (add_row(dt, ft_strndup(s + dt->i, delim_len)))
+        return (ft_print_err("Error: split input failed\n"),
+                free_str_arr(dt->arr), 1);
+    dt->l = dt->i + delim_len;
+    dt->i += delim_len;
+    return (0);
+}

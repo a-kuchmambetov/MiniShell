@@ -69,7 +69,6 @@ int process_expansion(t_env_list env, char **input)
     {
         if (s[dt.i] == '$')
         {
-            
             if (add_row(&dt, ft_strndup(s + dt.l, dt.i - dt.l)))
                 return (free_str_arr(dt.arr), 1);
             if (add_value_to_arr(&dt, env, input))

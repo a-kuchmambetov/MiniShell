@@ -37,7 +37,7 @@ int main(int argc, char **argv, char **envp)
     data = (t_shell_data){0};
 
     // Check with empty envp
-    char *envp2[] = {"PATH=/home/artem/bin:/bin", "HOME=/home/artem", "CMD=o hello world > res.txt", "TEST=something inside my head", "COM= < Makefile'something'           c", NULL};
+    char *envp2[] = {"PATH=/home/artem/bin:/bin", "HOME=/home/artem", "CMD=o hello world > res.txt", "TEST=something          inside my head", "COM= < Makefile'something             \"      head   3    \"        c", NULL};
     parse_envp(&data, envp2);
     if (data.env_list.len == 0)
     {
@@ -60,14 +60,15 @@ int main(int argc, char **argv, char **envp)
     }
 
     test(data, "<Makefile$TEST cat|grep something");
-    test(data, "<Makefile $TEST cat|grep something");
-    test(data, "<Makefile\"$TEST\" cat|grep something");
-    test(data, "<Makefile\'$TEST\' cat|grep something");
+    test(data, "<Makefile $TEST\"dawdawd '      \" cat|grep something");
+    test(data, "<Makefile     \"     $TEST        \" cat|grep something");
+    test(data, "<Makefile\'$TEST\"         \"\' cat|grep something");
     test(data, "<Makefile'some' cat");
     test(data, "<< Makefile$TEST cat");
     test(data, "<< Makefile'some' cat");
     test(data, "ech$CMD");
     test(data, "$COM");
+    test(data, "\"$COM\"");
     test(data, "'$COM'");
 
     free_shell_data(&data);
