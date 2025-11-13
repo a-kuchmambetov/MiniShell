@@ -198,7 +198,7 @@ char **split_space(t_polish_data dt)
             trimmed_str = ft_strtrim(dt.arr[dt.i], " ");
             if (!trimmed_str)
                 return (free_str_arr(new_arr), NULL);
-            code = merge_splited_space(&new_arr, split_input_str(trimmed_str));
+            code = merge_splited_space(&new_arr, split_input_str_relaxed(trimmed_str));
             my_free(trimmed_str);
         }
         if (code)

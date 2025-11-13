@@ -1,5 +1,5 @@
 #include "executor.h"
-
+// check for empty cmd and $?
 static int handle_special_cases(t_shell_data *data, t_exec_ctx *ctx)
 {
     if (is_empty_cmd(ctx->current))
@@ -11,7 +11,7 @@ static int handle_special_cases(t_shell_data *data, t_exec_ctx *ctx)
     }
     return (0);
 }
-
+// parse through all cmd in structure and call for each execution respectively 
 static int run_loop(t_shell_data *data, t_exec_ctx *ctx)
 {
     while (ctx->current)
@@ -27,7 +27,7 @@ static int run_loop(t_shell_data *data, t_exec_ctx *ctx)
     }
     return (0);
 }
-
+// start of executuin, initiallaizing structures, call functions 
 int execute_command_list(t_shell_data *data)
 {
     t_exec_ctx ctx;

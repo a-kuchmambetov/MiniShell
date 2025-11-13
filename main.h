@@ -60,6 +60,7 @@ int exec_builtin(t_shell_data *data, char **args);
 // Command t_cmd_list list management
 void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
 char **split_input_str(const char *s);
+char **split_input_str_relaxed(const char *s);
 int polish_input_arr(char ***arr);
 int create_cmd_list(t_shell_data *dt, char **str_arr);
 int parse_input(t_shell_data *data, char *input);

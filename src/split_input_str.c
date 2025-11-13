@@ -64,7 +64,7 @@ static int regular_parser(const char *s, t_split_data *dt, int delim_len)
     return (0);
 }
 
-char **split_input_str(const char *s)
+static char **split_input_str_impl(const char *s, int parse_quotes)
 {
     t_split_data dt;
     int delim_len;
@@ -73,7 +73,7 @@ char **split_input_str(const char *s)
     dt = (t_split_data){0};
     while (s[dt.i])
     {
-        if (s[dt.i] == '\'' || s[dt.i] == '\"')
+        if (parse_quotes && (s[dt.i] == '\'' || s[dt.i] == '\"'))
         {
             if (quote_parse(s, &dt, s[dt.i]))
                 return (NULL);
@@ -85,4 +85,14 @@ char **split_input_str(const char *s)
         if (handle_add_row(s, &dt))
             return (NULL);
     return (dt.arr);
+}
+
+char **split_input_str(const char *s)
+{
+    return (split_input_str_impl(s, 1));
+}
+
+char **split_input_str_relaxed(const char *s)
+{
+    return (split_input_str_impl(s, 0));
 }
