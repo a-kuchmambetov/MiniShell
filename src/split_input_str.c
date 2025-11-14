@@ -78,7 +78,7 @@ char **split_input_str(const char *s)
     return (split_input_str_impl(s, 1));
 }
 
-char **split_input_str_relaxed(const char *s)
+char **split_input_str_r(const char *s)
 {
     return (split_input_str_impl(s, 0));
 }

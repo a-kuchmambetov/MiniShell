@@ -1,6 +1,6 @@
 #include "parse_input_utils.h"
 
-static int merge_splited_space(char ***dst_a, char **src_arr)
+static int merge_splited(char ***dst_a, char **src_arr)
 {
 	const int src_size = arr_size(src_arr);
 	t_polish_data dt;
@@ -98,7 +98,7 @@ static char **split_space(t_polish_data dt)
 		{
 			trimmed_str = ft_strtrim(dt.arr[dt.i], " ");
 			code = !trimmed_str ||
-				   merge_splited_space(&new_arr, split_input_str_relaxed(trimmed_str));
+				   merge_splited(&new_arr, split_input_str_r(trimmed_str));
 			my_free(trimmed_str);
 		}
 		if (code)

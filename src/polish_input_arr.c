@@ -126,7 +126,7 @@ int protect_delim(char **arr)
     return (0);
 }
 
-int merge_splited_space(char ***dst_a, char **src_arr)
+int merge_splited(char ***dst_a, char **src_arr)
 {
     const int src_size = arr_size(src_arr);
     t_polish_data dt;
@@ -198,7 +198,7 @@ char **split_space(t_polish_data dt)
             trimmed_str = ft_strtrim(dt.arr[dt.i], " ");
             if (!trimmed_str)
                 return (free_str_arr(new_arr), NULL);
-            code = merge_splited_space(&new_arr, split_input_str_relaxed(trimmed_str));
+            code = merge_splited(&new_arr, split_input_str_r(trimmed_str));
             my_free(trimmed_str);
         }
         if (code)
