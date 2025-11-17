@@ -16,45 +16,42 @@
  * @brief Adds or updates an environment variable from assignment.
  */
 
-static int	process_assignment(t_shell_data *data, char **args, int *i)
+static void	clean_process_assigment(char *name, char *val, char *final)
+{
+		my_free(name);
+		my_free(val);
+		my_free(final);
+}
+static int	error_not_valid_identifier(char *args, char *name)
+{
+	ft_print_err("export: `%s' not a valid identifier\n", args[1]);
+	return (my_free(name),1);
+}
+static int	process_assignment(t_shell_data *data, char *arg)
 {
 	char	*name;
-	char	*val;
+	char	*value;
 	char	*final;
 	char	*eq;
 
-	eq = ft_strchr(args[*i], '=');
+	ft_printf("arg - %s\n", arg);
+	eq = ft_strchr(arg, '=');
 	if (!eq)
-		return (1); // некоректний синтаксис
-
-	name = ft_substr(args[*i], 0, eq - args[*i]);
+		return (1);
+	name = ft_substr(arg, 0, eq - arg);
 	if (!name)
-		return (1); // malloc fail
+		return (1);
 	if (!is_valid_identifier(name))
-	{
-		ft_print_err("export: `%s' not a valid identifier\n", args[1]);
-		return (free(name),1);
-	}
-	val = collect_value_after_equal(args, i);
-	if (!val)
-		return (free(name),1);
-	final = build_final_pair(name, val);
+		return(error_not_valid_identifier(arg, name));
+	value = ft_strdup(eq + 1);
+	if (!value)
+		return (my_free(name),1);
+	final = build_final_pair(name, value);
 	if (!final)
-	{
-		free(name);
-		free(val);
-		return (1);
-	}
+		return (my_free(name), my_free(value),1);
 	if (!add_or_update_env(data, final))
-	{
-		free(name);
-		free(val);
-		free(final);
-		return (1);
-	}
-	free(name);
-	free(val);
-	free(final);
+		return(clean_process_assigment(name, value, final), 1);
+	clean_process_assigment(name, value, final);
 	return (0);
 }
 
@@ -73,69 +70,47 @@ static void	print_export_list(t_env_node *node)
 		node = node->next;
 	}
 }
+/*
+** Handles "export NAME" (without '=')
+*/
+static int	handle_no_equal(char *arg)
+{
+	if (!is_valid_identifier(arg))
+	{
+		ft_print_err("export: `%s': not a valid identifier\n", arg);
+		return (1);
+	}
+	// if (!add_or_update_env(data, arg))
+	// 	return (1);
+	return (0);
+}
 
 /**
  * @brief Builtin: export command.
- *
- * Supports:
- * - export               → prints all variables
- * - export VAR           → adds VAR if valid
- * - export VAR=VALUE     → adds or updates with value (supports quotes/spaces)
  */
 int	builtin_export(t_shell_data *data, char **args)
 {
 	int		i;
-	char	*trimmed;
 	int		exit_code;
-	int		res;
 
 	exit_code = 0;
 	if (!args[1] || args[1][0] == '\0')
 		return (print_export_list(data->env_list.first), 0);
-
 	i = 1;
+	// ft_printf("0 - %s\n", args[0]);
 	while (args[i])
 	{
-		// 🔹 копіюємо або трімимо, щоб не втратити пробіли в значеннях
+		// ft_printf("%d - %s\n", i, args[i]);
 		if (ft_strchr(args[i], '='))
-			trimmed = ft_strdup(args[i]);
-		else
-			trimmed = ft_strtrim(args[i], " \t");
-		if (!trimmed)
-			return (1); // malloc error
-		// 🔹 якщо порожній аргумент — пропускаємо
-		if (trimmed[0] == '\0')
 		{
-			my_free(trimmed);
-			i++;
-			continue;
-		}
-			
-		// 🔹 без '=' → просто ім'я
-		if (!ft_strchr(trimmed, '='))
-		{
-			if (!is_valid_identifier(trimmed))
-			{
-				ft_print_err("export: `%s': not a valid identifier\n", trimmed);
-				exit_code = 1;
-			}
-			else
-			{
-				if (!add_or_update_env(data, trimmed))
-				{
-					my_free(trimmed);
-					return (1);
-				}
-			}
-		}
-		// 🔹 з '=' → повне присвоєння
-		else
-		{
-			res = process_assignment(data, args, &i);
-			if (res == 1)
+			if (process_assignment(data, args[i]))
 				exit_code = 1;
 		}
-		my_free(trimmed);
+		else
+		{
+			if (handle_no_equal(args[i]))
+				exit_code = 1;
+		}
 		i++;
 	}
 	sync_envp(data);
