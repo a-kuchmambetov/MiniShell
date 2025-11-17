@@ -25,7 +25,7 @@ static int	process_assignment(t_shell_data *data, char **args, int *i)
 
 	eq = ft_strchr(args[*i], '=');
 	if (!eq)
-		return (2); // некоректний синтаксис, bash би пропустив, але ставимо 2
+		return (1); // некоректний синтаксис
 
 	name = ft_substr(args[*i], 0, eq - args[*i]);
 	if (!name)
@@ -33,15 +33,11 @@ static int	process_assignment(t_shell_data *data, char **args, int *i)
 	if (!is_valid_identifier(name))
 	{
 		ft_print_err("export: `%s' not a valid identifier\n", args[1]);
-		free(name);
-		return (2);
+		return (free(name),1);
 	}
 	val = collect_value_after_equal(args, i);
 	if (!val)
-	{
-		free(name);
-		return (1);
-	}
+		return (free(name),1);
 	final = build_final_pair(name, val);
 	if (!final)
 	{
@@ -112,7 +108,7 @@ int	builtin_export(t_shell_data *data, char **args)
 		{
 			my_free(trimmed);
 			i++;
-			return (0);
+			continue;
 		}
 			
 		// 🔹 без '=' → просто ім'я
@@ -120,20 +116,24 @@ int	builtin_export(t_shell_data *data, char **args)
 		{
 			if (!is_valid_identifier(trimmed))
 			{
-				ft_print_err("export: not a valid identifier\n");
-				exit_code = 2; // позначаємо логічну помилку, але не перериваємо
+				ft_print_err("export: `%s': not a valid identifier\n", trimmed);
+				exit_code = 1;
 			}
-			else if (!add_or_update_env(data, trimmed))
-				return (my_free(trimmed), 1);
+			else
+			{
+				if (!add_or_update_env(data, trimmed))
+				{
+					my_free(trimmed);
+					return (1);
+				}
+			}
 		}
 		// 🔹 з '=' → повне присвоєння
 		else
 		{
 			res = process_assignment(data, args, &i);
 			if (res == 1)
-				return (my_free(trimmed), 1); //parcing problem
-			if (res == 2)
-				exit_code = 2;
+				exit_code = 1;
 		}
 		my_free(trimmed);
 		i++;

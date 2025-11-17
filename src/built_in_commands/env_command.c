@@ -22,15 +22,10 @@
  * @param args Command arguments array.
  * @return 0 on success, 1 if extra arguments are provided.
  */
-int	builtin_env(t_shell_data *data, char **args)
+int	builtin_env(t_shell_data *data)
 {
 	int	i;
 
-	if (args[1])
-	{
-		ft_putstr_fd("minishell: env: No such file or directory\n", 2);
-		return (1);
-	}
 	i = 0;
 	while (data->envp[i])
 	{

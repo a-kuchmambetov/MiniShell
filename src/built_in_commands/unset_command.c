@@ -62,10 +62,7 @@ int	builtin_unset(t_shell_data *data, char **args)
 	i = 1;
 	while (args[i])
 	{
-		if (!is_valid_identifier(args[i]))
-			ft_putstr_fd("minishell: unset: not a valid identifier\n", 2);
-		else
-			remove_env_node(&data->env_list, args[i]);
+		remove_env_node(&data->env_list, args[i]);
 		i++;
 	}
 	sync_envp(data);

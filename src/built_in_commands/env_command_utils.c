@@ -114,7 +114,6 @@ int	add_or_update_env(t_shell_data *data, const char *arg)
 	char	*key;
 	char	*value;
 
-	value = NULL;
 	equal = ft_strchr(arg, '=');
 	if (equal)
 	{
@@ -122,7 +121,10 @@ int	add_or_update_env(t_shell_data *data, const char *arg)
 		value = ft_strdup(equal + 1);
 	}
 	else
+	{
 		key = ft_strdup(arg);
+		value = ft_strdup("");
+	}
 	if (!key || !value)
 		return (my_free(key), my_free(value), 0);
 	if (!update_existing_env(&data->env_list, key, value))

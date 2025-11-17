@@ -40,7 +40,7 @@ int		builtin_cd(t_shell_data *data, char **args);
 int		builtin_pwd(t_shell_data *data, char **args);
 int		builtin_export(t_shell_data *data, char **args);
 int		builtin_unset(t_shell_data *data, char **args);
-int		builtin_env(t_shell_data *data, char **args);
+int		builtin_env(t_shell_data *data);
 int		builtin_exit(t_shell_data *data, char **args);
 int		change_dir_update(t_shell_data *data, char *pa, char *old, char **args);
 long	ft_atoi_long(const char *str, bool *overflow);
