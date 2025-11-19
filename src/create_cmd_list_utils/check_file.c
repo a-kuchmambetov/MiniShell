@@ -5,7 +5,8 @@ int check_file_open(const char *filename)
 {
     const int fd = open(filename, O_RDONLY);
 
-    if ((*filename < 'A' || *filename > 'z') && (*filename < '0' || *filename > '9'))
+    // if ((*filename < 'A' || *filename > 'z') && (*filename < '0' || *filename > '9'))
+    if (*filename == '\0' || *filename == '/')
     {
         ft_print_err("syntax error near unexpected token `%s'\n", filename);
         return (close(fd), 1);
@@ -23,7 +24,7 @@ int check_file_create(const char *filename, const int redir_type)
 {
     int fd;
 
-    if ((*filename < 'A' || *filename > 'z') && (*filename < '0' || *filename > '9'))
+    if (*filename == '\0' || *filename == '/')
     {
         ft_print_err("syntax error near unexpected token `%s'\n", filename);
         return (1);

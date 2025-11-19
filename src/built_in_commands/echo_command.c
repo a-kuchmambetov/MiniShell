@@ -17,64 +17,48 @@
  * @param str Input string.
  * @return 1 if only 'n', 0 otherwise.
  */
-int	all_n(char *str)
-{
-	int	j;
-
-	j = 0;
-	while (str[j])
-	{
-		if (str[j] != 'n')
-			return (0);
-		j++;
-	}
-	return (1);
-}
-
-/**
- * @brief Skips all '-n' flags in echo arguments.
- * @param argv Command arguments.
- * @return Index of the first non-flag argument.
- */
-static int	skip_n_flags(char **argv)
+static int	all_n(const char *str)
 {
 	int	i;
 
+	if (!str || str[0] != '-')
+		return (0);
 	i = 1;
-	while (argv[i] && !ft_strncmp(argv[i], "-n", 2))
+	if (!str[i])
+		return (0);
+	while (str[i])
 	{
-		if (!all_n(argv[i] + 1))
-			break ;
+		if (str[i] != 'n')
+			return (0);
 		i++;
 	}
-	return (i);
+	return (i > 1);
 }
 
 /**
- * @brief Implements echo builtin with '-n' option and variable expansion.
- * @param argv Command arguments.
- * @param envp Environment variables.
+ * @brief Implements echo builtin with '-n' option and variable expansion
  * @return 0 on success, 1 on failure.
  */
-int	builtin_echo(char **argv, char **envp)
+int	builtin_echo(char **argv)
 {
-	int		i;
-	int		n_flag;
-	char	*arg;
+	int	i;
+	int	no_newline;
 
-	i = skip_n_flags(argv);
-	n_flag = (i > 1);
+	i = 1;
+	no_newline = 0;
+	while (argv[i] && all_n(argv[i]))
+	{
+		no_newline = 1;
+		i++;
+	}
 	while (argv[i])
 	{
-		arg = parse_arg(argv[i], envp);
-		if (!arg)
-			return (1);
-		write(1, arg, ft_strlen(arg));
-		free(arg);
-		if (argv[++i])
+		write(1, argv[i], ft_strlen(argv[i]));
+		if (argv[i + 1])
 			write(1, " ", 1);
+		i++;
 	}
-	if (!n_flag)
+	if (!no_newline)
 		write(1, "\n", 1);
 	return (0);
 }

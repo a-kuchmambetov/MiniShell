@@ -63,15 +63,14 @@ int process_expansion(t_env_list env, char **input)
 {
     const char *s = *input;
     t_split_data dt;
-
+    
     dt = (t_split_data){0};
     while (s[dt.i])
     {
         if (s[dt.i] == '$')
         {
             if (add_row(&dt, ft_strndup(s + dt.l, dt.i - dt.l)))
-                return (ft_print_err("error: expanding input failed\n"),
-                        free_str_arr(dt.arr), 1);
+                return (free_str_arr(dt.arr), 1);
             if (add_value_to_arr(&dt, env, input))
                 return (1);
             dt.l = dt.i + 1;
@@ -80,37 +79,18 @@ int process_expansion(t_env_list env, char **input)
     }
     if (dt.i > dt.l)
         if (add_row(&dt, ft_strndup(s + dt.l, dt.i - dt.l)))
-            return (ft_print_err("error: expanding input failed\n"),
-                    free_str_arr(dt.arr), 1);
-    free(*input);
+            return (free_str_arr(dt.arr), 1);
+    my_free(*input);
     *input = NULL;
-    if (join_arr(&dt, input))
-        return (1);
-    return (0);
+    return (join_arr(&dt, input));
 }
 
 int check_do_expansion(t_env_list env, char **input)
 {
-    char *value;
-
-    value = NULL;
-    if (!input || !*input)
-        return (0);
-    if ((*input)[0] == '"')
-    {
-        value = ft_strtrim(*input, "\"");
-        free(*input);
-        *input = value;
-    }
-    else if ((*input)[0] == '\'')
-    {
-        value = ft_strtrim(*input, "\'");
-        free(*input);
-        *input = value;
-        return (0);
-    }
     if (!input || !*input)
         return (1);
+    if ((*input)[0] == '\'' || ft_strncmp(*input, " ", 1) == 0)
+        return (0);
     if (process_expansion(env, input))
         return (1);
     return (0);

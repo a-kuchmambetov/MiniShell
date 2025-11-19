@@ -26,21 +26,21 @@ typedef struct s_parser
 	int			bufsize;
 	char		**envp;
 	int			i;
+	int			in_var_expand;
 }	t_parser;
 
 char	*get_env_value(char **envp, const char *name);
-char	*parse_arg(const char *s, char **envp);
 int		is_builtin(char *cmd);
 int		exec_builtin(t_shell_data *data, char **args);
 int		add_or_update_env(t_shell_data *data, const char *arg);
 int		sync_envp(t_shell_data *data);
 int		is_valid_identifier(const char *str);
-int		builtin_echo(char **argv, char **envp);
+int		builtin_echo(char **argv);
 int		builtin_cd(t_shell_data *data, char **args);
 int		builtin_pwd(t_shell_data *data, char **args);
 int		builtin_export(t_shell_data *data, char **args);
 int		builtin_unset(t_shell_data *data, char **args);
-int		builtin_env(t_shell_data *data, char **args);
+int		builtin_env(t_shell_data *data);
 int		builtin_exit(t_shell_data *data, char **args);
 int		change_dir_update(t_shell_data *data, char *pa, char *old, char **args);
 long	ft_atoi_long(const char *str, bool *overflow);

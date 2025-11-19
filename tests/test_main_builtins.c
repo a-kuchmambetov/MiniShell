@@ -13,22 +13,75 @@ void mock_exit(int status)
 #endif
 
 // ===========================================================
-//   Helper: Execute one command (built-in or external)
+//   Helper: create simple command node for testing
 // ===========================================================
-void process_input(t_shell_data *data, char *input)
+t_cmd_node *create_simple_cmd(const char *input)
 {
-    char **args;
+    t_cmd_node *node = malloc(sizeof(t_cmd_node));
+    if (!node)
+        return (NULL);
 
-    args = ft_split(input, ' ');
-    if (!args)
-        return;
+    // Very simple split: first word = cmd, rest = args
+    char **split = ft_split(input, ' ');
+    if (!split)
+    {
+        free(node);
+        return (NULL);
+    }
 
-    if (is_builtin(args[0]))
-        data->last_exit_status = exec_builtin(data, args);
+    node->cmd = ft_strdup(split[0]);
+    if (split[1])
+    {
+        // join rest of parts into args string
+        size_t total_len = 0;
+        for (int i = 1; split[i]; i++)
+            total_len += ft_strlen(split[i]) + 1;
+        node->args = malloc(total_len + 1);
+        if (!node->args)
+        {
+            free(node->cmd);
+            free_str_arr(split);
+            free(node);
+            return (NULL);
+        }
+        node->args[0] = '\0';
+        for (int i = 1; split[i]; i++)
+        {
+            ft_strlcat(node->args, split[i], total_len + 1);
+            if (split[i + 1])
+                ft_strlcat(node->args, " ", total_len + 1);
+        }
+    }
     else
-        exec_cmd(data, args[0], args);
+        node->args = NULL;
 
-    free_str_arr(args);
+    node->input_redir_type = NO_REDIR;
+    node->input_redir = NULL;
+    node->output_redir_type = NO_REDIR;
+    node->output_redir = NULL;
+    node->is_pipe_in = 0;
+    node->is_pipe_out = 0;
+    node->next = NULL;
+
+    free_str_arr(split);
+    return (node);
+}
+
+// ===========================================================
+//   Helper: execute command using original process_input()
+// ===========================================================
+void run_command(t_shell_data *data, const char *input)
+{
+    t_cmd_node *cmd = create_simple_cmd(input);
+    if (!cmd)
+    {
+        printf(COLOR_RED "[FAIL] MEMORY ALLOCATION ERROR in run_command\n" COLOR_RESET);
+        return;
+    }
+    process_input(data, cmd);
+    free(cmd->cmd);
+    free(cmd->args);
+    free(cmd);
 }
 
 // ===========================================================
@@ -45,28 +98,26 @@ int ft_strcmp(const char *s1, const char *s2)
 // ===========================================================
 //   Execute + check exit status
 // ===========================================================
-void execute_and_check(t_shell_data *data, char *input, int expected_status, const char *test_name)
+void execute_and_check(t_shell_data *data, const char *input, int expected_status, const char *test_name)
 {
-    char *input_copy = ft_strdup(input);
-    if (!input_copy)
+    t_cmd_node *cmd = create_simple_cmd(input);
+    if (!cmd)
     {
-        printf(COLOR_RED "[FAIL] %s: MEMORY ALLOCATION ERROR\n" COLOR_RESET, test_name);
+        printf(COLOR_RED "[FAIL] %s: MEMORY ERROR\n" COLOR_RESET, test_name);
         return;
     }
-
-    process_input(data, input_copy);
-
+    process_input(data, cmd);
     int actual_status = WIFEXITED(data->last_exit_status)
         ? WEXITSTATUS(data->last_exit_status)
         : data->last_exit_status;
-
     if (actual_status == expected_status)
         printf(COLOR_GREEN "[OK] %s: '%s' -> Status: %d\n" COLOR_RESET, test_name, input, actual_status);
     else
         printf(COLOR_RED "[FAIL] %s: '%s' -> EXPECTED: %d, GOT: %d (raw: %d)\n" COLOR_RESET,
                test_name, input, expected_status, actual_status, data->last_exit_status);
-
-    free(input_copy);
+    free(cmd->cmd);
+    free(cmd->args);
+    free(cmd);
 }
 
 // ===========================================================
@@ -75,7 +126,6 @@ void execute_and_check(t_shell_data *data, char *input, int expected_status, con
 void check_env_value(t_shell_data *data, const char *key, const char *expected_value, const char *test_name)
 {
     char *result_value = get_env_value(data->envp, key);
-
     if (result_value && ft_strncmp(result_value, expected_value, ft_strlen(expected_value)) == 0)
         printf(COLOR_GREEN "[OK] %s: %s='%s'\n" COLOR_RESET, test_name, key, result_value);
     else
@@ -103,7 +153,7 @@ void check_cwd(const char *expected_end, const char *test_name)
 }
 
 // ===========================================================
-//   MAIN
+//   MAIN TEST SUITE
 // ===========================================================
 int main(int argc, char **argv, char **envp)
 {
@@ -117,39 +167,37 @@ int main(int argc, char **argv, char **envp)
 
     init_shell_data(&data, envp);
 
-    printf(COLOR_BLUE "=== MINISHELL TEST MODE ===\n" COLOR_RESET);
+    printf(COLOR_BLUE "=== MINISHELL TEST MODE (using original process_input) ===\n" COLOR_RESET);
 
     // -----------------------------------------------------------
     // 1. $? and variable expansion
     // -----------------------------------------------------------
     printf("\n--- 1. $? and EXPANSION ---\n");
 
-    // Bash returns 2 for missing file
     execute_and_check(&data, "ls file_not_found_127", 2, "TEST_1.1_LS_FAIL");
 
-    // Note: $? expansion not yet implemented
     printf("Test 1.2: echo $? (expected expansion, not yet implemented)\n");
-    process_input(&data, "echo $?");
+    run_command(&data, "echo $?");
 
     execute_and_check(&data, "/bin/ls", 0, "TEST_1.3_LS_SUCCESS");
     printf("Test 1.4: echo $? (expected expansion, not yet implemented)\n");
-    process_input(&data, "echo $?");
+    run_command(&data, "echo $?");
 
     execute_and_check(&data, "export MY_NAME=Minishell", 0, "TEST_1.5_SETUP_VAR");
     printf("Test 1.6: echo \"Value: $MY_NAME\" -> expect 'Value: Minishell\\n'\n");
-    process_input(&data, "echo \"Value: $MY_NAME\"");
+    run_command(&data, "echo \"Value: $MY_NAME\"");
     printf("Test 1.7: echo '$MY_NAME' -> expect literal '$MY_NAME'\\n\n");
-    process_input(&data, "echo '$MY_NAME'");
+    run_command(&data, "echo '$MY_NAME'");
 
     // -----------------------------------------------------------
     // 2. echo -n and quotes
     // -----------------------------------------------------------
     printf("\n--- 2. ECHO ---\n");
     printf("Test 2.1: echo -n -n Hello -> expect 'Hello' no newline\n");
-    process_input(&data, "echo -n -n Hello");
+    run_command(&data, "echo -n -n Hello");
     printf("\nTest 2.2: echo '' and echo \"\" -> expect newline twice\n");
-    process_input(&data, "echo ''");
-    process_input(&data, "echo \"\"");
+    run_command(&data, "echo ''");
+    run_command(&data, "echo \"\"");
 
     // -----------------------------------------------------------
     // 3. cd / pwd
@@ -168,7 +216,7 @@ int main(int argc, char **argv, char **envp)
     execute_and_check(&data, "cd /nonexistent_dir", 1, "TEST_3.4_CD_FAIL");
 
     printf("Test 3.5: pwd -> visual check\n");
-    process_input(&data, "pwd");
+    run_command(&data, "pwd");
 
     // -----------------------------------------------------------
     // 4. export / unset / env
@@ -179,13 +227,12 @@ int main(int argc, char **argv, char **envp)
 
     execute_and_check(&data, "export NO_VAL", 0, "TEST_4.2_EXPORT_NO_VALUE");
     printf("Test 4.2.1: export (show NO_VAL)\n");
-    process_input(&data, "export");
+    run_command(&data, "export");
 
-    // Restore PATH after test to keep env working
     execute_and_check(&data, "export PATH=/usr/bin:/bin:/usr/local/bin", 0, "TEST_4.3_RESTORE_PATH");
 
     printf("Test 4.4: env (visual check)\n");
-    process_input(&data, "env");
+    run_command(&data, "env");
 
     // -----------------------------------------------------------
     // 5. exit (mocked)
@@ -193,9 +240,9 @@ int main(int argc, char **argv, char **envp)
     printf("\n--- 5. EXIT (mocked) ---\n");
     execute_and_check(&data, "exit 42 1", 1, "TEST_5.1_EXIT_TOO_MANY");
     printf("Test 5.2: exit abc (should call mock_exit(2))\n");
-    process_input(&data, "exit abc");
+    run_command(&data, "exit abc");
     printf("Test 5.3: exit (should call mock_exit with last status)\n");
-    process_input(&data, "exit");
+    run_command(&data, "exit");
 
     // -----------------------------------------------------------
     // Cleanup

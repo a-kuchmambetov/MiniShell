@@ -48,10 +48,17 @@ int print_cmd_list(t_cmd_list *cmd_list, char *input)
 
 int test(char *input)
 {
-    char **arr;
+    t_shell_data data;
+    data = (t_shell_data){0};
 
-    arr = split_input_str(input);
-    if (!arr)
+    char *envp2[] = {"PATH=/home/artem/.nvm/versions/node/v22.19.0/bin:/home/artem/.local/funcheck/host:/home/artem/.npm-global/bin:/home/artem/bin:/home/artem/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin", "HOME=/home/artem", "PWD=/home/artem/minishell", NULL};
+    if (init_shell_data(&data, envp2))
+        return (free_shell_data(&data), ft_print_err("Error: Failed to initialize shell data\n"), 1);
+
+    int code;
+
+    code = parse_input(&data, input);
+    if (code)
     {
         printf(COLOR_CYAN);
         printf("\nCommand List (Total Commands: %d):\n", 0);
@@ -66,39 +73,14 @@ int test(char *input)
         fflush(stdout);
         printf("-------------------------------\n");
 
-        free_str_arr(arr);
-        return (1);
+        fflush(stdout);
+        return (free_shell_data(&data), code);
     }
-    fflush(stdout);
-
-    t_shell_data data;
-    data = (t_shell_data){0};
-    char *envp2[] = {"PATH=/home/artem/.nvm/versions/node/v22.19.0/bin:/home/artem/.local/funcheck/host:/home/artem/.npm-global/bin:/home/artem/bin:/home/artem/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin", "HOME=/home/artem", "PWD=/home/artem/minishell", NULL};
-    parse_envp(&data, envp2);
-    set_envp_from_env(&data);
-    parse_exec_folders(&data);
-
     printf(COLOR_MAGENTA);
     printf("\n-------------------------------");
     printf(COLOR_RESET);
     printf(COLOR_RED);
     fflush(stdout);
-    if (create_cmd_list(&data, arr))
-    {
-        printf(COLOR_RESET);
-        printf(COLOR_CYAN);
-        printf("Command List (Total Commands: %d):\n", 0);
-        printf(COLOR_RESET);
-        printf("Input: %s%s\n", COLOR_YELLOW, input);
-        printf(COLOR_RESET);
-        fflush(stdout);
-        printf("-------------------------------\n");
-        fflush(stdout);
-
-        free_shell_data(&data);
-        free_str_arr(arr);
-        return (1);
-    }
 
     t_cmd_list *cmd_list = &data.cmd_list;
     fflush(stdout);
@@ -106,7 +88,6 @@ int test(char *input)
     fflush(stdout);
 
     free_shell_data(&data);
-    free_str_arr(arr);
     return 0;
 }
 
@@ -114,7 +95,7 @@ int main()
 {
     setup_signals_prompt();
 
-    test("echo hello | grep h >> output.txt");
+    test("echo hello some text and other stuff | grep h >> output.txt");
     test("   ls           -la       /home/user/Documents  > result.txt  <             input.txt                   ");
     test("cat << EOF | grep \"pattern >> output.txt\"");
     test("cat << \"EOF\"");

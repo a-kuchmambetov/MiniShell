@@ -11,20 +11,41 @@ LIBFTDIR = libft
 LIBFT    = $(LIBFTDIR)/libft.a
 
 SRC = src/exec_cmd.c \
+		src/executor/executor_command_info.c \
+		src/executor/executor_build_argv.c \
+		src/executor/executor_io.c \
+		src/executor/executor_child.c \
+		src/executor/executor_parent.c \
+		src/executor/executor_path.c \
+		src/executor/executor_wait.c \
+		src/executor/executor_ctx.c \
+		src/executor/executor_iteration.c \
+		src/executor/executor_run.c \
+		src/my_free.c \
         src/free_utils.c \
         src/ft_print_err.c \
-        src/split_input_str.c \
         src/print_prompt_header.c \
-        src/set_shell_data.c \
-        src/split_input_str_utils/split_input_str_utils.c \
-		src/expande_input_arr.c \
+		src/update_last_cmd_code.c \
+        src/init_shell_data.c \
+		src/split_input_str_utils/split_input_str_utils.c \
+        src/split_input_str.c \
+		src/process_expansion_utils/process_expansion_utils.c \
+		src/process_expansion.c \
+		src/start_here_doc_utils/file_utils.c \
+		src/start_here_doc_utils/start_here_doc_utils.c \
+		src/start_here_doc.c \
+		src/parse_input_utils/trim_quote.c \
+		src/parse_input_utils/expand_input_arr.c \
+		src/parse_input_utils/polish_input_arr_utils_small.c \
+		src/parse_input_utils/polish_input_arr_utils_arr.c \
+		src/parse_input_utils/polish_input_arr.c \
+		src/parse_input.c \
 		src/create_cmd_list.c \
 		src/create_cmd_list_utils/create_cmd_list_utils.c \
 		src/create_cmd_list_utils/check_file.c \
 		src/create_cmd_list_utils/cmd_node_utils.c \
 		src/built_in_commands/built_in_commands.c \
 		src/built_in_commands/echo_command.c \
-		src/built_in_commands/echo_command_utils.c \
 		src/built_in_commands/export_command.c \
 		src/built_in_commands/export_command_utils.c \
 		src/built_in_commands/cd_command.c \
@@ -34,12 +55,7 @@ SRC = src/exec_cmd.c \
 		src/built_in_commands/utils.c \
 		src/built_in_commands/env_command.c \
 		src/built_in_commands/unset_command.c \
-		src/built_in_commands/exit_command.c \
-		src/start_here_doc_utils/file_utils.c \
-		src/start_here_doc_utils/start_here_doc_utils.c \
-		src/start_here_doc.c \
-		src/process_expansion_utils/process_expansion_utils.c \
-		src/process_expansion.c
+		src/built_in_commands/exit_command.c 
 
 OBJS     = $(SRC:.c=.o)
 
@@ -100,7 +116,7 @@ compileTestPipelineParser: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_pipeline_parser.c $(LIBS) $(LDLIBS) -o $(NAME)_test_pipeline_parser
 
 compileTestBuiltins: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_builtins.c $(LIBS) $(LDLIBS) -o $(NAME)_test_builtins
+	$(CC) $(CFLAGS) tests/test_main_builtins.c tests/process_input_for_tests.c $(LIBS) $(LDLIBS) -o $(NAME)_test_builtins
 
 compileTestFull: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/minishell_full_test.c $(LIBS) $(LDLIBS) -lreadline -o $(NAME)_test_full

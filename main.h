@@ -38,6 +38,7 @@ int ft_print_err(const char *format, ...);
 void parse_envp(t_shell_data *data, char **envp);
 void parse_exec_folders(t_shell_data *data);
 
+void my_free(void *ptr);
 void free_cmd_node(t_cmd_node *node);
 void free_cmd_list(t_cmd_list *cmd_list);
 void free_env_list(t_env_list *env);
@@ -45,22 +46,24 @@ void free_str_arr(char **paths);
 void free_shell_data(t_shell_data *data);
 
 int set_envp_from_env(t_shell_data *data);
-void init_shell_data(t_shell_data *data, char **envp);
+int init_shell_data(t_shell_data *data, char **envp);
+int update_last_exit_status(t_shell_data *dt, int last_cmd_code);
 
 void print_prompt_header(void);
 char *read_input();
-void process_input(t_shell_data *data, char *input);
 void exec_cmd(t_shell_data *data, char *command, char **argv_str);
 
 /// Built-in commands
 int is_builtin(char *cmd);
 int exec_builtin(t_shell_data *data, char **args);
 
-// Command t_cmd_list list management
-void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
+// Functions for parsing input
 char **split_input_str(const char *s);
-char **expande_input_arr(t_shell_data *data, char **arr);
+char **split_input_str_relaxed(const char *s);
+int polish_input_arr(char ***arr);
+void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
 int create_cmd_list(t_shell_data *dt, char **str_arr);
+int parse_input(t_shell_data *data, char *input);
 
 int process_expansion(t_env_list env, char **input);
 int check_do_expansion(t_env_list env, char **input);

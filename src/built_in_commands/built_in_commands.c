@@ -54,7 +54,7 @@ int	is_builtin(char *cmd)
 int	exec_builtin(t_shell_data *data, char **args)
 {
 	if (!ft_strncmp(args[0], "echo", 5))
-		return (builtin_echo(args, data->envp));
+		return (builtin_echo(args));
 	else if (!ft_strncmp(args[0], "cd", 3))
 		return (builtin_cd(data, args));
 	else if (!ft_strncmp(args[0], "pwd", 4))
@@ -64,7 +64,7 @@ int	exec_builtin(t_shell_data *data, char **args)
 	else if (!ft_strncmp(args[0], "unset", 6))
 		return (builtin_unset(data, args));
 	else if (!ft_strncmp(args[0], "env", 4))
-		return (builtin_env(data, args));
+		return (builtin_env(data));
 	else if (!ft_strncmp(args[0], "exit", 5))
 		return (builtin_exit(data, args));
 	return (1);

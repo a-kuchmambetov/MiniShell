@@ -30,11 +30,14 @@ void print_error(const char *eof_word)
 int compare_eof(const char *input, const char *eof_word)
 {
     char *trimmed_eof;
+    int result;
 
     if (!input || !eof_word)
         return (0);
     trimmed_eof = ft_strtrim((char *)eof_word, "\'\"");
     if (!trimmed_eof)
         return (0);
-    return (ft_strncmp(input, trimmed_eof, ft_strlen(trimmed_eof)) == 0);
+    result = ft_strncmp(input, trimmed_eof, ft_strlen(trimmed_eof)) == 0;
+    my_free(trimmed_eof);
+    return (result);
 }

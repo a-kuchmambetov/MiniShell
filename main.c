@@ -1,4 +1,5 @@
 #include "main.h"
+#include "src/executor/executor.h"
 
 volatile sig_atomic_t g_signal_received = 0;
 
@@ -30,23 +31,6 @@ char *read_input()
     return (input);
 }
 
-void process_input(t_shell_data *data, char *input)
-{
-   char **args;
-
-    args = ft_split(input, ' ');
-    if (!args)
-        return;
-    if (ft_strncmp(args[0], "$?", 2) == 0)
-        return (ft_printf("%d: command not found\n", WEXITSTATUS(data->last_exit_status)), (void)0);
-    //exec_cmd_2(data, args[0], args);
-    if (is_builtin(args[0]))
-        data->last_exit_status = exec_builtin(data, args);
-    else
-        exec_cmd(data, args[0], args);
-    free_str_arr(args);
-}
-
 int main(int argc, char **argv, char **envp)
 {
     t_shell_data data;
@@ -64,7 +48,9 @@ int main(int argc, char **argv, char **envp)
         if (*input) // Only process non-empty input
         {
             add_history(input); // Add to readline history
-            process_input(&data, input);
+            if (parse_input(&data, input) == 0 && data.cmd_list.first)
+                execute_command_list(&data);
+            free_cmd_list(&data.cmd_list);
             free(input);
         }
     }
