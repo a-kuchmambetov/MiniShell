@@ -10,8 +10,8 @@ LIBS    = libminishell.a
 LIBFTDIR = libft
 LIBFT    = $(LIBFTDIR)/libft.a
 
-SRC = src/exec_cmd.c \
-		src/executor/executor_command_info.c \
+SRC = 	src/executor/executor_command_info.c \
+		src/executor/executor_split_args.c \
 		src/executor/executor_build_argv.c \
 		src/executor/executor_io.c \
 		src/executor/executor_child.c \

@@ -51,7 +51,6 @@ int update_last_exit_status(t_shell_data *dt, int last_cmd_code);
 
 void print_prompt_header(void);
 char *read_input();
-void exec_cmd(t_shell_data *data, char *command, char **argv_str);
 
 /// Built-in commands
 int is_builtin(char *cmd);

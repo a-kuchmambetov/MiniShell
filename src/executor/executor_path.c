@@ -13,29 +13,26 @@ static void exit_exec_failure(char **argv, char *path)
     exit(code);
 }
 
-char *resolve_command_path(t_shell_data *data, const char *command)
+static char *find_executable(t_shell_data *data, char *command)
 {
-    char    *full;
-    size_t  cmd_len;
-    size_t  dir_len;
-    int     i;
+    int i;
+    char *full_path;
 
-    if (!data->paths || !command)
-        return (NULL);
-    cmd_len = ft_strlen(command);
     i = 0;
+    if (!data->paths)
+        return (NULL);
     while (data->paths[i])
     {
-        dir_len = ft_strlen(data->paths[i]);
-        full = malloc(dir_len + cmd_len + 2);
-        if (!full)
+        full_path = malloc(ft_strlen(data->paths[i]) + ft_strlen(command) + 2);
+        if (!full_path)
             return (NULL);
-        ft_strlcpy(full, data->paths[i], dir_len + 1);
-        ft_strlcat(full, "/", dir_len + 2);
-        ft_strlcat(full, command, dir_len + cmd_len + 2);
-        if (access(full, X_OK) == 0)
-            return (full);
-        free(full);
+        ft_strlcpy(full_path, data->paths[i], ft_strlen(data->paths[i]) + 1);
+        ft_strlcat(full_path, "/", ft_strlen(full_path) + 2);
+        ft_strlcat(full_path, command, ft_strlen(full_path) + ft_strlen(command) + 1);
+        // printf("Checking path: %s\n", full_path);
+        if (access(full_path, X_OK) == 0)
+            return (full_path);
+        free(full_path);
         i++;
     }
     return (NULL);
@@ -52,7 +49,7 @@ void exec_external(t_shell_data *data, char **argv)
         execve(argv[0], argv, data->envp);
         exit_exec_failure(argv, NULL);
     }
-    path = resolve_command_path(data, argv[0]);
+    path = find_executable(data, argv[0]);
     if (!path)
     {
         ft_print_err("%s: command not found\n", argv[0]);

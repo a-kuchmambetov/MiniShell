@@ -1,7 +1,9 @@
 #ifndef SPLIT_INPUT_STR_H
 #define SPLIT_INPUT_STR_H
 
-#include "../../main.h"
+#include "../parser.h"
+
+char **split_input(const char *s, int parse_quotes, int *errno);
 
 int is_delim(const char *str);
 void skip_spaces(const char *s, t_split_data *dt);
