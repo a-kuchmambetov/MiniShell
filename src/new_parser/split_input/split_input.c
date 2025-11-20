@@ -54,9 +54,7 @@ static int regular_parser(const char *s, t_split_data *dt)
 
 static void select_parser(const char *s, t_split_data *dt, int *errno)
 {
-    const int str_len = ft_strlen(s);
-
-    if ((s[dt->i] == '\'' || s[dt->i] == '\"') && s[dt->i] == s[str_len - 1])
+    if ((s[dt->i] == '\'' || s[dt->i] == '\"'))
     {
         *errno = quote_parser(s, dt, s[dt->i]);
         if (*errno)

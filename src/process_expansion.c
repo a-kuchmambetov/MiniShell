@@ -1,6 +1,6 @@
 #include "../main.h"
 #include "process_expansion_utils/process_expansion_utils.h"
-#include "split_input_str_utils/split_input_str_utils.h"
+#include "new_parser/split_input/split_input.h"
 
 static int join_value(char **dest, const char *src)
 {

@@ -14,7 +14,8 @@ typedef enum e_token_type
     TOKEN_APPEND = 3,
     TOKEN_PIPE = 4,
     TOKEN_TEXT = 5,
-    TOKEN_EXPANSION = 6
+    TOKEN_EXPANSION = 6,
+    TOKEN_AMBIGUOUS = 7
 } t_token_type;
 
 struct s_token_node

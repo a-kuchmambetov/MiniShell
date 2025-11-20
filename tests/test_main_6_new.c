@@ -67,15 +67,15 @@ int main(int argc, char **argv, char **envp)
     }
 
     // test(data, "<Makefile$TEST cat|grep something");
-    // test(data, "<Makefile $TEST\"dawdawd '      \" cat|grep something");
+    test(data, "<Makefile $TEST\"dawdawd '      \" cat|grep something");
     // test(data, "<Makefile     \"     $TEST        \" cat|grep something");
     // test(data, "<Makefile\'$TEST\"         \"\' cat|grep something");
     // test(data, "<Makefile'some' cat");
     // test(data, "<< Makefile$TEST cat");
     // test(data, "<< Makefile'some' cat");
     // test(data, "ech$");
-    test(data, "ech$CMD");
-    test(data, "ech\"$CMD\"");
+    // test(data, "ech$CMD");
+    // test(data, "ech\"$CMD\"");
     // test(data, "$COM");
     // test(data, "\"$COM\"");
     // test(data, "'$COM'");

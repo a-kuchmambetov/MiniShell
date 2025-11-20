@@ -12,6 +12,7 @@
         "start_here_doc_utils.h": "c",
         "main.h": "c",
         "create_cmd_list_utils.h": "c",
-        "builtins.h": "c"
+        "builtins.h": "c",
+        "parser.h": "c"
     }
 }
