@@ -11,11 +11,11 @@ int set_input_redir(t_shell_data *data, t_cmd_node *node, char **str_arr, int *i
     if (ft_strncmp(str_arr[*i], "<<", 2) == 0)
         node->input_redir_type = REDIR_HEREDOC;
     else
-        node->input_redir_type = REDIR_IN;
+        node->input_redir_type = REDIR_INPUT;
     if (str_arr[*i + 1][0] == ' ')
         *i += 1;
     *i += 1;
-    if (node->input_redir_type == REDIR_IN && check_file_open(str_arr[*i]))
+    if (node->input_redir_type == REDIR_INPUT && check_file_open(str_arr[*i]))
         return (1);
     if (node->input_redir)
         free(node->input_redir);

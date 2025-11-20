@@ -7,7 +7,7 @@ int redirect_input(t_cmd_node *cmd, int prev_fd)
     fd = -1;
     if (!cmd)
         return (-1);
-    if (cmd->input_redir_type == REDIR_IN || cmd->input_redir_type == REDIR_HEREDOC)
+    if (cmd->input_redir_type == REDIR_INPUT || cmd->input_redir_type == REDIR_HEREDOC)
     {
         fd = open(cmd->input_redir, O_RDONLY);
         if (fd < 0)

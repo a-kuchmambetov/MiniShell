@@ -60,23 +60,21 @@ static void select_parser(const char *s, t_split_data *dt, int *errno)
     {
         *errno = quote_parser(s, dt, s[dt->i]);
         if (*errno)
-            return (NULL);
+            return ;
     }
     else
     {
         *errno = regular_parser(s, dt);
         if (*errno)
-            return (NULL);
+            return ;
     }
     *errno = 0;
 }
 
-char **split_input(const char *s, int parse_quotes, int *errno)
+char **split_input(const char *s, int *errno)
 {
     t_split_data dt;
-    int delim_len;
 
-    delim_len = 0;
     dt = (t_split_data){0};
     while (s[dt.i])
     {

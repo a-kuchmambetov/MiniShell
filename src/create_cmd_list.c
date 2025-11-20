@@ -4,7 +4,7 @@
 static int delimiter_type(const char *str)
 {
     if (str[0] == '<')
-        return (REDIR_IN);
+        return (REDIR_INPUT);
     if (str[0] == '>')
         return (REDIR_OUTPUT);
     if (ft_strncmp(str, ">>", 2) == 0)
@@ -12,7 +12,7 @@ static int delimiter_type(const char *str)
     if (ft_strncmp(str, "<<", 2) == 0)
         return (REDIR_HEREDOC);
     if (str[0] == '|')
-        return (PIPE);
+        return (REDIR_PIPE);
     return (NO_REDIR);
 }
 
@@ -23,11 +23,11 @@ static int parsing_str_arr(t_shell_data *dt, t_cmd_node **node,
 
     if (!dt || !str_arr || !node || !i)
         return (1);
-    if (delim_type == REDIR_IN || delim_type == REDIR_HEREDOC)
+    if (delim_type == REDIR_INPUT || delim_type == REDIR_HEREDOC)
         return (set_input_redir(dt, *node, str_arr, i));
     else if (delim_type == REDIR_OUTPUT || delim_type == REDIR_APPEND)
         return (set_output_redir(*node, str_arr, i));
-    else if (delim_type == PIPE)
+    else if (delim_type == REDIR_PIPE)
         return (set_pipe(&dt->cmd_list, node, str_arr, i));
     else
     {

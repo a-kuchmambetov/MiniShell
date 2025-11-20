@@ -1,4 +1,4 @@
-#include "split_input_str_utils.h"
+#include "split_input.h"
 
 int is_delim(const char *str)
 {

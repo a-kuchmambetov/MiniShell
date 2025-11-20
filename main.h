@@ -14,6 +14,7 @@
 // Project custom headers
 #include "types.h"
 #include "libft/libft.h"
+#include "src/new_parser/parser.h"
 
 extern volatile sig_atomic_t g_signal_received;
 
@@ -55,14 +56,6 @@ char *read_input();
 /// Built-in commands
 int is_builtin(char *cmd);
 int exec_builtin(t_shell_data *data, char **args);
-
-// Functions for parsing input
-char **split_input_str(const char *s);
-char **split_input_str_r(const char *s);
-int polish_input_arr(char ***arr);
-void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
-int create_cmd_list(t_shell_data *dt, char **str_arr);
-int parse_input(t_shell_data *data, char *input);
 
 int process_expansion(t_env_list env, char **input);
 int check_do_expansion(t_env_list env, char **input);

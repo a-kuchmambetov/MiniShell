@@ -1,18 +1,27 @@
 #include "create_token_list.h"
 
+static int is_delim(const char *str)
+{
+    if (ft_strncmp(str, "<<", 2) == 0 || ft_strncmp(str, ">>", 2) == 0)
+        return (2);
+    if (str[0] == '|' || str[0] == '>' || str[0] == '<' || str[0] == ' ')
+        return (1);
+    return (0);
+}
+
 static t_token_type get_tkn_type(char **arr, int i)
 {
     if (ft_strncmp(arr[i], "|", 2) == 0)
-        return (PIPE);
+        return (TOKEN_PIPE);
     if (ft_strncmp(arr[i], "<", 2) == 0)
-        return (REDIR_IN);
+        return (TOKEN_REDIR_IN);
     if (ft_strncmp(arr[i], ">", 2) == 0)
-        return (REDIR_OUT);
+        return (TOKEN_REDIR_OUT);
     if (ft_strncmp(arr[i], ">>", 3) == 0)
-        return (APPEND);
+        return (TOKEN_APPEND);
     if (ft_strncmp(arr[i], "<<", 3) == 0)
-        return (HEREDOC);
-    return (TEXT);
+        return (TOKEN_HEREDOC);
+    return (TOKEN_TEXT);
 }
 
 static char *get_tkn_val(char **arr, int *i, t_token_node tkn, int *ernno)
@@ -20,20 +29,20 @@ static char *get_tkn_val(char **arr, int *i, t_token_node tkn, int *ernno)
     char *copy;
 
     copy = NULL;
-    if (tkn.type != PIPE && tkn.type != TEXT)
+    if (tkn.type != TOKEN_PIPE && tkn.type != TOKEN_TEXT)
     {
         if (ft_strncmp(arr[*i + 1], " ", 2) != 0 && !is_delim(arr[*i + 1]))
         {
             *i += 1;
             copy = ft_strdup(arr[*i]);
         }
-        if (ft_strncmp(arr[*i + 1], " ", 2) == 0 && !is_delim(arr[*i + 2]))
+        else if (ft_strncmp(arr[*i + 1], " ", 2) == 0 && !is_delim(arr[*i + 2]))
         {
             *i += 2;
             copy = ft_strdup(arr[*i]);
         }
         if (!copy)
-            ft_print_error("wrong file name");
+            ft_print_err("wrong file name");
     }
     else
         copy = ft_strdup(arr[*i]);
