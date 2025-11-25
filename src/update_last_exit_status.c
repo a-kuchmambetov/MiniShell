@@ -1,6 +1,6 @@
 #include "../main.h"
 
-static void free_node(t_env_node *node)
+static void free_env_node(t_env_node *node)
 {
     if (!node)
         return;
@@ -30,7 +30,7 @@ static int create_new(t_shell_data *dt, char *code_str)
     new_node->key = ft_strdup("?");
     new_node->value = code_str;
     if (!new_node->key)
-        return (free_node(new_node), 1);
+        return (free_env_node(new_node), 1);
     if (current)
         current->next = new_node;
     else

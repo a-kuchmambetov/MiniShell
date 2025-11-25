@@ -31,7 +31,7 @@ static char *get_tkn_val(char **arr, int *i, t_token_node tkn, int *ernno)
     copy = NULL;
     if (tkn.type != TOKEN_PIPE && tkn.type != TOKEN_TEXT)
     {
-        if (ft_strncmp(arr[*i + 1], " ", 2) != 0 && !is_delim(arr[*i + 1]))
+        if (!is_delim(arr[*i + 1]))
         {
             *i += 1;
             copy = ft_strdup(arr[*i]);

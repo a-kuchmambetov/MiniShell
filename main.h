@@ -14,7 +14,7 @@
 // Project custom headers
 #include "types.h"
 #include "libft/libft.h"
-#include "src/new_parser/parser.h"
+#include "new_parser/parser.h"
 
 extern volatile sig_atomic_t g_signal_received;
 

@@ -1,5 +1,5 @@
 #include "../main.h"
-#include "start_here_doc_utils/start_here_doc_utils.h"
+#include "start_here_doc_utils.h"
 
 int delete_here_doc(const char *filename)
 {

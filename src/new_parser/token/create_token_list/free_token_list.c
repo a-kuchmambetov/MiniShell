@@ -1,6 +1,5 @@
 #include "create_token_list.h"
 
-
 void free_token_list(t_token_list *tkn_li)
 {
     t_token_node *current;

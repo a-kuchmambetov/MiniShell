@@ -20,7 +20,7 @@ typedef enum e_redir
 typedef struct s_cmd_node
 {
     char *cmd;
-    char *args;
+    char **args;
     t_redir input_redir_type;
     char *input_redir;
     t_redir output_redir_type;
@@ -71,14 +71,6 @@ typedef struct s_split_data
     int row;
     t_quote in_quote;
 } t_split_data;
-
-typedef struct s_polish_data
-{
-    char **arr;
-    int from;
-    int to;
-    int i;
-} t_polish_data;
 
 
 #endif // TYPES_H

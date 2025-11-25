@@ -50,13 +50,22 @@ SRC = 	src/executor/executor_command_info.c \
 		src/built_in_commands/unset_command.c \
 		src/built_in_commands/exit_command.c 
 
-SRC += 	src/new_parser/expand_tokens.c \
-		src/new_parser/split_input/split_input.c \
-		src/new_parser/split_input/split_input_utils.c \
-		src/new_parser/token/create_token_list/create_token_list.c \
+# Parser SRC files
+SRC += 	src/new_parser/split_input/split_input.c \
+		src/new_parser/split_input/split_input_utils.c
+# - Token related files
+# -- Create token list
+SRC += 	src/new_parser/token/create_token_list/create_token_list.c \
+		src/new_parser/token/create_token_list/set_tkn.c \
 		src/new_parser/token/create_token_list/free_token_list.c \
-		src/new_parser/token/create_token_list/set_tkn.c 
-
+		src/new_parser/token/create_token_list/free_token_node.c
+# -- Expande tokens
+SRC += 	src/new_parser/token/expande_tokens/expand_tokens.c 
+# -- Split expansion
+SRC += 	src/new_parser/token/split_expansion/split_expansion.c
+# -- Merge tokens
+SRC += 	src/new_parser/token/merge_tokens/merge_tokens.c \
+		src/new_parser/token/merge_tokens/trim_quotes.c
 
 OBJS     = $(SRC:.c=.o)
 

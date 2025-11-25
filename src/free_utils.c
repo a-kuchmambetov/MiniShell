@@ -29,7 +29,7 @@ void free_cmd_node(t_cmd_node *node)
     if (node->cmd)
         my_free(node->cmd);
     if (node->args)
-        my_free(node->args);
+        free_str_arr(node->args);
     if (node->input_redir)
         my_free(node->input_redir);
     if (node->output_redir)

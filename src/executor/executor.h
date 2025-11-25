@@ -1,7 +1,7 @@
 #ifndef EXECUTOR_H
 #define EXECUTOR_H
 
-#include "../../main.h"
+#include "main.h"
 #include <stdbool.h>
 
 typedef struct s_exec_ctx
