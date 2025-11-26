@@ -1,48 +1,5 @@
 #include "../main.h"
 
-static void free_node(t_env_node *node)
-{
-    if (!node)
-        return;
-    if (node->key)
-        free(node->key);
-    if (node->value)
-        free(node->value);
-    free(node);
-}
-
-void parse_envp(t_shell_data *data, char **envp)
-{
-    t_env_node *new_node;
-    t_env_node *current;
-    char **res;
-
-    if (!envp || !envp[0])
-        return;
-    current = data->env_list.first;
-    while (envp[data->env_list.len])
-    {
-        new_node = ft_calloc(sizeof(t_env_node), 1);
-        res = ft_split(envp[data->env_list.len], '=');
-        if (!new_node || !res)
-            return (free_node(new_node), free_str_arr(res));
-        new_node->key = ft_strdup(res[0]);
-        if (!res[1])
-            new_node->value = ft_strdup("");
-        else
-            new_node->value = ft_strdup(res[1]);
-        if (!new_node->key || !new_node->value)
-            return (free_node(new_node), free_str_arr(res));
-        free_str_arr(res);
-        if (current)
-            current->next = new_node;
-        else
-            data->env_list.first = new_node;
-        current = new_node;
-        data->env_list.len++;
-    }
-}
-
 void parse_exec_folders(t_shell_data *data)
 {
     t_env_node *current;

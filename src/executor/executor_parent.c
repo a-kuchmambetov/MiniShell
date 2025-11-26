@@ -47,20 +47,17 @@ static int setup_parent_redirs(t_cmd_node *cmd, int saved[2], int pipefd[2])
 int execute_builtin_parent(t_shell_data *data, t_cmd_node *cmd)
 {
     int     saved[2];
-    char    **argv;
     int     pipefd[2];
     int     status;
 
     if (setup_parent_redirs(cmd, saved, pipefd) < 0)
         return (-1);
-    argv = build_argv(cmd);
-    if (!argv)
+    if (!cmd->args)
     {
         restore_parent_stdio(saved);
         return (-1);
     }
-    status = exec_builtin(data, argv);
-    free_str_arr(argv);
+    status = exec_builtin(data, cmd->args);
     restore_parent_stdio(saved);
     update_last_exit_status(data, status);
     return (status);

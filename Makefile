@@ -10,9 +10,7 @@ LIBS    = libminishell.a
 LIBFTDIR = libft
 LIBFT    = $(LIBFTDIR)/libft.a
 
-SRC = src/exec_cmd.c \
-		src/executor/executor_command_info.c \
-		src/executor/executor_build_argv.c \
+SRC = 	src/executor/executor_command_info.c \
 		src/executor/executor_io.c \
 		src/executor/executor_child.c \
 		src/executor/executor_parent.c \
@@ -25,26 +23,11 @@ SRC = src/exec_cmd.c \
         src/free_utils.c \
         src/ft_print_err.c \
         src/print_prompt_header.c \
-		src/update_last_cmd_code.c \
         src/init_shell_data.c \
-		src/split_input_str_utils/split_input_str_utils.c \
-        src/split_input_str.c \
-		src/process_expansion_utils/process_expansion_utils.c \
-		src/process_expansion.c \
-		src/start_here_doc_utils/file_utils.c \
-		src/start_here_doc_utils/start_here_doc_utils.c \
-		src/start_here_doc.c \
-		src/parse_input_utils/trim_quote.c \
-		src/parse_input_utils/expand_input_arr.c \
-		src/parse_input_utils/polish_input_arr_utils_small.c \
-		src/parse_input_utils/polish_input_arr_utils_arr.c \
-		src/parse_input_utils/polish_input_arr.c \
-		src/parse_input.c \
-		src/create_cmd_list.c \
-		src/create_cmd_list_utils/create_cmd_list_utils.c \
-		src/create_cmd_list_utils/check_file.c \
-		src/create_cmd_list_utils/cmd_node_utils.c \
-		src/built_in_commands/built_in_commands.c \
+		src/parse_envp.c \
+		src/update_last_exit_status.c
+# 
+SRC +=	src/built_in_commands/built_in_commands.c \
 		src/built_in_commands/echo_command.c \
 		src/built_in_commands/export_command.c \
 		src/built_in_commands/export_command_utils.c \
@@ -56,6 +39,33 @@ SRC = src/exec_cmd.c \
 		src/built_in_commands/env_command.c \
 		src/built_in_commands/unset_command.c \
 		src/built_in_commands/exit_command.c 
+# Parser SRC files
+SRC += 	src/new_parser/split_input/split_input.c \
+		src/new_parser/split_input/split_input_utils.c
+# - Token related files
+# -- Create token list
+SRC += 	src/new_parser/token/create_token_list/create_token_list.c \
+		src/new_parser/token/create_token_list/set_tkn.c \
+		src/new_parser/token/create_token_list/free_token_list.c \
+		src/new_parser/token/create_token_list/free_token_node.c
+# -- Expande tokens
+SRC += 	src/new_parser/token/expande_tokens/expand_tokens.c 
+# -- Split expansion
+SRC += 	src/new_parser/token/split_expansion/split_expansion.c
+# -- Merge tokens
+SRC += 	src/new_parser/token/merge_tokens/merge_tokens.c \
+		src/new_parser/token/merge_tokens/trim_quotes.c
+# 		
+SRC +=	src/new_parser/create_cmd_list/create_cmd_list.c \
+		src/new_parser/create_cmd_list/create_cmd_list_utils.c \
+		src/new_parser/create_cmd_list/check_file.c \
+		src/new_parser/create_cmd_list/cmd_node_utils.c
+# 
+SRC +=	src/new_parser/start_here_doc/start_here_doc_utils.c \
+		src/new_parser/start_here_doc/file_utils.c \
+		src/new_parser/start_here_doc/start_here_doc.c 
+# 
+SRC +=	src/new_parser/parser.c
 
 OBJS     = $(SRC:.c=.o)
 
@@ -109,6 +119,12 @@ compileTest5: $(LIBFT) $(LIB)
 compileTest6: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_6.c $(LIBS) $(LDLIBS) -o $(NAME)_test_6
 
+compileTest7: $(LIBFT) $(LIB)
+	$(CC) $(CFLAGS) tests/test_main_7.c $(LIBS) $(LDLIBS) -o $(NAME)_test_7
+
+compileTest6New: $(LIBFT) $(LIB)
+	$(CC) $(CFLAGS) tests/test_main_6_new.c $(LIBS) $(LDLIBS) -o $(NAME)_test_6_new
+
 compileTestExit: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_exit.c $(LIBS) $(LDLIBS) -o $(NAME)_test_exit
 
@@ -127,5 +143,5 @@ valgrind:
 	--track-origins=yes --trace-children=yes ./minishell
 
 .PHONY: all clean fclean allClean re \
-	compileTest1 compileTest2 compileTest3 compileTest4 compileTest5 compileTest6 \
-	 compileTestExit compileTestPipelineParser compileTestBuiltins compileTestFull
+	compileTest1 compileTest2 compileTest3 compileTest4 compileTest5 compileTest6 compileTest6New \
+	compileTestExit compileTestPipelineParser compileTestBuiltins compileTestFull

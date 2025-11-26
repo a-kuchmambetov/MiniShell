@@ -1,22 +1,11 @@
 #include "executor.h"
-// check for empty cmd and $?
-static int handle_special_cases(t_shell_data *data, t_exec_ctx *ctx)
-{
-    if (is_empty_cmd(ctx->current))
-        return (1);
-    if (is_question_command(ctx->current))
-    {
-        ft_printf("%d: command not found\n", data->last_exit_status);
-        return (1);
-    }
-    return (0);
-}
+
 // parse through all cmd in structure and call for each execution respectively 
 static int run_loop(t_shell_data *data, t_exec_ctx *ctx)
 {
     while (ctx->current)
     {
-        if (handle_special_cases(data, ctx))
+        if (is_empty_cmd(ctx->current))
         {
             ctx->current = ctx->current->next;
             continue;

@@ -1,5 +1,16 @@
 {
     "files.associations": {
-        "stdbool.h": "c"
+        "*.ejs": "html",
+        "*.dbclient-js": "javascript",
+        "readline.h": "c",
+        "libft.h": "c",
+        "types.h": "c",
+        "split_input_str_utils.h": "c",
+        "start_here_doc_utils.h": "c",
+        "main.h": "c",
+        "create_cmd_list_utils.h": "c",
+        "builtins.h": "c",
+        "parser.h": "c",
+        "merge_tokens.h": "c"
     }
 }

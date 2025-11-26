@@ -14,6 +14,7 @@
 // Project custom headers
 #include "types.h"
 #include "libft/libft.h"
+#include "src/new_parser/parser.h"
 
 extern volatile sig_atomic_t g_signal_received;
 
@@ -51,23 +52,14 @@ int update_last_exit_status(t_shell_data *dt, int last_cmd_code);
 
 void print_prompt_header(void);
 char *read_input();
-void exec_cmd(t_shell_data *data, char *command, char **argv_str);
 
 /// Built-in commands
 int is_builtin(char *cmd);
 int exec_builtin(t_shell_data *data, char **args);
-
-// Functions for parsing input
-char **split_input_str(const char *s);
-char **split_input_str_relaxed(const char *s);
-int polish_input_arr(char ***arr);
-void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
-int create_cmd_list(t_shell_data *dt, char **str_arr);
-int parse_input(t_shell_data *data, char *input);
-
-int process_expansion(t_env_list env, char **input);
-int check_do_expansion(t_env_list env, char **input);
+    
+char *process_expansion(t_env_list env, char *input, int *errno, int *current_type);
 int start_here_doc(t_env_list env, const char *eof_word, char **filename);
 int delete_here_doc(const char *filename);
+int parse_input(t_shell_data *data, char *input);
 
 #endif
