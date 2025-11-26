@@ -1,12 +1,13 @@
 #ifndef MERGE_TOKENS_H
 #define MERGE_TOKENS_H
 
-#include "new_parser/parser.h"
+#include "../../parser.h"
 
-void merge_token(t_token_list tkn_li, int *errno);
+void merge_tokens(t_token_list tkn_li, int *errno);
 
-char *trim_quotes(const char *str);
-char *trim_space_before(const char *str);
-char *trim_space_after(const char *str);
+char *trim_quotes(char *str);
+char *trim_space_before(char *str);
+char *trim_space_after(char *str);
+char *trim_space_both(char *str);
 
 #endif

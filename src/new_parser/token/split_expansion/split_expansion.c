@@ -4,7 +4,7 @@ static int get_space_index(const char *str)
 {
     int i;
 
-    i = 0;
+    i = 1;
     while (str[i])
     {
         if (str[i] == ' ')
@@ -27,6 +27,7 @@ static t_token_node *init_new_token_node(int *errno)
     new_tkn->type = TOKEN_TEXT;
     new_tkn->is_space_after = 0;
     new_tkn->next = NULL;
+    return new_tkn;
 }
 
 static void process_split_node(t_token_node *cur, t_token_node *new_tkn, int space_index, int *errno)
@@ -48,10 +49,21 @@ static void process_split_node(t_token_node *cur, t_token_node *new_tkn, int spa
     }
     my_free(cur->value);
     cur->type = TOKEN_TEXT;
-    cur->value = temp;
+    cur->value = trim_space_both(temp);
     new_tkn->is_space_after = cur->is_space_after;
+    cur->is_space_after = 1;
     new_tkn->next = cur->next;
     cur->next = new_tkn;
+    return;
+}
+
+static int is_quoted(char *str)
+{
+    if (!str)
+        return (0);
+    if ((str[0] == '"' || str[0] == '\'') && str[0] == str[ft_strlen(str) - 1])
+        return (1);
+    return (0);
 }
 
 void split_expansion(t_token_list tkn_li, int *errno)
@@ -63,7 +75,7 @@ void split_expansion(t_token_list tkn_li, int *errno)
     cur = tkn_li.head;
     while (cur)
     {
-        if (cur->type == TOKEN_EXPANSION)
+        if (cur->type == TOKEN_EXPANSION && !is_quoted(cur->value))
         {
             space_index = get_space_index(cur->value);
             if (space_index)
@@ -78,4 +90,5 @@ void split_expansion(t_token_list tkn_li, int *errno)
         }
         cur = cur->next;
     }
+    return;
 }

@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../main.h"
 
 void parse_exec_folders(t_shell_data *data)
 {

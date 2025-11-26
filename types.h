@@ -13,8 +13,7 @@ typedef enum e_redir
     REDIR_INPUT = 1,
     REDIR_OUTPUT = 2,
     REDIR_APPEND = 3,
-    REDIR_HEREDOC = 4,
-    REDIR_PIPE = 5
+    REDIR_HEREDOC = 4
 } t_redir;
 
 typedef struct s_cmd_node

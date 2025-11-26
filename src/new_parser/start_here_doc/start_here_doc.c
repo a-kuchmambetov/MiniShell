@@ -1,5 +1,4 @@
-#include "../main.h"
-#include "start_here_doc_utils.h"
+#include "start_here_doc.h"
 
 int delete_here_doc(const char *filename)
 {
@@ -33,10 +32,24 @@ static void cleanup_here_doc(char *input, int fd, char **filename)
     }
 }
 
+static char *start_expansion(t_env_list env, char *input, int *errno)
+{
+    char *res;
+    int type = TOKEN_TEXT;
+
+    res = process_expansion(env, input, errno, &type);
+    if (*errno)
+        return (NULL);
+    my_free(input);
+    return (res);
+}
+
 static int write_here_doc(t_env_list env, const char *eof_word, char **filename, int fd)
 {
     char *input;
+    int errno;
 
+    errno = 0;
     while (1)
     {
         input = readline("> ");
@@ -47,10 +60,9 @@ static int write_here_doc(t_env_list env, const char *eof_word, char **filename,
         if (compare_eof(input, eof_word))
             break;
         if (eof_word[0] != '\'' && eof_word[ft_strlen(eof_word)] != '\'')
-        {
-            if (process_expansion(env, &input))
-                return (cleanup_here_doc(input, fd, filename), ft_print_err("error: processing expansion failed\n"), 1);
-        }
+            input = start_expansion(env, input, &errno);
+        if (errno)
+            return (cleanup_here_doc(input, fd, filename), 1);
         ft_putendl_fd(input, fd);
         free(input);
     }

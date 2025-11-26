@@ -1,4 +1,4 @@
-#include "new_parser/parser.h"
+#include "merge_tokens.h"
 
 char *trim_quotes(char *str)
 {
@@ -15,6 +15,7 @@ char *trim_quotes(char *str)
             i++;
         }
         str[i - 1] = '\0';
+        str[i - 2] = '\0';
     }
     return (str);
 }
@@ -63,4 +64,14 @@ char *trim_space_after(char *str)
     }
     str[j] = '\0';
     return (str);
+}
+
+char *trim_space_both(char *str)
+{
+    char *res;
+
+    res = trim_space_before(str);
+    res = trim_space_after(res);
+
+    return (res);
 }

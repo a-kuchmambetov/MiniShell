@@ -1,7 +1,7 @@
 #ifndef CREATE_TOKEN_LIST_UTILS_H
 #define CREATE_TOKEN_LIST_UTILS_H
 
-#include "new_parser/parser.h"
+#include "../../parser.h"
 
 void free_token_list(t_token_list *tkn_li);
 void free_token_node(t_token_node *node);

@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../main.h"
 
 static void free_env_node(t_env_node *node)
 {
@@ -19,6 +19,7 @@ static int set_new_env_node(t_env_node *node, char **res)
         node->value = ft_strdup(res[1]);
     if (!node->key || !node->value)
         return (1);
+    return (0);
 }
 void parse_envp(t_shell_data *data, char **envp)
 {

@@ -1,41 +1,50 @@
 #include "../main.h"
 
+volatile sig_atomic_t g_signal_received = 0;
+
 int test(t_shell_data data, char *input)
 {
     char **arr;
     int errno;
-    t_token_list *token_list;
+    t_token_list *tkn_li;
 
     arr = split_input(input, &errno);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
-    token_list = create_token_list(arr, &errno);
+    tkn_li = create_token_list(arr, &errno);
     if (errno)
     {
         free_str_arr(arr);
         return (ft_print_err("Error: Failed to create token list\n"), 1);
     }
-    expand_tokens(token_list, &data, &errno);
+    expand_tokens(tkn_li, &data, &errno);
     if (errno)
     {
         free_str_arr(arr);
         return (ft_print_err("Error: Failed to expand input array\n"), 1);
     }
-    split_expansion(*token_list, &errno);
+    split_expansion(*tkn_li, &errno);
     if (errno)
     {
         free_str_arr(arr);
         return (ft_print_err("Error: Failed to split expansions\n"), 1);
     }
-    merge_tokens(*token_list, &errno);
+    merge_tokens(*tkn_li, &errno);
     if (errno)
     {
         free_str_arr(arr);
         return (ft_print_err("Error: Failed to merge tokens\n"), 1);
     }
+    create_cmd_list(&data, tkn_li, &errno);
+    if (errno)
+    {
+        free_str_arr(arr);
+        return (ft_print_err("Error: Failed to create cmd list\n"), 1);
+    }
+
     ft_printf("INPUT:\n%s", input);
     ft_printf("\nRESULT:\n");
-    t_token_node *current = token_list->head;
+    t_token_node *current = tkn_li->head;
     while (current)
     {
         ft_printf("[%s] ", current->value);
@@ -81,16 +90,16 @@ int main(int argc, char **argv, char **envp)
     // test(data, "<Makefile$TEST cat|grep something");
     // test(data, "<Makefile $TEST\"dawdawd '      \" cat|grep something");
     // test(data, "<Makefile     \"     $TEST        \" cat|grep something");
-    // test(data, "<Makefile\'$TEST\"         \"\' cat|grep something");
+    test(data, "<Makefile\'$TEST\"         \"\' cat|grep something");
     // test(data, "<Makefile'some' cat");
     // test(data, "<< Makefile$TEST cat");
     // test(data, "<< Makefile'some' cat");
     // test(data, "ech$");
     // test(data, "ech$CMD");
     // test(data, "ech\"$CMD\"");
-    test(data, "$COM");
-    test(data, "\"$COM\"");
-    test(data, "'$COM'");
+    // test(data, "$COM");
+    // test(data, "\"$COM\"");
+    // test(data, "'$COM'");
 
     free_shell_data(&data);
     return (data.last_exit_status);

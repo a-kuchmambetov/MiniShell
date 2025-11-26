@@ -1,7 +1,7 @@
 #ifndef START_HERE_DOC_UTILS_H
 #define START_HERE_DOC_UTILS_H
 
-#include "../../main.h"
+#include "../parser.h"
 
 int check_signal_hook(void);
 void handle_sigint_heredoc(int sig);

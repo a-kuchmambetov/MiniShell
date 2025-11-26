@@ -2,21 +2,19 @@
 
 void child_execute(t_shell_data *data, t_cmd_node *cmd, int prev_fd, int pipefd[2])
 {
-    char    **argv;
     int     status;
 
     if (setup_child_fds(cmd, prev_fd, pipefd) < 0)
         exit(1);
-    argv = build_argv(cmd);
-    if (!argv)
+    if (!cmd->args)
         exit(1);
     if (is_builtin(cmd->cmd))
     {
-        status = exec_builtin(data, argv);
-        free_str_arr(argv);
+        status = exec_builtin(data, cmd->args);
+        free_str_arr(cmd->args);
         exit(status);
     }
-    exec_external(data, argv);
+    exec_external(data, cmd->args);
 }
 
 bool should_run_parent_builtin(t_cmd_node *cmd, int exec_count)

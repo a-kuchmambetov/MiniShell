@@ -29,7 +29,7 @@ static int is_space_after(char *str)
     return (0);
 }
 
-static char *join_values(char *val1, char *val2, int *errno)
+static char *join_value(char *val1, char *val2, int *errno)
 {
     const int is_quoted_1 = is_quoted(val1);
     const int is_quoted_2 = is_quoted(val2);
@@ -49,10 +49,12 @@ static char *join_values(char *val1, char *val2, int *errno)
         *errno = 1;
         return (NULL);
     }
+    if (!is_quoted_2)
+        new_value = trim_space_after(new_value);
     return (new_value);
 }
 
-void merge_token(t_token_list tkn_li, int *errno)
+void merge_tokens(t_token_list tkn_li, int *errno)
 {
     t_token_node *cur;
     t_token_node *next_free;
@@ -63,13 +65,11 @@ void merge_token(t_token_list tkn_li, int *errno)
     {
         if (is_next_mergeable(cur))
         {
-            temp = ft_strjoin(cur->value, cur->next->value);
+            temp = join_value(cur->value, cur->next->value, errno);
             if (*errno)
                 return;
             free(cur->value);
             cur->is_space_after = cur->next->is_space_after;
-            if (cur->is_space_after)
-                temp = trim_space_after(temp);
             cur->value = temp;
             next_free = cur->next;
             cur->next = cur->next->next;

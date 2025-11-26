@@ -34,8 +34,14 @@ typedef struct s_token_list
 void free_token_list(t_token_list *tkn_li);
 void free_token_node(t_token_node *node);
 
+char *trim_space_both(char *str);
+
 char **split_input(const char *s, int *errno);
 t_token_list *create_token_list(char **arr, int *errno);
-void expand_tokens(t_token_list *token_list, t_shell_data *data, int *errno);
+void expand_tokens(t_token_list *tkn_li, t_shell_data *data, int *errno);
+char *process_expansion(t_env_list env, char *input, int *errno, int *current_type);
+void split_expansion(t_token_list tkn_li, int *errno);
+void merge_tokens(t_token_list tkn_li, int *errno);
+int create_cmd_list(t_shell_data *dt, t_token_list *tkn_li, int *errno);
 
 #endif
