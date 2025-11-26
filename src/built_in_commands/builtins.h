@@ -18,16 +18,6 @@
 # include <stdbool.h>
 # include <errno.h>
 
-typedef struct s_parser
-{
-	const char	*s;
-	char		*res;
-	int			pos;
-	int			bufsize;
-	char		**envp;
-	int			i;
-	int			in_var_expand;
-}	t_parser;
 
 char	*get_env_value(char **envp, const char *name);
 int		is_builtin(char *cmd);
@@ -44,10 +34,6 @@ int		builtin_env(t_shell_data *data);
 int		builtin_exit(t_shell_data *data, char **args);
 int		change_dir_update(t_shell_data *data, char *pa, char *old, char **args);
 long	ft_atoi_long(const char *str, bool *overflow);
-char	*strip_outer_quotes(const char *s);
-char	get_opening_quote(const char *s);
-void	join_quoted_parts(char **res, char **args, int *i, char quote);
-char	*collect_value_after_equal(char **args, int *i);
 char	*build_final_pair(char *name, char *clean);
 
 #endif

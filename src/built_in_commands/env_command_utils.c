@@ -113,6 +113,7 @@ int	add_or_update_env(t_shell_data *data, const char *arg)
 	char	*equal;
 	char	*key;
 	char	*value;
+	int res;
 
 	equal = ft_strchr(arg, '=');
 	if (equal)
@@ -123,15 +124,16 @@ int	add_or_update_env(t_shell_data *data, const char *arg)
 	else
 	{
 		key = ft_strdup(arg);
-		value = ft_strdup("");
+		value = NULL;
 	}
-	if (!key || !value)
+	if (!key || (equal && !value))
 		return (my_free(key), my_free(value), 0);
-	if (!update_existing_env(&data->env_list, key, value))
-		add_new_env(&data->env_list, key, value);
+	res = update_existing_env(&data->env_list, key, value);
+    if (!res)
+        res = add_new_env(&data->env_list, key, value);
 	free(key);
 	free(value);
-	return (1);
+	return (res);
 }
 
 /**
@@ -157,13 +159,17 @@ int	sync_envp(t_shell_data *data)
 		if (current->value)
 		{
 			tmp = ft_strjoin(current->key, "=");
+			if (!tmp)
+                return 0;
 			data->envp[i] = ft_strjoin(tmp, current->value);
 			free(tmp);
 		}
 		else
 			data->envp[i] = ft_strdup(current->key);
-		current = current->next;
+		if (!data->envp[i])
+            return 0;
 		i++;
+		current = current->next;
 	}
 	data->envp[i] = NULL;
 	return (1);

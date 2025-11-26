@@ -26,7 +26,7 @@ SRC = 	src/executor/executor_command_info.c \
         src/init_shell_data.c \
 		src/parse_envp.c \
 		src/update_last_exit_status.c
-# 
+
 SRC +=	src/built_in_commands/built_in_commands.c \
 		src/built_in_commands/echo_command.c \
 		src/built_in_commands/export_command.c \

@@ -12,9 +12,7 @@
 
 #include "builtins.h"
 
-/**
- * @brief Builds "KEY=VALUE" pair for adding to env list.
- */
+/* Build "KEY=VALUE" string */
 char *build_final_pair(char *name, char *clean)
 {
 	char *pair;

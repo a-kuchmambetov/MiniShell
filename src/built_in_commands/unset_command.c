@@ -58,13 +58,23 @@ static void	remove_env_node(t_env_list *env, const char *key)
 int	builtin_unset(t_shell_data *data, char **args)
 {
 	int	i;
+	int	exit_code;
 
 	i = 1;
+	exit_code = 0;
 	while (args[i])
 	{
-		remove_env_node(&data->env_list, args[i]);
+		if (!is_valid_identifier(args[i]))
+		{
+			ft_print_err("unset: `%s': not a valid identifier\n", args[i]);
+			exit_code = 1;
+		}
+		else
+		{
+			remove_env_node(&data->env_list, args[i]);
+		}
 		i++;
 	}
 	sync_envp(data);
-	return (0);
+	return (exit_code);
 }

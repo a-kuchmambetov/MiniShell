@@ -35,6 +35,24 @@ static int	all_n(const char *str)
 	return (i > 1);
 }
 
+char *remove_quotes(const char *str)
+{
+    int len;
+    char *res;
+
+	len = ft_strlen(str);
+    if (len >= 2 && ((str[0] == '"' && str[len - 1] == '"') 
+		|| (str[0] == '\'' && str[len - 1] == '\'')))
+    {
+        res = malloc(len - 1);
+        if (!res)
+            return (NULL);
+        ft_strlcpy(res, str + 1, len - 1);
+        return (res);
+    }
+    return (ft_strdup(str));
+}
+
 /**
  * @brief Implements echo builtin with '-n' option and variable expansion
  * @return 0 on success, 1 on failure.
@@ -43,6 +61,8 @@ int	builtin_echo(char **argv)
 {
 	int	i;
 	int	no_newline;
+	char *arg;
+	char *next;
 
 	i = 1;
 	no_newline = 0;
@@ -53,9 +73,23 @@ int	builtin_echo(char **argv)
 	}
 	while (argv[i])
 	{
-		write(1, argv[i], ft_strlen(argv[i]));
+		arg = remove_quotes(argv[i]);
+        if (!arg)
+            return (1);
+		write(1, arg, strlen(arg));
 		if (argv[i + 1])
-			write(1, " ", 1);
+		{
+			next = remove_quotes(argv[i + 1]);
+			if (!next)
+            {
+                free(arg);
+                return (1);
+            }
+			if (next[0] != '\0')
+                write(1, " ", 1);
+            free(next);
+        }
+		free(arg);
 		i++;
 	}
 	if (!no_newline)

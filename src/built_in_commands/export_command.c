@@ -12,21 +12,23 @@
 
 #include "builtins.h"
 
-/**
- * @brief Adds or updates an environment variable from assignment.
- */
 
+/* Frees temporary strings after processing */
 static void	clean_process_assigment(char *name, char *val, char *final)
 {
 		my_free(name);
 		my_free(val);
 		my_free(final);
 }
+
+/* Error message for invalid identifier */
 static int	error_not_valid_identifier(char *args, char *name)
 {
 	ft_print_err("export: `%s' not a valid identifier\n", args[1]);
 	return (my_free(name),1);
 }
+
+/* Process KEY=VALUE assignments */
 static int	process_assignment(t_shell_data *data, char *arg)
 {
 	char	*name;
@@ -34,7 +36,6 @@ static int	process_assignment(t_shell_data *data, char *arg)
 	char	*final;
 	char	*eq;
 
-	ft_printf("arg - %s\n", arg);
 	eq = ft_strchr(arg, '=');
 	if (!eq)
 		return (1);
@@ -70,20 +71,35 @@ static void	print_export_list(t_env_node *node)
 		node = node->next;
 	}
 }
-/*
-** Handles "export NAME" (without '=')
-*/
-static int	handle_no_equal(char *arg)
+/* Handle export NAME without '=' */
+static int	handle_no_equal(char *arg, t_shell_data *data)
 {
+	t_env_node	*node;
+
 	if (!is_valid_identifier(arg))
 	{
 		ft_print_err("export: `%s': not a valid identifier\n", arg);
 		return (1);
 	}
-	// if (!add_or_update_env(data, arg))
-	// 	return (1);
+	// Шукаємо, чи така змінна вже існує
+	node = data->env_list.first;
+	while (node)
+	{
+		if (ft_strncmp(node->key, arg, ft_strlen(arg) + 1) == 0)
+			return (0); // вже є, нічого не робимо
+		node = node->next;
+	}
+	node = malloc(sizeof(t_env_node));
+	if (!node)
+		return (1); // помилка виділення пам'яті
+	node->key = ft_strdup(arg);
+	node->value = NULL; // без значення
+	node->next = data->env_list.first;
+	data->env_list.first = node;
+	data->env_list.len++;
 	return (0);
 }
+
 
 /**
  * @brief Builtin: export command.
@@ -97,10 +113,8 @@ int	builtin_export(t_shell_data *data, char **args)
 	if (!args[1] || args[1][0] == '\0')
 		return (print_export_list(data->env_list.first), 0);
 	i = 1;
-	// ft_printf("0 - %s\n", args[0]);
 	while (args[i])
 	{
-		// ft_printf("%d - %s\n", i, args[i]);
 		if (ft_strchr(args[i], '='))
 		{
 			if (process_assignment(data, args[i]))
@@ -108,7 +122,7 @@ int	builtin_export(t_shell_data *data, char **args)
 		}
 		else
 		{
-			if (handle_no_equal(args[i]))
+			if (handle_no_equal(args[i], data))
 				exit_code = 1;
 		}
 		i++;
