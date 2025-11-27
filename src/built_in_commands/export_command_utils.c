@@ -15,8 +15,8 @@
 /* Build "KEY=VALUE" string */
 char *build_final_pair(char *name, char *clean)
 {
-	char *pair;
-	char *final;
+	char	*pair;
+	char	*final;
 
 	pair = ft_strjoin(name, "=");
 	if (!pair)

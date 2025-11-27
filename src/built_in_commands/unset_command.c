@@ -35,9 +35,9 @@ static void	remove_env_node(t_env_list *env, const char *key)
 				prev->next = current->next;
 			else
 				env->first = current->next;
-			free(current->key);
-			free(current->value);
-			free(current);
+			my_free(current->key);
+			my_free(current->value);
+			my_free(current);
 			env->len--;
 			return ;
 		}

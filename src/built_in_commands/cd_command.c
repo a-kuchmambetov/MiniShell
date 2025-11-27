@@ -90,7 +90,7 @@ static char	*get_old_and_target(t_shell_data *data, char **args, char **oldpwd)
 	path = get_target_path(data, args);
 	if (!path)
 	{
-		free(*oldpwd);
+		my_free(*oldpwd);
 		return (NULL);
 	}
 	return (path);

@@ -16,17 +16,19 @@
 /* Frees temporary strings after processing */
 static void	clean_process_assigment(char *name, char *val, char *final)
 {
-		my_free(name);
-		my_free(val);
-		my_free(final);
+	my_free(name);
+	my_free(val);
+	my_free(final);
 }
 
 /* Error message for invalid identifier */
-static int	error_not_valid_identifier(char *args, char *name)
+static int	error_not_valid_identifier(char *arg, char *name)
 {
-	ft_print_err("export: `%s' not a valid identifier\n", args[1]);
-	return (my_free(name),1);
+	ft_print_err("export: `%s' not a valid identifier\n", arg);
+	my_free(name);
+	return (1);
 }
+
 
 /* Process KEY=VALUE assignments */
 static int	process_assignment(t_shell_data *data, char *arg)

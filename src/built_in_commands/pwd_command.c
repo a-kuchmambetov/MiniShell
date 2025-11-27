@@ -67,6 +67,6 @@ int	builtin_pwd(t_shell_data *data, char **args)
 		return (1);
 	}
 	ft_printf("%s\n", cwd);
-	free(cwd);
+	my_free(cwd);
 	return (0);
 }

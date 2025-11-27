@@ -127,12 +127,18 @@ int	add_or_update_env(t_shell_data *data, const char *arg)
 		value = NULL;
 	}
 	if (!key || (equal && !value))
-		return (my_free(key), my_free(value), 0);
+	{
+		my_free(key);
+		my_free(value);
+		return 0;
+	}
 	res = update_existing_env(&data->env_list, key, value);
-    if (!res)
-        res = add_new_env(&data->env_list, key, value);
-	free(key);
-	free(value);
+	if (!res)
+	{
+		res = add_new_env(&data->env_list, key, value);
+	}
+	my_free(key);
+	my_free(value);
 	return (res);
 }
 
@@ -160,14 +166,14 @@ int	sync_envp(t_shell_data *data)
 		{
 			tmp = ft_strjoin(current->key, "=");
 			if (!tmp)
-                return 0;
+				return (0);
 			data->envp[i] = ft_strjoin(tmp, current->value);
-			free(tmp);
+			my_free(tmp);
 		}
 		else
 			data->envp[i] = ft_strdup(current->key);
 		if (!data->envp[i])
-            return 0;
+			return (0);
 		i++;
 		current = current->next;
 	}

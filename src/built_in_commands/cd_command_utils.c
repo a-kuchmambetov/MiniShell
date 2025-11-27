@@ -55,13 +55,13 @@ void	update_env_pwd(t_shell_data *data, char *key, char *value)
 
 	tmp = ft_strjoin(key, value);
 	add_or_update_env(data, tmp);
-	free(tmp);
+	my_free(tmp);
 }
 
 static int	cleanup_cd_error(char *oldpwd, char *path)
 {
-	free(oldpwd);
-	free(path);
+	my_free(oldpwd);
+	my_free(path);
 	return (1);
 }
 
@@ -95,10 +95,10 @@ int	change_dir_update(t_shell_data *data, char *pa, char *old, char **args)
 	update_env_pwd(data, "PWD=", cwd);
 	sync_envp(data);
 	if (data->pwd)
-		free(data->pwd);
+		my_free(data->pwd);
 	data->pwd = ft_strdup(cwd);
-	free(old);
-	free(cwd);
-	free(path);
+	my_free(old);
+	my_free(cwd);
+	my_free(path);
 	return (0);
 }
