@@ -82,7 +82,7 @@ int start_here_doc(t_env_list env, const char *eof_word, char **filename)
         return (1);
     if (*filename)
     {
-        free(*filename);
+        my_free(*filename);
         *filename = NULL;
     }
     g_signal_received = 0;
