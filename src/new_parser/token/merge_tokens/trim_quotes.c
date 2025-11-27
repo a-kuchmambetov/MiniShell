@@ -45,15 +45,16 @@ char *trim_space_before(char *str)
 
 char *trim_space_after(char *str)
 {
+	const int str_len = ft_strlen(str) - 1;
     int i;
     int j;
 
     if (!str)
         return (NULL);
-    i = ft_strlen(str) - 1;
+    i = str_len;
     while (str[i] == ' ')
         i--;
-    if (i == 0)
+    if (i == str_len)
         return (str);
     j = 0;
     while (str[i])
