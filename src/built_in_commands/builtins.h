@@ -18,7 +18,6 @@
 # include <stdbool.h>
 # include <errno.h>
 
-
 char	*get_env_value(char **envp, const char *name);
 int		is_builtin(char *cmd);
 int		exec_builtin(t_shell_data *data, char **args);
@@ -35,5 +34,9 @@ int		builtin_exit(t_shell_data *data, char **args);
 int		change_dir_update(t_shell_data *data, char *pa, char *old, char **args);
 long	ft_atoi_long(const char *str, bool *overflow);
 char	*build_final_pair(char *name, char *clean);
+int		cleanup_return(char *key, char *value, int res);
+void	print_export_list(t_env_node *node);
+void	clean_process_assigment(char *name, char *val, char *final);
+int		error_not_valid_identifier(char *arg, char *name);
 
 #endif

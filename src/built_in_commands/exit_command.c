@@ -13,10 +13,15 @@
 #include "builtins.h"
 
 /**
- * @brief Checks if a string is a valid numeric argument for exit.
+ * @brief Checks a string is a valid numeric argument for the `exit` builtin.
+ *
+ * Accepts optional leading whitespace, an optional sign, digits, and optional
+ * trailing whitespace. Returns true only if the string contains at least one 
+ * digit and contains no invalid characters.
  *
  * @param arg Input string.
- * @return true if valid, false otherwise.
+ * @return true if the string represents a valid numeric argument, false 
+ * otherwise.
  */
 static bool	is_valid_numeric_arg(char *arg)
 {
@@ -43,13 +48,16 @@ static bool	is_valid_numeric_arg(char *arg)
 }
 
 /**
- * @brief Handles exit when argument is missing or empty string.
+ * @brief Handles the case where `exit` is called with no argument or an empty 
+ * string.
  *
- * If no argument is provided, exits with last exit status.
- * If argument is an empty string, exits with status 0.
+ * - If no argument is provided, exits with the last exit status.
+ * - If the argument is an empty string, exits with status 0.
  *
- * @param data Pointer to shell data structure.
- * @param arg Argument string (may be NULL or empty).
+ * Frees all shell data before exiting.
+ *
+ * @param data Pointer to the shell data structure.
+ * @param arg Argument string (may be NULL or an empty string).
  */
 static void	handle_no_args_or_empty(t_shell_data *data, char *arg)
 {
@@ -77,13 +85,19 @@ static void	handle_invalid_arg(t_shell_data *data, char *arg)
 }
 
 /**
- * @brief Implements the 'exit' builtin command.
+ * @brief Implements the `exit` builtin command.
  *
- * Handles numeric argument, overflow, empty argument, and too many arguments.
+ * Behavior:
+ * - No argument → exit with last exit code.
+ * - Empty argument → exit with 0.
+ * - Non-numeric or overflow → print error and exit with 2.
+ * - More than one argument → print error and return 1 (does NOT exit).
+ * - Otherwise → exit with the parsed numeric value (cast to unsigned char).
  *
- * @param data Pointer to shell data structure.
- * @param args Command arguments array.
- * @return Returns 1 if too many arguments, otherwise exits the program.
+ * @param data Pointer to shell state.
+ * @param args Array of command arguments (args[0] = "exit").
+ * @return 1 if there are too many arguments (shell continues), otherwise the
+ *         function does not return because the shell exits.
  */
 int	builtin_exit(t_shell_data *data, char **args)
 {

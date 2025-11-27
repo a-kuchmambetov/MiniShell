@@ -49,7 +49,7 @@ char	*get_current_dir_or_fallback(t_shell_data *data)
  * @param key The environment variable key (e.g., "PWD=" or "OLDPWD=").
  * @param value The new value to set.
  */
-void	update_env_pwd(t_shell_data *data, char *key, char *value)
+static void	update_env_pwd(t_shell_data *data, char *key, char *value)
 {
 	char	*tmp;
 

@@ -20,8 +20,9 @@
  */
 static int	validate_cd_args(char **args)
 {
-	int count = 0;
+	int	count;
 
+	count = 0;
 	while (args[count])
 		count++;
 	if (count > 2)
@@ -31,7 +32,6 @@ static int	validate_cd_args(char **args)
 	}
 	return (0);
 }
-
 
 /**
  * @brief Returns the target path for the cd command.

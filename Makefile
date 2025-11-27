@@ -35,6 +35,7 @@ SRC +=	src/built_in_commands/built_in_commands.c \
 		src/built_in_commands/cd_command_utils.c \
 		src/built_in_commands/pwd_command.c \
 		src/built_in_commands/env_command_utils.c \
+		src/built_in_commands/env_utils.c \
 		src/built_in_commands/utils.c \
 		src/built_in_commands/env_command.c \
 		src/built_in_commands/unset_command.c \

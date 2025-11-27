@@ -90,3 +90,10 @@ long	ft_atoi_long(const char *str, bool *overflow)
 	}
 	return ((long)(num * neg));
 }
+
+int	cleanup_return(char *key, char *value, int res)
+{
+	my_free(key);
+	my_free(value);
+	return (res);
+}

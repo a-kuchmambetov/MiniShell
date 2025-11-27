@@ -13,9 +13,15 @@
 #include "builtins.h"
 
 /**
- * @brief Checks if string consists only of 'n' characters.
- * @param str Input string.
- * @return 1 if only 'n', 0 otherwise.
+ * @brief Checks whether a string is a valid echo -n flag.
+ *
+ * A valid flag must:
+ *   - start with '-'
+ *   - contain at least one character after '-'
+ *   - consist only of 'n' characters (e.g. "-n", "-nnn")
+ *
+ * @param str Input string to check.
+ * @return 1 if the string is a valid -n flag, 0 otherwise.
  */
 static int	all_n(const char *str)
 {
@@ -35,14 +41,25 @@ static int	all_n(const char *str)
 	return (i > 1);
 }
 
+/**
+ * @brief Removes surrounding single or double quotes from a string.
+ *
+ * If the string begins and ends with matching quotes ('...' or "..."),
+ * a new allocated string without the outer quotes is returned.
+ * If no surrounding quotes are found, a duplicate of the original
+ * string is returned.
+ *
+ * @param str Input string.
+ * @return Newly allocated string without quotes, or NULL on allocation failure.
+ */
 char	*remove_quotes(const char *str)
 {
 	char	*res;
 	int		len;
 
 	len = ft_strlen(str);
-	if (len >= 2 && ((str[0] == '"' && str[len - 1] == '"') 
-		|| (str[0] == '\'' && str[len - 1] == '\'')))
+	if (len >= 2 && ((str[0] == '"' && str[len - 1] == '"')
+			|| (str[0] == '\'' && str[len - 1] == '\'')))
 	{
 		res = malloc(len - 1);
 		if (!res)
@@ -54,14 +71,22 @@ char	*remove_quotes(const char *str)
 }
 
 /**
- * @brief Implements echo builtin with '-n' option and variable expansion
- * @return 0 on success, 1 on failure.
+ * @brief Implements the echo builtin with support for repeated "-n" flags.
+ *
+ * Handles:
+ *   - one or multiple valid "-n" flags ("-n", "-nnn", "-nn")
+ *   - printing arguments separated by spaces
+ *   - optional suppression of the trailing newline
+ *   - removal of surrounding quotes
+ *
+ * @param argv Array of arguments passed to the echo command.
+ * @return 0 on success, 1 on allocation failure.
  */
 int	builtin_echo(char **argv)
 {
-	int	i;
-	int	no_newline;
-	char *arg;
+	char	*arg;
+	int		i;
+	int		no_newline;
 
 	i = 1;
 	no_newline = 0;
@@ -77,7 +102,7 @@ int	builtin_echo(char **argv)
 			return (1);
 		write(1, arg, strlen(arg));
 		my_free(arg);
-		if (argv[i + 1]) // пробіл між словами
+		if (argv[i + 1])
 			write(1, " ", 1);
 		i++;
 	}
