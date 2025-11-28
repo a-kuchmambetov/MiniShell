@@ -9,4 +9,9 @@ t_cmd_node *malloc_cmd_node(int *errno);
 int check_file_open(const char *filename);
 int check_file_create(const char *filename, const int redir_type);
 
+int set_errno(int code, int *errno);
+int has_content(t_cmd_node *node);
+size_t arg_count(char **args);
+int append_arg(t_cmd_node *node, const char *value, int *errno);
+
 #endif

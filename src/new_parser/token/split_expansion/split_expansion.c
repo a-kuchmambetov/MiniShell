@@ -4,7 +4,9 @@ static int get_space_index(const char *str)
 {
     int i;
 
-    i = 1;
+    if (!str || !*str)
+        return (0);
+    i = 0;
     while (str[i])
     {
         if (str[i] == ' ')
@@ -78,7 +80,7 @@ void split_expansion(t_token_list tkn_li, int *errno)
         if (cur->type == TOKEN_EXPANSION && !is_quoted(cur->value))
         {
             space_index = get_space_index(cur->value);
-            if (space_index)
+            if (space_index > 0)
             {
                 new_tkn = init_new_token_node(errno);
                 if (*errno)

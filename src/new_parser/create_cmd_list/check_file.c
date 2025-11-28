@@ -1,4 +1,5 @@
 #include "create_cmd_list_utils.h"
+#include <errno.h>
 
 // Check with chatGPT for edge cases regarding filenames
 int check_file_open(const char *filename)
@@ -11,12 +12,13 @@ int check_file_open(const char *filename)
         ft_print_err("syntax error near unexpected token `%s'\n", filename);
         return (close(fd), 1);
     }
-    if (fd == -1)
+    access(filename, R_OK);
+    if (errno == ENOENT)
     {
         ft_print_err("%s: No such file or directory\n", filename);
         return (close(fd), 1);
     }
-    if (access(filename, F_OK) == -1)
+    else if (errno == EACCES)
     {
         ft_print_err("%s: Permission denied\n", filename);
         return (close(fd), 1);
@@ -38,13 +40,17 @@ int check_file_create(const char *filename, const int redir_type)
         fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
     else
         fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (access(filename, R_OK) == -1)
+    access(filename, R_OK);
+    if (errno == ENOENT)
+    {
+        ft_print_err("%s: No such file or directory\n", filename);
+        return (close(fd), 1);
+    }
+    else if (errno == EACCES)
     {
         ft_print_err("%s: Permission denied\n", filename);
         return (close(fd), 1);
     }
-    if (fd == -1)
-        return (1);
     close(fd);
     return (0);
 }

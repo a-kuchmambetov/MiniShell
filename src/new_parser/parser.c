@@ -9,7 +9,7 @@ int parse_input(t_shell_data *data, char *input)
     errno = 0;
     arr = split_input(input, &errno);
     if (!arr)
-        return (ft_print_err("Error: Failed to split input string\n"), 1);
+        return (1);
     tkn_li = create_token_list(arr, &errno);
     if (errno)
         return (free_str_arr(arr), free_token_list(tkn_li), 1);

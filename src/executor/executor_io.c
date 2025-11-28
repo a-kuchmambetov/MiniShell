@@ -11,7 +11,6 @@ int redirect_input(t_cmd_node *cmd, int prev_fd)
     {
         fd = open(cmd->input_redir, O_RDONLY);
         if (fd < 0)
-            // return (perror(cmd->input_redir), -1);
             return (-1);
         if (dup2(fd, STDIN_FILENO) < 0)
             return (perror("dup2"), close(fd), -1);
@@ -27,6 +26,18 @@ int redirect_input(t_cmd_node *cmd, int prev_fd)
     return (0);
 }
 
+static int set_flags(t_cmd_node *cmd)
+{
+    int flags;
+
+    flags = O_WRONLY | O_CREAT;
+    if (cmd->output_redir_type == REDIR_OUTPUT)
+        flags |= O_TRUNC;
+    else
+        flags |= O_APPEND;
+    return (flags);
+}
+
 int redirect_output(t_cmd_node *cmd, int pipefd[2])
 {
     int fd;
@@ -35,14 +46,9 @@ int redirect_output(t_cmd_node *cmd, int pipefd[2])
     fd = -1;
     if (cmd->output_redir_type == REDIR_OUTPUT || cmd->output_redir_type == REDIR_APPEND)
     {
-        flags = O_WRONLY | O_CREAT;
-        if (cmd->output_redir_type == REDIR_OUTPUT)
-            flags |= O_TRUNC;
-        else
-            flags |= O_APPEND;
+        flags = set_flags(cmd);
         fd = open(cmd->output_redir, flags, 0644);
         if (fd < 0)
-            // return (perror(cmd->output_redir), -1);
             return (-1);
         if (dup2(fd, STDOUT_FILENO) < 0)
             return (perror("dup2"), close(fd), -1);

@@ -7,7 +7,7 @@ static void handle_sigint_prompt(int sig)
     (void)sig;
     g_signal_received = 1;
     write(STDOUT_FILENO, "\n", 1);
-    print_prompt_header();
+    build_prompt();
     rl_on_new_line();
     rl_replace_line("", 0);
     rl_redisplay();

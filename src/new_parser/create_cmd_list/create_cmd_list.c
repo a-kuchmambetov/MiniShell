@@ -1,55 +1,5 @@
 #include "create_cmd_list_utils.h"
 
-static int set_errno(int code, int *errno)
-{
-	if (errno)
-		*errno = code;
-	return (code);
-}
-
-static int has_content(t_cmd_node *node)
-{
-	if (!node)
-		return (0);
-	return (node->cmd || node->args || node->input_redir || node->output_redir);
-}
-
-static size_t arg_count(char **args)
-{
-	size_t count;
-
-	count = 0;
-	if (!args)
-		return (0);
-	while (args[count])
-		count++;
-	return (count);
-}
-
-static int append_arg(t_cmd_node *node, const char *value, int *errno)
-{
-	char **new_args;
-	size_t count;
-	size_t i;
-
-	count = arg_count(node->args);
-	new_args = ft_calloc(sizeof(char *), count + 2);
-	if (!new_args)
-		return (set_errno(1, errno));
-	i = 0;
-	while (i < count)
-	{
-		new_args[i] = node->args[i];
-		i++;
-	}
-	new_args[count] = ft_strdup(value);
-	if (!new_args[count])
-		return (free(new_args), set_errno(1, errno));
-	free(node->args);
-	node->args = new_args;
-	return (0);
-}
-
 static int handle_word(t_cmd_node *node, t_token_node *tkn, int *errno)
 {
 	if (!tkn->value || *(tkn->value) == '\0')
@@ -143,19 +93,6 @@ static int process_token(t_shell_data *dt, t_token_node *tkn,
 	return (handle_word(*node, tkn, errno));
 }
 
-static void build_commands(t_shell_data *dt, t_token_node *cur,
-						   t_cmd_node **node, int *errno)
-{
-	while (cur)
-	{
-		if (process_token(dt, cur, node, errno) == 0)
-			cur = cur->next;
-		else
-			break;
-	}
-	return;
-}
-
 int create_cmd_list(t_shell_data *dt, t_token_list *tkn_li, int *errno)
 {
 	t_token_node *cur;
@@ -170,7 +107,11 @@ int create_cmd_list(t_shell_data *dt, t_token_list *tkn_li, int *errno)
 	cur = tkn_li->head;
 	if (!cur)
 		return (free_cmd_node(node), 1);
-	build_commands(dt, cur, &node, errno);
+	while (cur)
+	{
+		process_token(dt, cur, &node, errno);
+		cur = cur->next;
+	}
 	if (*errno)
 		return (free_cmd_node(node), free_cmd_list(&dt->cmd_list), 1);
 	if (has_content(node))

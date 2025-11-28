@@ -22,7 +22,6 @@ SRC = 	src/executor/executor_command_info.c \
 		src/my_free.c \
         src/free_utils.c \
         src/ft_print_err.c \
-        src/print_prompt_header.c \
         src/init_shell_data.c \
 		src/parse_envp.c \
 		src/update_last_exit_status.c
@@ -50,7 +49,10 @@ SRC += 	src/new_parser/token/create_token_list/create_token_list.c \
 		src/new_parser/token/create_token_list/free_token_list.c \
 		src/new_parser/token/create_token_list/free_token_node.c
 # -- Expande tokens
-SRC += 	src/new_parser/token/expande_tokens/expand_tokens.c 
+SRC += 	src/new_parser/token/expand_tokens/expand_tokens.c \
+		src/new_parser/token/expand_tokens/expand_tokens_utils.c \
+		src/new_parser/token/expand_tokens/is_ambig.c \
+		src/new_parser/token/expand_tokens/squash_spaces.c
 # -- Split expansion
 SRC += 	src/new_parser/token/split_expansion/split_expansion.c
 # -- Merge tokens
@@ -139,9 +141,7 @@ compileTestFull: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/minishell_full_test.c $(LIBS) $(LDLIBS) -lreadline -o $(NAME)_test_full
 
 valgrind:
-	PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
-	valgrind --leak-check=full --show-leak-kinds=all \
-	--track-origins=yes --trace-children=yes ./minishell
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes --show-leak-kinds=definite ./minishell
 
 .PHONY: all clean fclean allClean re \
 	compileTest1 compileTest2 compileTest3 compileTest4 compileTest5 compileTest6 compileTest6New \
