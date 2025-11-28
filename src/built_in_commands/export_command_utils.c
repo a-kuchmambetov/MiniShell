@@ -52,7 +52,7 @@ void	clean_process_assigment(char *name, char *val, char *final)
 /* Error message for invalid identifier */
 int	error_not_valid_identifier(char *arg, char *name)
 {
-	ft_print_err("export: `%s' not a valid identifier\n", arg);
+	ft_print_err("export: not a valid identifier\n", arg);
 	my_free(name);
 	return (1);
 }

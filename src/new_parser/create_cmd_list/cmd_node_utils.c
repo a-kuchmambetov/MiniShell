@@ -31,6 +31,7 @@ t_cmd_node *malloc_cmd_node(int *errno)
     }
     node->cmd = NULL;
     node->args = NULL;
+    node->failed_code = NO_FAIL;
     node->input_redir_type = NO_REDIR;
     node->input_redir = NULL;
     node->output_redir_type = NO_REDIR;

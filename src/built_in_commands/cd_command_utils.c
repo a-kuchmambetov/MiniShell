@@ -84,7 +84,7 @@ int	change_dir_update(t_shell_data *data, char *pa, char *old, char **args)
 	path = pa;
 	if (chdir(path) != 0)
 	{
-		ft_printf("cd: %s: %s\n", path, strerror(errno));
+		ft_print_err("cd: %s: %s\n", path, strerror(errno));
 		return (cleanup_cd_error(old, path));
 	}
 	cwd = get_current_dir_or_fallback(data);

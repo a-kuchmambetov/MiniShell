@@ -76,6 +76,9 @@ void merge_tokens(t_token_list tkn_li, int *errno)
 			free_token_node(next_free);
 		}
 		else
+		{
+			cur->value = trim_quotes(cur->value);
 			cur = cur->next;
+		}
 	}
 }

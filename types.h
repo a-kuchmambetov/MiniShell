@@ -16,10 +16,18 @@ typedef enum e_redir
     REDIR_HEREDOC = 4
 } t_redir;
 
+typedef enum e_failed_redir
+{
+    NO_FAIL = 0,
+    FAILED_IN = 1,
+    FAILED_OUT = 2
+} t_failed_redir;
+
 typedef struct s_cmd_node
 {
     char *cmd;
     char **args;
+    t_failed_redir failed_code;
     t_redir input_redir_type;
     char *input_redir;
     t_redir output_redir_type;

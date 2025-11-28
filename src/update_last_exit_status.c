@@ -28,9 +28,9 @@ static int create_new(t_shell_data *dt, char *code_str)
     if (!new_node)
         return (1);
     new_node->key = ft_strdup("?");
-    new_node->value = code_str;
     if (!new_node->key)
         return (free_env_node(new_node), 1);
+    new_node->value = code_str;
     if (current)
         current->next = new_node;
     else

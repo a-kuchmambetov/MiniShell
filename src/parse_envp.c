@@ -21,6 +21,36 @@ static int set_new_env_node(t_env_node *node, char **res)
         return (1);
     return (0);
 }
+
+static char **split_by_equal(char *env_var)
+{
+    char **res;
+    int i;
+
+    res = NULL;
+    i = 0;
+    while (env_var[i] && env_var[i] != '=')
+        i++;
+    if (env_var[i] == '=')
+    {
+        res = ft_calloc(3, sizeof(char *));
+        if (!res)
+            return (NULL);
+        res[0] = ft_substr(env_var, 0, i);
+        res[1] = ft_strdup(env_var + i + 1);
+        if (!res || !res[0] || !res[1])
+            return (my_free(res[0]), my_free(res[1]), my_free(res), NULL);
+        return (res);
+    }
+    res = ft_calloc(2, sizeof(char *));
+    if (!res)
+        return (NULL);
+    res[0] = ft_strdup(env_var);
+    if (!res[0])
+        return (free(res[0]), free(res), NULL);
+    return (res);
+}
+
 void parse_envp(t_shell_data *data, char **envp)
 {
     t_env_node *new_node;
@@ -33,7 +63,7 @@ void parse_envp(t_shell_data *data, char **envp)
     while (envp[data->env_list.len])
     {
         new_node = ft_calloc(sizeof(t_env_node), 1);
-        res = ft_split(envp[data->env_list.len], '=');
+        res = split_by_equal(envp[data->env_list.len]);
         if (!new_node || !res)
             return (free_env_node(new_node), free_str_arr(res));
         if (set_new_env_node(new_node, res))

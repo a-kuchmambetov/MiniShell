@@ -6,6 +6,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <signal.h>
 #include <fcntl.h>
 #include <readline/readline.h>
@@ -56,7 +57,7 @@ char *read_input();
 /// Built-in commands
 int is_builtin(char *cmd);
 int exec_builtin(t_shell_data *data, char **args);
-    
+
 char *process_expansion(t_env_list env, char *input, int *errno, int *current_type);
 int start_here_doc(t_env_list env, const char *eof_word, char **filename);
 int delete_here_doc(const char *filename);

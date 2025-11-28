@@ -8,7 +8,7 @@ void process_input(t_shell_data *data, t_cmd_node *cmd_data)
         return;
     if (ft_strncmp(cmd_data->cmd, "$?", 2) == 0)
     {
-        ft_printf("%d: command not found\n", WEXITSTATUS(data->last_exit_status));
+        ft_print_err("%d: command not found", WEXITSTATUS(data->last_exit_status));
         return;
     }
     if (is_builtin(cmd_data->cmd))

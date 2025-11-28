@@ -27,7 +27,7 @@ static int	validate_cd_args(char **args)
 		count++;
 	if (count > 2)
 	{
-		ft_printf("cd: too many arguments\n");
+		ft_print_err("cd: too many arguments\n");
 		return (1);
 	}
 	return (0);
@@ -54,7 +54,7 @@ static char	*get_target_path(t_shell_data *data, char **args)
 		value = get_env_value(data->envp, "HOME");
 		if (value)
 			return (ft_strdup(value));
-		ft_printf("cd: HOME not set\n");
+		ft_print_err("cd: HOME not set\n");
 		return (NULL);
 	}
 	if (ft_strncmp(args[1], "-", 2) == 0)
@@ -62,7 +62,7 @@ static char	*get_target_path(t_shell_data *data, char **args)
 		value = get_env_value(data->envp, "OLDPWD");
 		if (value)
 			return (ft_strdup(value));
-		ft_printf("cd: OLDPWD not set\n");
+		ft_print_err("cd: OLDPWD not set\n");
 		return (NULL);
 	}
 	return (ft_strdup(args[1]));

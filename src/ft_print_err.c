@@ -27,7 +27,7 @@ int ft_print_err(const char *format, ...)
     len = 0;
     i = 0;
 
-    ft_print_str(COLOR_RED "\nminishell: ");
+    // ft_print_str(COLOR_RED "\nminishell: ");
     while (format[i])
     {
         if (format[i] == '%')
@@ -41,7 +41,7 @@ int ft_print_err(const char *format, ...)
             len += ft_print_char(format[i]);
         i++;
     }
-    ft_print_str(COLOR_RESET);
+    // ft_print_str(COLOR_RESET);
     va_end(args);
     return (len);
 }

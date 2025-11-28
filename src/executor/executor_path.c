@@ -52,7 +52,7 @@ void exec_external(t_shell_data *data, char **argv)
     path = find_executable(data, argv[0]);
     if (!path)
     {
-        ft_print_err("%s: command not found\n", argv[0]);
+        ft_print_err("%s: command not found", argv[0]);
         free_str_arr(argv);
         exit(127);
     }

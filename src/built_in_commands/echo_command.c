@@ -23,9 +23,9 @@
  * @param str Input string to check.
  * @return 1 if the string is a valid -n flag, 0 otherwise.
  */
-static int	all_n(const char *str)
+static int all_n(const char *str)
 {
-	int	i;
+	int i;
 
 	if (!str || str[0] != '-')
 		return (0);
@@ -42,35 +42,6 @@ static int	all_n(const char *str)
 }
 
 /**
- * @brief Removes surrounding single or double quotes from a string.
- *
- * If the string begins and ends with matching quotes ('...' or "..."),
- * a new allocated string without the outer quotes is returned.
- * If no surrounding quotes are found, a duplicate of the original
- * string is returned.
- *
- * @param str Input string.
- * @return Newly allocated string without quotes, or NULL on allocation failure.
- */
-char	*remove_quotes(const char *str)
-{
-	char	*res;
-	int		len;
-
-	len = ft_strlen(str);
-	if (len >= 2 && ((str[0] == '"' && str[len - 1] == '"')
-			|| (str[0] == '\'' && str[len - 1] == '\'')))
-	{
-		res = malloc(len - 1);
-		if (!res)
-			return (NULL);
-		ft_strlcpy(res, str + 1, len - 1);
-		return (res);
-	}
-	return (ft_strdup(str));
-}
-
-/**
  * @brief Implements the echo builtin with support for repeated "-n" flags.
  *
  * Handles:
@@ -82,11 +53,11 @@ char	*remove_quotes(const char *str)
  * @param argv Array of arguments passed to the echo command.
  * @return 0 on success, 1 on allocation failure.
  */
-int	builtin_echo(char **argv)
+int builtin_echo(char **argv)
 {
-	char	*arg;
-	int		i;
-	int		no_newline;
+	char *arg;
+	int i;
+	int no_newline;
 
 	i = 1;
 	no_newline = 0;
@@ -97,7 +68,7 @@ int	builtin_echo(char **argv)
 	}
 	while (argv[i])
 	{
-		arg = remove_quotes(argv[i]);
+		arg = ft_strdup(argv[i]);
 		if (!arg)
 			return (1);
 		write(1, arg, strlen(arg));

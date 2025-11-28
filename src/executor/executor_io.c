@@ -11,7 +11,8 @@ int redirect_input(t_cmd_node *cmd, int prev_fd)
     {
         fd = open(cmd->input_redir, O_RDONLY);
         if (fd < 0)
-            return (perror(cmd->input_redir), -1);
+            // return (perror(cmd->input_redir), -1);
+            return (-1);
         if (dup2(fd, STDIN_FILENO) < 0)
             return (perror("dup2"), close(fd), -1);
         close(fd);
@@ -41,7 +42,8 @@ int redirect_output(t_cmd_node *cmd, int pipefd[2])
             flags |= O_APPEND;
         fd = open(cmd->output_redir, flags, 0644);
         if (fd < 0)
-            return (perror(cmd->output_redir), -1);
+            // return (perror(cmd->output_redir), -1);
+            return (-1);
         if (dup2(fd, STDOUT_FILENO) < 0)
             return (perror("dup2"), close(fd), -1);
         close(fd);

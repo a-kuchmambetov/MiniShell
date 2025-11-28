@@ -25,6 +25,6 @@ void print_prompt_header(void)
     hdr = build_prompt_header();
     if (!hdr)
         return;
-    ft_printf("%s\n", hdr);
+    ft_printf("\n%s", hdr);
     free(hdr);
 }

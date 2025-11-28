@@ -8,6 +8,8 @@ static int run_loop(t_shell_data *data, t_exec_ctx *ctx)
         if (is_empty_cmd(ctx->current))
         {
             ctx->current = ctx->current->next;
+            if (ctx->current == NULL)
+                update_last_exit_status(data, 0);
             continue;
         }
         if (process_command_node(data, ctx, ctx->current))

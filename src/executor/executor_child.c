@@ -1,17 +1,33 @@
 #include "executor.h"
 
+static int isDirectoryExists(const char *path)
+{
+    struct stat stats;
+
+    if (path[0] != '.' && path[0] != '/')
+        return 0;
+    stat(path, &stats);
+    if (S_ISDIR(stats.st_mode))
+        return 1;
+    return 0;
+}
+
 void child_execute(t_shell_data *data, t_cmd_node *cmd, int prev_fd, int pipefd[2])
 {
-    int     status;
+    int status;
 
     if (setup_child_fds(cmd, prev_fd, pipefd) < 0)
         exit(1);
     if (!cmd->args)
         exit(1);
+    if (isDirectoryExists(cmd->args[0]))
+    {
+        ft_print_err("%s: Is a directory\n", cmd->args[0]);
+        exit(126);
+    }
     if (is_builtin(cmd->cmd))
     {
         status = exec_builtin(data, cmd->args);
-        free_str_arr(cmd->args);
         exit(status);
     }
     exec_external(data, cmd->args);
