@@ -102,8 +102,8 @@ static int	handle_no_equal(char *arg, t_shell_data *data)
  */
 int	builtin_export(t_shell_data *data, char **args)
 {
-	int		i;
-	int		exit_code;
+	int	i;
+	int	exit_code;
 
 	exit_code = 0;
 	if (!args[1] || args[1][0] == '\0')

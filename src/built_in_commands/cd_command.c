@@ -99,7 +99,7 @@ static char	*get_old_and_target(t_shell_data *data, char **args, char **oldpwd)
 /**
  * @brief Executes the builtin cd command.
  *
- * Validates arguments, determines the target path, and performs 
+ * Validates arguments, determines the target path, and performs
  * directory change.
  * * @param data Pointer to shell data structure containing environment info.
  * @param args Command arguments array.

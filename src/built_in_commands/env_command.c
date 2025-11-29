@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "builtins.h"
+
 /**
  * @brief Retrieves the value of an environment variable by name.
  *

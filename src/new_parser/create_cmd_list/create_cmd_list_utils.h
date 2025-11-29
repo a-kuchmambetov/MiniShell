@@ -1,17 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   create_cmd_list_utils.h                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vmoroka <vmoroka@student.hive.fi>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/29 12:50:16 by vmoroka           #+#    #+#             */
+/*   Updated: 2025/11/29 12:50:17 by vmoroka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CREATE_CMD_LIST_UTILS_H
-#define CREATE_CMD_LIST_UTILS_H
+# define CREATE_CMD_LIST_UTILS_H
 
-#include "../parser.h"
+# include "../parser.h"
 
-void push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
-t_cmd_node *malloc_cmd_node(int *errno);
+void		push_cmd_node(t_cmd_list *cmd_list, t_cmd_node *new_node);
+t_cmd_node	*malloc_cmd_node(int *errno);
 
-int check_file_open(const char *filename);
-int check_file_create(const char *filename, const int redir_type);
+int			check_file_open(const char *filename);
+int			check_file_create(const char *filename, const int redir_type);
 
-int set_errno(int code, int *errno);
-int has_content(t_cmd_node *node);
-size_t arg_count(char **args);
-int append_arg(t_cmd_node *node, const char *value, int *errno);
+int			set_errno(int code, int *errno);
+int			has_content(t_cmd_node *node);
+size_t		arg_count(char **args);
+int			append_arg(t_cmd_node *node, const char *value, int *errno);
 
 #endif

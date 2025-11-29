@@ -17,7 +17,7 @@
  *
  * Supported builtin commands:
  * echo, cd, pwd, export, рunset, env, exit
- *norm bui  
+ *norm bui
  * @param cmd Command string to check.
  * @return 1 if cmd is a builtin, 0 otherwise.
  */

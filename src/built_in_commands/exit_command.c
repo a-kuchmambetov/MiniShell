@@ -16,11 +16,11 @@
  * @brief Checks a string is a valid numeric argument for the `exit` builtin.
  *
  * Accepts optional leading whitespace, an optional sign, digits, and optional
- * trailing whitespace. Returns true only if the string contains at least one 
+ * trailing whitespace. Returns true only if the string contains at least one
  * digit and contains no invalid characters.
  *
  * @param arg Input string.
- * @return true if the string represents a valid numeric argument, false 
+ * @return true if the string represents a valid numeric argument, false
  * otherwise.
  */
 static bool	is_valid_numeric_arg(char *arg)
@@ -48,7 +48,7 @@ static bool	is_valid_numeric_arg(char *arg)
 }
 
 /**
- * @brief Handles the case where `exit` is called with no argument or an empty 
+ * @brief Handles the case where `exit` is called with no argument or an empty
  * string.
  *
  * - If no argument is provided, exits with the last exit status.

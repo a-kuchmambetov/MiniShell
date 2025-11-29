@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   create_cmd_list.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vmoroka <vmoroka@student.hive.fi>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/29 12:50:12 by vmoroka           #+#    #+#             */
+/*   Updated: 2025/11/29 13:16:58 by vmoroka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "create_cmd_list_utils.h"
 
-static int handle_word(t_cmd_node *node, t_token_node *tkn, int *errno)
+static int	handle_word(t_cmd_node *node, t_token_node *tkn, int *errno)
 {
 	if (!tkn->value || *(tkn->value) == '\0')
 		return (0);
@@ -17,8 +29,8 @@ static int handle_word(t_cmd_node *node, t_token_node *tkn, int *errno)
 	return (append_arg(node, tkn->value, errno));
 }
 
-static int handle_input_redir(t_shell_data *dt, t_cmd_node *node,
-							  t_token_node *tkn, int *errno)
+static int	handle_input_redir(t_shell_data *dt, t_cmd_node *node,
+		t_token_node *tkn, int *errno)
 {
 	if (tkn->type == TOKEN_HEREDOC || tkn->type == TOKEN_HEREDOC_QUOTES)
 	{
@@ -39,15 +51,15 @@ static int handle_input_redir(t_shell_data *dt, t_cmd_node *node,
 		if (!node->input_redir)
 			return (set_errno(1, errno));
 	}
-	if (node->input_redir_type == REDIR_INPUT && check_file_open(node->input_redir) == 1)
+	if (node->input_redir_type == REDIR_INPUT
+		&& check_file_open(node->input_redir) == 1)
 	{
 		node->failed_code = FAILED_IN;
-		return (0);
 	}
 	return (0);
 }
 
-static int handle_output_redir(t_cmd_node *node, t_token_node *tkn, int *errno)
+static int	handle_output_redir(t_cmd_node *node, t_token_node *tkn, int *errno)
 {
 	if (node->failed_code != NO_FAIL)
 		return (0);
@@ -63,7 +75,8 @@ static int handle_output_redir(t_cmd_node *node, t_token_node *tkn, int *errno)
 	node->output_redir = ft_strdup(tkn->value);
 	if (!node->output_redir)
 		return (set_errno(1, errno));
-	if (node->output_redir && check_file_create(node->output_redir, node->output_redir_type) == 1)
+	if (node->output_redir && check_file_create(node->output_redir,
+			node->output_redir_type) == 1)
 	{
 		node->failed_code = FAILED_OUT;
 		return (0);
@@ -71,8 +84,8 @@ static int handle_output_redir(t_cmd_node *node, t_token_node *tkn, int *errno)
 	return (0);
 }
 
-static int process_token(t_shell_data *dt, t_token_node *tkn,
-						 t_cmd_node **node, int *errno)
+static int	process_token(t_shell_data *dt, t_token_node *tkn,
+		t_cmd_node **node, int *errno)
 {
 	if (!tkn)
 		return (0);
@@ -86,17 +99,18 @@ static int process_token(t_shell_data *dt, t_token_node *tkn,
 		(*node)->is_pipe_in = 1;
 		return (0);
 	}
-	if (tkn->type == TOKEN_REDIR_IN || tkn->type == TOKEN_HEREDOC || tkn->type == TOKEN_HEREDOC_QUOTES)
+	if (tkn->type == TOKEN_REDIR_IN || tkn->type == TOKEN_HEREDOC
+		|| tkn->type == TOKEN_HEREDOC_QUOTES)
 		return (handle_input_redir(dt, *node, tkn, errno));
 	if (tkn->type == TOKEN_REDIR_OUT || tkn->type == TOKEN_APPEND)
 		return (handle_output_redir(*node, tkn, errno));
 	return (handle_word(*node, tkn, errno));
 }
 
-int create_cmd_list(t_shell_data *dt, t_token_list *tkn_li, int *errno)
+int	create_cmd_list(t_shell_data *dt, t_token_list *tkn_li, int *errno)
 {
-	t_token_node *cur;
-	t_cmd_node *node;
+	t_token_node	*cur;
+	t_cmd_node		*node;
 
 	if (!dt || !tkn_li || !errno)
 		return (1);

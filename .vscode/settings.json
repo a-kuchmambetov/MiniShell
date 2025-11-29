@@ -2,5 +2,8 @@
     "[c]": {
         "editor.formatOnSave": false,
         "editor.defaultFormatter": null
+    },
+    "files.associations": {
+        "executor.h": "c"
     }
 }

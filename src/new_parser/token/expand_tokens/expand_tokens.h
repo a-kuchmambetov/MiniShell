@@ -1,15 +1,27 @@
-#ifndef EXPANDE_TOKENS_H
-#define EXPANDE_TOKENS_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_tokens.h                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vmoroka <vmoroka@student.hive.fi>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/29 12:52:02 by vmoroka           #+#    #+#             */
+/*   Updated: 2025/11/29 13:15:00 by vmoroka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "../../parser.h"
+#ifndef EXPAND_TOKENS_H
+# define EXPAND_TOKENS_H
 
-int join_value(char **dest, const char *src, int *errno);
-char *get_val_by_key(t_env_list env, const char *name);
-int find_key_len(const char *str);
-char *get_expanded_val(t_env_list env, char *input, int *i, int *errno);
-void update_value(t_token_node *cur, char *new_value, int *errno);
+# include "../../parser.h"
 
-int is_ambig(char *src);
-char *squash_spaces(char *src);
+int		join_value(char **dest, const char *src, int *errno);
+char	*get_val_by_key(t_env_list env, const char *name);
+int		find_key_len(const char *str);
+char	*get_expanded_val(t_env_list env, char *input, int *i, int *errno);
+void	update_value(t_token_node *cur, char *new_value, int *errno);
+
+int		is_ambig(char *src);
+char	*squash_spaces(char *src);
 
 #endif

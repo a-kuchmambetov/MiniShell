@@ -23,9 +23,9 @@
  * @param str Input string to check.
  * @return 1 if the string is a valid -n flag, 0 otherwise.
  */
-static int all_n(const char *str)
+static int	all_n(const char *str)
 {
-	int i;
+	int	i;
 
 	if (!str || str[0] != '-')
 		return (0);
@@ -53,11 +53,11 @@ static int all_n(const char *str)
  * @param argv Array of arguments passed to the echo command.
  * @return 0 on success, 1 on allocation failure.
  */
-int builtin_echo(char **argv)
+int	builtin_echo(char **argv)
 {
-	char *arg;
-	int i;
-	int no_newline;
+	char	*arg;
+	int		i;
+	int		no_newline;
 
 	i = 1;
 	no_newline = 0;

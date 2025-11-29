@@ -52,7 +52,7 @@ static char	*make_env_entry(const char *key, const char *value)
  */
 static int	fill_envp(t_env_node *node, char **envp)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (node)
