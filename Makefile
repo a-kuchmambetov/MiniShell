@@ -81,7 +81,7 @@ $(LIB): $(OBJS)
 	cp $(LIBFT) $(LIB)
 	ar rcs $(LIB) $(OBJS)
 
-$(NAME): $(LIBFT) $(LIB)
+$(NAME): $(LIBFT) $(LIB) main.c
 	$(CC) $(CFLAGS) main.c $(LIBS) $(LDLIBS) -o $(NAME)
 
 clean:

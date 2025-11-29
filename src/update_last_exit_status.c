@@ -19,7 +19,7 @@ static int create_new(t_shell_data *dt, char *code_str)
 
     i = 0;
     current = dt->env_list.first;
-    while (current->next)
+    while (current && current->next)
     {
         current = current->next;
         i++;
