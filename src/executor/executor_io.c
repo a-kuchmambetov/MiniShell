@@ -6,7 +6,7 @@
 /*   By: vmoroka <vmoroka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 12:38:34 by vmoroka           #+#    #+#             */
-/*   Updated: 2025/11/29 12:40:56 by vmoroka          ###   ########.fr       */
+/*   Updated: 2025/11/30 03:15:02 by vmoroka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int	redirect_output(t_cmd_node *cmd, int pipefd[2])
 	int	fd;
 	int	flags;
 
-	fd = -1;
 	if (cmd->output_redir_type == REDIR_OUTPUT
 		|| cmd->output_redir_type == REDIR_APPEND)
 	{

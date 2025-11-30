@@ -19,7 +19,7 @@ static char	*ft_trim_local(const char *nptr)
 	index = 0;
 	while ((nptr[index] >= 9 && nptr[index] <= 13) || nptr[index] == ' ')
 		index++;
-	return ((char *) &nptr[index]);
+	return ((char *)&nptr[index]);
 }
 
 static int	is_negtive(char val)
@@ -31,9 +31,9 @@ static int	is_negtive(char val)
 
 int	ft_atoi(const char *nptr)
 {
-	long int		number;
-	int				index;
-	short int		sign;
+	long int	number;
+	int			index;
+	short int	sign;
 
 	if (nptr == NULL)
 		return (0);

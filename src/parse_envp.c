@@ -6,7 +6,7 @@
 /*   By: vmoroka <vmoroka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 12:52:55 by vmoroka           #+#    #+#             */
-/*   Updated: 2025/11/29 12:53:08 by vmoroka          ###   ########.fr       */
+/*   Updated: 2025/11/30 03:25:35 by vmoroka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ static char	**split_by_equal(char *env_var)
 
 void	parse_envp(t_shell_data *data, char **envp)
 {
-	t_env_node *new_node;
-	t_env_node *current;
-	char **res;
+	t_env_node	*new_node;
+	t_env_node	*current;
+	char		**res;
 
 	if (!envp || !envp[0] || !*envp[0])
 		return ;

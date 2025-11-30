@@ -6,7 +6,7 @@
 /*   By: vmoroka <vmoroka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 12:37:26 by vmoroka           #+#    #+#             */
-/*   Updated: 2025/11/29 12:37:30 by vmoroka          ###   ########.fr       */
+/*   Updated: 2025/11/30 03:40:26 by vmoroka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	child_execute(t_shell_data *data, t_cmd_node *cmd, int prev_fd,
 		exit(1);
 	if (!cmd->args)
 		exit(1);
-	if (isDirectoryExists(cmd->args[0]))
+	if (is_directory_exists(cmd->args[0]))
 	{
 		ft_print_err("%s: Is a directory\n", cmd->args[0]);
 		exit(126);

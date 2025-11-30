@@ -18,17 +18,17 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 	size_t	index;
 
 	if (little == NULL)
-		return ((char *) big);
+		return ((char *)big);
 	if (little[0] == 0)
-		return ((char *) big);
+		return ((char *)big);
 	little_len = ft_strlen(little);
 	index = 0;
 	while (big[index] != '\0' && index < len)
 	{
 		if (big[index] == *little)
-			if (!ft_strncmp(&big[index], little, little_len)
-				&& (index + little_len) <= len)
-				return ((char *) &big[index]);
+			if (!ft_strncmp(&big[index], little, little_len) && (index
+					+ little_len) <= len)
+				return ((char *)&big[index]);
 		index++;
 	}
 	return (NULL);

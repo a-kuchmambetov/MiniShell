@@ -6,7 +6,7 @@
 /*   By: vmoroka <vmoroka@student.hive.fi>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/29 12:52:37 by vmoroka           #+#    #+#             */
-/*   Updated: 2025/11/29 12:52:39 by vmoroka          ###   ########.fr       */
+/*   Updated: 2025/11/30 03:47:53 by vmoroka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PARSER_H
 
 # include "../../main.h"
+# include "../../types.h"
 
 typedef enum e_token_type
 {
