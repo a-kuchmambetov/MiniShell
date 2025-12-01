@@ -28,6 +28,7 @@
 # include "libft/libft.h"
 # include "src/new_parser/parser.h"
 # include "types.h"
+#include "src/executor/executor.h"
 
 extern volatile sig_atomic_t	g_signal_received;
 

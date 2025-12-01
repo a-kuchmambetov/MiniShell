@@ -4,10 +4,11 @@ int main()
 {
     char **arr;
     char *input;
+    int errno;
 
     input = "echo hello some text and other stuff | grep h >> output.txt";
-    arr = split_input_str(input);
-    if (!arr)
+    arr = split_input(input, &errno);
+    if (!arr || errno)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
     ft_printf("INPUT:\n%s", input);
     ft_printf("\nRESULT:\n");
@@ -18,7 +19,7 @@ int main()
     ft_printf("\n\n");
 
     input = "   ls           -la       /home/user/Documents  > result.txt  <             input.txt                   ";
-    arr = split_input_str(input);
+    arr = split_input(input, &errno);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
     ft_printf("INPUT:\n%s", input);
@@ -30,7 +31,7 @@ int main()
     ft_printf("\n\n");
 
     input = "cat << EOF | grep \"pattern >> output.txt\"";
-    arr = split_input_str(input);
+    arr = split_input(input, &errno);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
     ft_printf("INPUT:\n%s", input);
@@ -42,7 +43,7 @@ int main()
     ft_printf("\n\n");
 
     input = "cat < Makefile \"  pattern >> output.txt\"";
-    arr = split_input_str(input);
+    arr = split_input(input, &errno);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
     ft_printf("INPUT:\n%s", input);
@@ -54,7 +55,7 @@ int main()
     ft_printf("\n\n");
 
     input = "cat < Makefile\"  pattern >> output.txt\"";
-    arr = split_input_str(input);
+    arr = split_input(input, &errno);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
     ft_printf("INPUT:\n%s", input);
@@ -66,7 +67,7 @@ int main()
     ft_printf("\n\n");
 
     input = "echo 'x -$PWD \"'$HOME'\" y -$PWD > output.txt'";
-    arr = split_input_str(input);
+    arr = split_input(input, &errno);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
     ft_printf("INPUT:\n%s", input);
@@ -78,7 +79,7 @@ int main()
     ft_printf("\n\n");
 
     input = "cat 'test file.txt'; echo \"Hello World\"";
-    arr = split_input_str(input);
+    arr = split_input(input, &errno);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
     ft_printf("INPUT:\n%s", input);
@@ -90,7 +91,7 @@ int main()
     ft_printf("\n\n");
 
     input = "cat<<'EOF'<Makefile < Test";
-    arr = split_input_str(input);
+    arr = split_input(input, &errno);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
     ft_printf("INPUT:\n%s", input);
@@ -102,7 +103,7 @@ int main()
     ft_printf("\n\n");
 
     input = "echo 'x -$PWD \"'          $HOME       '\" y -$PWD > output.txt'";
-    arr = split_input_str(input);
+    arr = split_input(input, &errno);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
     ft_printf("INPUT:\n%s", input);
@@ -114,7 +115,7 @@ int main()
     ft_printf("\n\n");
 
     input = "echo 'x -$PWD \"' || ><";
-    arr = split_input_str(input);
+    arr = split_input(input, &errno);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
     ft_printf("INPUT:\n%s", input);
@@ -126,7 +127,7 @@ int main()
     ft_printf("\n\n");
 
     input = "echo 'x -$PWD \"' '|| ><'";
-    arr = split_input_str(input);
+    arr = split_input(input, &errno);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
     ft_printf("INPUT:\n%s", input);
@@ -138,7 +139,7 @@ int main()
     ft_printf("\n\n");
 
     input = "echo 'x -$PWD \"' && '|| ><'";
-    arr = split_input_str(input);
+    arr = split_input(input, &errno);
     if (!arr)
         return (ft_print_err("Error: Failed to split input string\n"), 1);
     ft_printf("INPUT:\n%s", input);

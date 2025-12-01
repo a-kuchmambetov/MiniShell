@@ -1,90 +1,53 @@
 #include "../main.h"
 
+volatile sig_atomic_t	g_signal_received = 0;
+
+static void	handle_sigint_prompt(int sig)
+{
+	(void)sig;
+	g_signal_received = 1;
+	write(STDOUT_FILENO, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+static void	setup_signals_prompt(void)
+{
+	signal(SIGINT, handle_sigint_prompt);
+	signal(SIGQUIT, SIG_IGN);
+}
+
+int test (char *input, char **envp)
+{
+    t_shell_data data;
+    data = (t_shell_data){0};
+    init_shell_data(&data, envp);
+
+    printf("Running %s: \n\n", input);
+    if (parse_input(&data, input) == 0 && data.cmd_list.first)
+        execute_command_list(&data);
+    printf("Last exit status: %d\n\n", data.last_exit_status);
+    free_shell_data(&data);
+    return 0;
+}
+
 int main(int argc, char **argv, char **envp)
 {
     (void)argc;(void)argv;(void)envp;
-
-    t_shell_data data;
-    data = (t_shell_data){0};
-
+	setup_signals_prompt();
     // Check with empty envp
-    // char *envp2[] = { "PATH", NULL };
-    // parse_envp(&data, envp2);
-    // parse_exec_folders(&data);
-
-    parse_envp(&data, envp);
-    if (!data.env_list.first)
-    {
-        ft_print_err("Error: No environment variables found\n");
-        free_shell_data(&data);
-        return 1;
-    }
-    parse_exec_folders(&data);
-    if (!data.paths)
-    {
-        ft_print_err("Error: No PATH variable found in environment\n");
-        free_shell_data(&data);
-        return 1;
-    }
-    if (set_envp_from_env(&data))
-    {
-        ft_print_err("Error: No environment variables found\n");
-        free_shell_data(&data);
-        return 1;
-    }
-    
-    t_env_node *current;
-    current = data.env_list.first;
-    int i = 0;
-    while (i < data.env_list.len)
-    {
-        printf("Key and value %s=%s\n", current->key, current->value);
-        current = current->next;
-        i++;
-    }
-
-    printf("\nPATHS:\n");
-    i = 0;
-    while (data.paths[i])
-    {
-        printf("Path %s\n", data.paths[i]);
-        i++;
-    }
-    
-    printf("\nENV:\n");
-    i = 0;
-    while (i < data.env_list.len)
-    {
-        printf("Env %s\n", data.envp[i]);
-        i++;
-    }
-
+    char *envp2[] = { "PATH=/bin", NULL };
+    (void) envp2;
     printf("\nTRYING TO EXECUTE:\n");
 
-    printf("Running ls -la: \n");
-    exec_cmd(&data, "ls", "-la");
-    printf("Last exit status: %d\n\n", WEXITSTATUS(data.last_exit_status));
+    test("ls -la", envp);
+    test("gcc --version", envp);
+    test("nonexistentcommand", envp);
+    test("echo \"Hello World\"", envp);
+    test("cat test file.txt", envp);
+    test("cat \"test file.txt\"", envp);
+    test("   ls           -la       /  > result.txt  <             Makefile                   ; cat result.txt", envp);
 
-    printf("Running gcc --version: \n");
-    exec_cmd(&data, "gcc", "--version");
-    printf("Last exit status: %d\n\n", WEXITSTATUS(data.last_exit_status));
-
-    printf("Running nonexistentcommand: \n");
-    exec_cmd(&data, "nonexistentcommand", "");
-    printf("Last exit status: %d\n\n", WEXITSTATUS(data.last_exit_status));
-
-    printf("Running echo \"Hello World\": \n");
-    exec_cmd(&data, "echo", "'Hello World'");
-    printf("Last exit status: %d\n\n", WEXITSTATUS(data.last_exit_status));
-
-    printf("Running cat test file.txt: \n");
-    exec_cmd(&data, "cat", "test file.txt");
-    printf("Last exit status: %d\n\n", WEXITSTATUS(data.last_exit_status));
-
-    printf("Running cat \"test file.txt\": \n");
-    exec_cmd(&data, "cat", "\"test file.txt\"");
-    printf("Last exit status: %d\n\n", WEXITSTATUS(data.last_exit_status));
-
-    free_shell_data(&data);
     return 0;
 }

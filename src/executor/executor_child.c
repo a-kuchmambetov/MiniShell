@@ -16,9 +16,8 @@ static int	is_directory_exists(const char *path)
 {
 	struct stat	stats;
 
-	if (path[0] != '.' && path[0] != '/')
+	if (stat(path, &stats) != 0)
 		return (0);
-	stat(path, &stats);
 	if (S_ISDIR(stats.st_mode))
 		return (1);
 	return (0);

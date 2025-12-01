@@ -39,7 +39,7 @@ static int	is_quoted(char *str)
 
 static int	is_space_after(char *str)
 {
-	if (!str)
+	if (!str || ft_strlen(str) == 0)
 		return (0);
 	if (str[ft_strlen(str) - 1] == ' ')
 		return (1);

@@ -1,26 +1,10 @@
 {
     "version": "2.0.0",
     "tasks": [
-		        {
+        {
             "label": "build main",
             "type": "shell",
             "command": "make",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "detail": "Build main executable"
-        },
-        {
-            "label": "build test_main_6",
-            "type": "shell",
-            "command": "make",
-            "args": [
-                "compileTest6"
-            ],
             "group": {
                 "kind": "build",
                 "isDefault": false
@@ -28,7 +12,7 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "detail": "Build test_main_6 executable"
+            "detail": "Build main executable"
         },
         {
             "type": "cppbuild",

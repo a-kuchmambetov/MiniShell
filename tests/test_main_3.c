@@ -7,7 +7,6 @@ static void handle_sigint_prompt(int sig)
     (void)sig;
     g_signal_received = 1;
     write(STDOUT_FILENO, "\n", 1);
-    build_prompt();
     rl_on_new_line();
     rl_replace_line("", 0);
     rl_redisplay();
@@ -17,6 +16,32 @@ static void setup_signals_prompt(void)
 {
     signal(SIGINT, handle_sigint_prompt);
     signal(SIGQUIT, SIG_IGN);
+}
+
+static char *join_arr(char **arr)
+{
+    char *res;
+    int total_len = 0;
+
+    int i = 0;
+    while (arr[i])
+    {   
+        total_len += strlen(arr[i]) + 1; // +1 for space or null terminator
+        i++;
+    }
+    res = malloc(total_len);
+    if (!res)
+        return (NULL);
+    res[0] = '\0';
+    i = 0;
+    while (arr[i])
+    {   
+        strcat(res, arr[i]);
+        if (arr[i + 1])
+            strcat(res, " ");
+        i++;
+    }
+    return (res);
 }
 
 int print_cmd_list(t_cmd_list *cmd_list, char *input)
@@ -37,7 +62,7 @@ int print_cmd_list(t_cmd_list *cmd_list, char *input)
     while (current)
     {
         printf(COLOR_GREEN);
-        printf("  %d   | %s | `%s` | %s | %s | %s | %s | `%s`\n", index++, current->cmd, current->args,
+        printf("  %d   | %s | `%s` | %s | %s | %s | %s | `%s`\n", index++, current->cmd, join_arr(current->args),
                t_redir_types[current->input_redir_type], t_redir_types[current->output_redir_type], t_pipe_types[current->is_pipe_in], t_pipe_types[current->is_pipe_out == 1 ? 2 : 0], current->input_redir_type == REDIR_HEREDOC ? current->input_redir : "");
         current = current->next;
         printf(COLOR_RESET);

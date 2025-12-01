@@ -18,12 +18,12 @@ int	check_file_open(const char *filename)
 {
 	int	fd;
 
-	fd = open(filename, O_RDONLY);
 	if (*filename == '\0' || *filename == '/')
 	{
 		ft_print_err("syntax error near unexpected token `%s'\n", filename);
-		return (close(fd), 1);
+		return (1);
 	}
+	fd = open(filename, O_RDONLY);
 	access(filename, R_OK);
 	if (errno == ENOENT)
 	{

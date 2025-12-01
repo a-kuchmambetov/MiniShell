@@ -45,9 +45,6 @@ int				count_executable(t_cmd_node *node);
 t_cmd_node		*find_last_executable(t_cmd_node *node);
 void			cleanup_heredocs(t_cmd_node *cmd);
 
-char			**split_args(const char *args, int *errored);
-char			**build_argv(t_cmd_node *cmd);
-
 int				redirect_input(t_cmd_node *cmd, int prev_fd);
 int				redirect_output(t_cmd_node *cmd, int pipefd[2]);
 int				setup_child_fds(t_cmd_node *cmd, int prev_fd, int pipefd[2]);

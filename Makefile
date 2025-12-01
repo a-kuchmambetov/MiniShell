@@ -122,21 +122,6 @@ compileTest5: $(LIBFT) $(LIB)
 compileTest6: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/test_main_6.c $(LIBS) $(LDLIBS) -o $(NAME)_test_6
 
-compileTest7: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_7.c $(LIBS) $(LDLIBS) -o $(NAME)_test_7
-
-compileTest6New: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_6_new.c $(LIBS) $(LDLIBS) -o $(NAME)_test_6_new
-
-compileTestExit: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_exit.c $(LIBS) $(LDLIBS) -o $(NAME)_test_exit
-
-compileTestPipelineParser: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_pipeline_parser.c $(LIBS) $(LDLIBS) -o $(NAME)_test_pipeline_parser
-
-compileTestBuiltins: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_builtins.c tests/process_input_for_tests.c $(LIBS) $(LDLIBS) -o $(NAME)_test_builtins
-
 compileTestFull: $(LIBFT) $(LIB)
 	$(CC) $(CFLAGS) tests/minishell_full_test.c $(LIBS) $(LDLIBS) -lreadline -o $(NAME)_test_full
 
