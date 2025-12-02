@@ -32,7 +32,8 @@ typedef enum e_failed_redir
 {
 	NO_FAIL = 0,
 	FAILED_IN = 1,
-	FAILED_OUT = 2
+	FAILED_OUT = 2,
+	FAILED_AMBIG = 3
 }						t_failed_redir;
 
 typedef struct s_cmd_node

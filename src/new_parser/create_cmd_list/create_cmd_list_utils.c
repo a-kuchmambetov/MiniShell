@@ -23,7 +23,8 @@ int	has_content(t_cmd_node *node)
 {
 	if (!node)
 		return (0);
-	return (node->cmd || node->args || node->input_redir || node->output_redir);
+	return (node->cmd || node->args || node->input_redir || node->output_redir
+		|| node->failed_code != NO_FAIL);
 }
 
 size_t	arg_count(char **args)

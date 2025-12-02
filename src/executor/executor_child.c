@@ -12,15 +12,20 @@
 
 #include "executor.h"
 
+static int is_path(const char *cmd)
+{
+    return strchr(cmd, '/') != NULL;
+}
+
 static int	is_directory_exists(const char *path)
 {
-	struct stat	stats;
+    struct stat st;
 
-	if (stat(path, &stats) != 0)
-		return (0);
-	if (S_ISDIR(stats.st_mode))
-		return (1);
-	return (0);
+	if (!is_path(path))
+        return 0;
+    if (stat(path, &st) != 0)
+        return 0;
+    return S_ISDIR(st.st_mode);  // non-zero if directory, 0 otherwise
 }
 
 void	child_execute(t_shell_data *data, t_cmd_node *cmd, int prev_fd,
@@ -29,25 +34,29 @@ void	child_execute(t_shell_data *data, t_cmd_node *cmd, int prev_fd,
 	int	status;
 
 	if (setup_child_fds(cmd, prev_fd, pipefd) < 0)
-		exit(1);
+		my_exit(1, data);
 	if (!cmd->args)
-		exit(1);
+		my_exit(1, data);
 	if (is_directory_exists(cmd->args[0]))
 	{
 		ft_print_err("%s: Is a directory\n", cmd->args[0]);
-		exit(126);
+		my_exit(126, data);
 	}
 	if (is_builtin(cmd->cmd))
 	{
 		status = exec_builtin(data, cmd->args);
-		exit(status);
+		my_exit(status, data);
 	}
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	exec_external(data, cmd->args);
 }
 
 bool	should_run_parent_builtin(t_cmd_node *cmd, int exec_count)
 {
 	if (!cmd || is_empty_cmd(cmd))
+		return (false);
+	if (cmd->failed_code != NO_FAIL)
 		return (false);
 	if (!is_builtin(cmd->cmd))
 		return (false);

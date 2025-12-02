@@ -14,7 +14,11 @@
 
 bool	is_empty_cmd(t_cmd_node *cmd)
 {
-	if (!cmd || !cmd->cmd || cmd->cmd[0] == ' ')
+	if (!cmd)
+		return (true);
+	if (cmd->failed_code != NO_FAIL)
+		return (false);
+	if (!cmd->cmd || cmd->cmd[0] == ' ')
 		return (true);
 	return (cmd->cmd[0] == '\0');
 }

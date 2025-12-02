@@ -37,7 +37,7 @@ static int	handle_input_redir(t_shell_data *dt, t_cmd_node *node,
 		my_free(node->input_redir);
 		node->input_redir = NULL;
 		node->input_redir_type = REDIR_HEREDOC;
-		if (start_here_doc(dt->env_list, tkn->value, &node->input_redir))
+		if (start_here_doc(dt->env_list, tkn->value, &node->input_redir, tkn->type))
 			return (set_errno(1, errno));
 	}
 	else
@@ -89,6 +89,11 @@ static int	process_token(t_shell_data *dt, t_token_node *tkn,
 {
 	if (!tkn)
 		return (0);
+	if (tkn->type == TOKEN_AMBIGUOUS)
+	{
+		(*node)->failed_code = FAILED_AMBIG;
+		return (0);
+	}
 	if (tkn->type == TOKEN_PIPE)
 	{
 		(*node)->is_pipe_out = 1;

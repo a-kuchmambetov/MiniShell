@@ -100,8 +100,15 @@ char	*get_expanded_val(t_env_list env, char *input, int *i, int *errno)
 	return (my_free(key), env_value);
 }
 
-void	update_value(t_token_node *cur, char *new_value, int *errno)
+void	update_token(t_token_node *cur, char *new_value, int current_type, int *errno)
 {
+	if ((cur->type == TOKEN_REDIR_IN || cur->type == TOKEN_REDIR_OUT 
+		|| cur->type == TOKEN_APPEND) && ft_strncmp(new_value, "", 1) == 0)
+		cur->type = TOKEN_AMBIGUOUS;
+	else 
+		cur->type = current_type;
+	if (cur->type == TOKEN_AMBIGUOUS)
+		return ;
 	my_free(cur->value);
 	cur->value = ft_strdup(new_value);
 	if (!cur->value)

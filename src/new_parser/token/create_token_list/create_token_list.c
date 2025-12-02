@@ -15,7 +15,8 @@
 static void	add_tkn_to_li(t_token_node *tkn, t_token_list *tkn_li)
 {
 	if (tkn_li->tail && (tkn_li->tail->type == TOKEN_HEREDOC
-			|| tkn_li->tail->type == TOKEN_HEREDOC_PART)
+			|| tkn_li->tail->type == TOKEN_HEREDOC_QUOTES
+			|| tkn_li->tail->type == TOKEN_HEREDOC_PART )
 		&& tkn_li->tail->is_space_after == 0 && tkn->type == TOKEN_TEXT)
 		tkn->type = TOKEN_HEREDOC_PART;
 	if (!tkn_li->head)

@@ -27,6 +27,8 @@ static char	*make_env_entry(const char *key, const char *value)
 	char	*tmp;
 	char	*res;
 
+	if (ft_strncmp(key, "?", 2) == 0)
+		return (NULL);
 	tmp = ft_strjoin(key, "=");
 	if (!tmp)
 		return (NULL);

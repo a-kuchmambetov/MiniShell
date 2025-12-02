@@ -49,6 +49,8 @@ extern volatile sig_atomic_t	g_signal_received;
 # define COLOR_DIM "\033[2m"
 
 int		ft_print_err(const char *format, ...);
+int		is_quoted(char *str);
+void	my_exit(int exit_code, t_shell_data *data);
 
 void	parse_envp(t_shell_data *data, char **envp);
 void	parse_exec_folders(t_shell_data *data);
@@ -70,7 +72,7 @@ int		exec_builtin(t_shell_data *data, char **args);
 
 char	*process_expansion(t_env_list env, char *input, int *errno,
 			int *current_type);
-int		start_here_doc(t_env_list env, const char *eof_word, char **filename);
+int		start_here_doc(t_env_list env, const char *eof_word, char **filename, int is_eof_quoted);
 int		delete_here_doc(const char *filename);
 int		parse_input(t_shell_data *data, char *input);
 

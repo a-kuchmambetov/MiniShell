@@ -40,13 +40,45 @@ static int	handle_iter_error(t_exec_ctx *ctx, int pipefd[2], int input_fd)
 	return (1);
 }
 
+static int	handle_failed_command(t_shell_data *data, t_exec_ctx *ctx,
+		t_cmd_node *cmd, int pipefd[2])
+{
+	if (ctx->prev_pipe_read != -1)
+		close(ctx->prev_pipe_read);
+	if (cmd->is_pipe_out)
+	{
+		if (pipefd[1] != -1)
+			close(pipefd[1]);
+		ctx->prev_pipe_read = pipefd[0];
+	}
+	else
+	{
+		if (pipefd[0] != -1)
+			close(pipefd[0]);
+		if (pipefd[1] != -1)
+			close(pipefd[1]);
+		ctx->prev_pipe_read = -1;
+	}
+	if (cmd == ctx->last_exec)
+	{
+		update_last_exit_status(data, 1);
+		ctx->status_updated = true;
+	}
+	ctx->had_error = true;
+	return (0);
+}
+
 // fork and call of child_execute
 int	spawn_child_process(t_shell_data *data, t_exec_ctx *ctx, t_cmd_node *cmd,
 		int pipefd[2])
 {
 	ctx->pids[ctx->child_count] = fork();
 	if (ctx->pids[ctx->child_count] == 0)
+	{
+		my_free(ctx->pids); // child does not need pid list; free to avoid valgrind reachable leak
+		ctx->pids = NULL;
 		child_execute(data, cmd, ctx->prev_pipe_read, pipefd);
+	}
 	if (ctx->pids[ctx->child_count] < 0)
 	{
 		perror("fork");
@@ -85,6 +117,8 @@ int	process_command_node(t_shell_data *data, t_exec_ctx *ctx, t_cmd_node *cmd)
 
 	if (prepare_pipe(pipefd, cmd))
 		return (handle_iter_error(ctx, pipefd, ctx->prev_pipe_read));
+	if (cmd->failed_code != NO_FAIL)
+		return (handle_failed_command(data, ctx, cmd, pipefd));
 	input_fd = ctx->prev_pipe_read;
 	parent_run = should_run_parent_builtin(cmd, ctx->exec_count);
 	if (parent_run && run_parent_builtin(data, ctx, cmd))

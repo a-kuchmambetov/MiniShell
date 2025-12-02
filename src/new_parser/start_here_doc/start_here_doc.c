@@ -58,7 +58,7 @@ static char	*start_expansion(t_env_list env, char *input, int *errno)
 }
 
 static int	write_here_doc(t_env_list env, const char *eof_word,
-		char **filename, int fd)
+		t_here_doc_data h_d_data, int type)
 {
 	char	*input;
 	int		errno;
@@ -68,44 +68,46 @@ static int	write_here_doc(t_env_list env, const char *eof_word,
 	{
 		input = readline("> ");
 		if (g_signal_received)
-			return (cleanup_here_doc(input, fd, filename), 130);
+			return (cleanup_here_doc(input, h_d_data.fd, h_d_data.filename), 130);
 		if (!input)
-			return (close(fd), print_error(eof_word), 0);
+			return (close(h_d_data.fd), print_error(eof_word), 0);
 		if (compare_eof(input, eof_word))
 			break ;
-		if (eof_word[0] != '\'' && eof_word[ft_strlen(eof_word)] != '\'')
+		if (type == TOKEN_HEREDOC)
 			input = start_expansion(env, input, &errno);
 		if (errno)
-			return (cleanup_here_doc(input, fd, filename), 1);
-		ft_putendl_fd(input, fd);
+			return (cleanup_here_doc(input, h_d_data.fd, h_d_data.filename), 1);
+		ft_putendl_fd(input, h_d_data.fd);
 		free(input);
 	}
 	if (input)
 		free(input);
-	close(fd);
+	close(h_d_data.fd);
 	return (0);
 }
 
-int	start_here_doc(t_env_list env, const char *eof_word, char **filename)
+int	start_here_doc(t_env_list env, const char *eof_word, char **filename, int type)
 {
-	int		fd;
 	int		result;
 	void	(*old_handler)(int);
+	t_here_doc_data h_d_data;
 
-	if (!filename)
+	h_d_data.fd = -1;
+	h_d_data.filename = filename;
+	if (!h_d_data.filename)
 		return (1);
-	if (*filename)
+	if (*h_d_data.filename)
 	{
-		my_free(*filename);
-		*filename = NULL;
+		my_free(*h_d_data.filename);
+		*h_d_data.filename = NULL;
 	}
 	g_signal_received = 0;
 	rl_done = 0;
 	rl_event_hook = check_signal_hook;
 	old_handler = signal(SIGINT, handle_sigint_heredoc);
-	if (create_file(filename, &fd))
+	if (create_file(h_d_data.filename, &h_d_data.fd))
 		return (signal(SIGINT, old_handler), 1);
-	result = write_here_doc(env, eof_word, filename, fd);
+	result = write_here_doc(env, eof_word, h_d_data, type);
 	g_signal_received = 0;
 	rl_done = 0;
 	rl_event_hook = NULL;

@@ -61,10 +61,9 @@ static bool	is_valid_numeric_arg(char *arg)
  */
 static void	handle_no_args_or_empty(t_shell_data *data, char *arg)
 {
-	free_shell_data(data);
 	if (!arg)
-		exit(data->last_exit_status);
-	exit(0);
+		my_exit(data->last_exit_status, data);
+	my_exit(0, data);
 }
 
 /**
@@ -80,8 +79,7 @@ static void	handle_invalid_arg(t_shell_data *data, char *arg)
 	ft_putstr_fd("minishell: exit: ", 2);
 	ft_putstr_fd(arg, 2);
 	ft_putendl_fd(": numeric argument required", 2);
-	free_shell_data(data);
-	exit(2);
+	my_exit(2, data);
 }
 
 /**
@@ -105,7 +103,8 @@ int	builtin_exit(t_shell_data *data, char **args)
 	long	exit_value;
 
 	overflow = false;
-	ft_putendl_fd("exit", 1);
+	if (isatty(STDIN_FILENO))
+		ft_putendl_fd("exit", 2);
 	if (!args[1] || args[1][0] == '\0')
 		handle_no_args_or_empty(data, args[1]);
 	if (!is_valid_numeric_arg(args[1]))
@@ -119,6 +118,6 @@ int	builtin_exit(t_shell_data *data, char **args)
 		data->last_exit_status = 1;
 		return (1);
 	}
-	free_shell_data(data);
-	exit((unsigned char)exit_value);
+	my_exit((unsigned char)exit_value, data);
+	return ((unsigned char)exit_value);
 }

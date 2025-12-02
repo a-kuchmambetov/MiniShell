@@ -28,15 +28,6 @@ static int	is_next_mergeable(t_token_node *cur)
 	return (1);
 }
 
-static int	is_quoted(char *str)
-{
-	if (!str)
-		return (0);
-	if ((str[0] == '"' || str[0] == '\'') && str[0] == str[ft_strlen(str) - 1])
-		return (1);
-	return (0);
-}
-
 static int	is_space_after(char *str)
 {
 	if (!str || ft_strlen(str) == 0)

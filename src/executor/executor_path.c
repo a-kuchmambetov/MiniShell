@@ -13,7 +13,7 @@
 #include "executor.h"
 #include <errno.h>
 
-static void	exit_exec_failure(char **argv, char *path)
+static void	exit_exec_failure(char **argv, char *path, t_shell_data *data)
 {
 	int	code;
 
@@ -24,8 +24,7 @@ static void	exit_exec_failure(char **argv, char *path)
 	perror(argv[0]);
 	if (path)
 		free(path);
-	free_str_arr(argv);
-	exit(code);
+	my_exit(code, data);
 }
 
 static char	*find_executable(t_shell_data *data, char *command)
@@ -58,19 +57,18 @@ void	exec_external(t_shell_data *data, char **argv)
 	char	*path;
 
 	if (!argv || !argv[0])
-		exit(0);
+		my_exit(0, data);
 	if (ft_strchr(argv[0], '/'))
 	{
 		execve(argv[0], argv, data->envp);
-		exit_exec_failure(argv, NULL);
+		exit_exec_failure(argv, NULL, data);
 	}
 	path = find_executable(data, argv[0]);
 	if (!path)
 	{
 		ft_print_err("%s: command not found\n", argv[0]);
-		free_str_arr(argv);
-		exit(127);
+		my_exit(127, data);
 	}
 	execve(path, argv, data->envp);
-	exit_exec_failure(argv, path);
+	exit_exec_failure(argv, path, data);
 }

@@ -19,7 +19,9 @@ static char	*process_src(char *src, int in_quotes, int *check_token)
 		if (*check_token == TOKEN_REDIR_IN || *check_token == TOKEN_REDIR_OUT
 			|| *check_token == TOKEN_APPEND)
 			if (is_ambig(src))
+			{
 				*check_token = TOKEN_AMBIGUOUS;
+			}
 		return (squash_spaces(src));
 	}
 	return (src);
@@ -97,11 +99,11 @@ void	expand_tokens(t_token_list *tkn_li, t_shell_data *data, int *errno)
 				return (my_free(src), (void) NULL);
 			if (src)
 			{
-				update_value(cur, src, errno);
+				update_token(cur, src, cur_t, errno);
 				if (*errno)
 					return (my_free(src), (void) NULL);
-				if (cur_t == TOKEN_AMBIGUOUS || cur_t == TOKEN_EXPANSION)
-					cur->type = cur_t;
+				if (cur->type == TOKEN_AMBIGUOUS)
+					ft_print_err("%s: ambiguous redirect\n", cur->value);
 			}
 		}
 		cur = cur->next;

@@ -54,7 +54,7 @@ static char	*get_tkn_val(char **arr, int *i, t_token_node tkn, int *ernno)
 			copy = ft_strdup(arr[*i]);
 		}
 		if (!copy)
-			ft_print_err("wrong file name");
+			ft_print_err("syntax error near unexpected token\n");
 	}
 	else
 		copy = ft_strdup(arr[*i]);
@@ -90,6 +90,11 @@ t_token_node	*set_tkn(char **arr, int *i, int *errno)
 		*errno = 1;
 		my_free(tkn);
 		return (NULL);
+	}
+	if (tkn->type == TOKEN_HEREDOC)
+	{
+		if (is_quoted(tkn->value))
+			tkn->type = TOKEN_HEREDOC_QUOTES;
 	}
 	tkn->is_space_after = is_space_after(arr, i);
 	tkn->next = NULL;

@@ -19,6 +19,8 @@ SRC = 	src/executor/executor_command_info.c \
 		src/executor/executor_ctx.c \
 		src/executor/executor_iteration.c \
 		src/executor/executor_run.c \
+		src/is_quoted.c \
+		src/my_exit.c \
 		src/my_free.c \
         src/free_utils.c \
         src/ft_print_err.c \

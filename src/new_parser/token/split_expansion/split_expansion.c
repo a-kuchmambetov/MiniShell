@@ -73,15 +73,6 @@ static void	process_split_node(t_token_node *cur, t_token_node *new_tkn,
 	return ;
 }
 
-static int	is_quoted(char *str)
-{
-	if (!str)
-		return (0);
-	if ((str[0] == '"' || str[0] == '\'') && str[0] == str[ft_strlen(str) - 1])
-		return (1);
-	return (0);
-}
-
 void	split_expansion(t_token_list tkn_li, int *errno)
 {
 	t_token_node	*cur;

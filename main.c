@@ -26,8 +26,25 @@ static void	handle_sigint_prompt(int sig)
 
 static void	setup_signals_prompt(void)
 {
-	signal(SIGINT, handle_sigint_prompt);
-	signal(SIGQUIT, SIG_IGN);
+	if (isatty(STDIN_FILENO))
+	{
+		signal(SIGINT, handle_sigint_prompt);
+		signal(SIGQUIT, SIG_IGN);
+	}
+}
+static char* read_line_prompt()
+{
+	if (isatty(STDIN_FILENO))
+		return"minishell > ";
+	else
+		return " > ";
+}
+
+static void finish_cmd(t_shell_data *data, char *input)
+{
+	ft_printf("\n");
+	free_cmd_list(&data->cmd_list);
+	my_free(input);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -35,25 +52,26 @@ int	main(int argc, char **argv, char **envp)
 	t_shell_data	data;
 	char			*input;
 
-	(void)argc;
-	(void)argv;
-	setup_signals_prompt();
+	(void)argc, (void)argv;
 	init_shell_data(&data, envp);
 	while (1)
 	{
-		input = readline(COLOR_CYAN "minishell > " COLOR_RESET);
+		setup_signals_prompt();
+		input = readline(read_line_prompt());
 		if (!input)
+		{
+			if (isatty(STDIN_FILENO))
+				write(2, "exit\n", 5);
 			break ;
+		}
 		if (*input)
 		{
 			add_history(input);
 			if (parse_input(&data, input) == 0 && data.cmd_list.first)
 				execute_command_list(&data);
-			free_cmd_list(&data.cmd_list);
-			free(input);
+			finish_cmd(&data, input);
 		}
 	}
 	free_shell_data(&data);
 	rl_clear_history();
-	return (0);
 }

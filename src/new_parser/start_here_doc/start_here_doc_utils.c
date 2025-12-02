@@ -39,6 +39,8 @@ void	print_error(const char *eof_word)
 	ft_putstr_fd(COLOR_RESET, 2);
 }
 
+
+
 int	compare_eof(const char *input, const char *eof_word)
 {
 	char	*trimmed_eof;
@@ -53,3 +55,4 @@ int	compare_eof(const char *input, const char *eof_word)
 	my_free(trimmed_eof);
 	return (result);
 }
+
