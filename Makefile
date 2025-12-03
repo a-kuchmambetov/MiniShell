@@ -1,14 +1,14 @@
 # Makefile
-NAME    = minishell
-LIB     = libminishell.a
+NAME = minishell
+LIB	 = libminishell.a
 
-CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -g
-LDLIBS  = -lreadline
-LIBS    = libminishell.a
+CC		= cc
+CFLAGS	= -Wall -Wextra -Werror -g
+LDLIBS	= -lreadline
+LIBS	= libminishell.a
 
 LIBFTDIR = libft
-LIBFT    = $(LIBFTDIR)/libft.a
+LIBFT	 = $(LIBFTDIR)/libft.a
 
 SRC = 	src/executor/executor_command_info.c \
 		src/executor/executor_io.c \
@@ -22,9 +22,9 @@ SRC = 	src/executor/executor_command_info.c \
 		src/is_quoted.c \
 		src/my_exit.c \
 		src/my_free.c \
-        src/free_utils.c \
-        src/ft_print_err.c \
-        src/init_shell_data.c \
+		src/free_utils.c \
+		src/ft_print_err.c \
+		src/init_shell_data.c \
 		src/parse_envp.c \
 		src/update_last_exit_status.c
 
@@ -60,19 +60,19 @@ SRC += 	src/new_parser/token/split_expansion/split_expansion.c
 # -- Merge tokens
 SRC += 	src/new_parser/token/merge_tokens/merge_tokens.c \
 		src/new_parser/token/merge_tokens/trim_quotes.c
-# 		
+#
 SRC +=	src/new_parser/create_cmd_list/create_cmd_list.c \
 		src/new_parser/create_cmd_list/create_cmd_list_utils.c \
 		src/new_parser/create_cmd_list/check_file.c \
 		src/new_parser/create_cmd_list/cmd_node_utils.c
-# 
+#
 SRC +=	src/new_parser/start_here_doc/start_here_doc_utils.c \
 		src/new_parser/start_here_doc/file_utils.c \
 		src/new_parser/start_here_doc/start_here_doc.c 
-# 
+#
 SRC +=	src/new_parser/parser.c
 
-OBJS     = $(SRC:.c=.o)
+OBJS = $(SRC:.c=.o)
 
 all: $(NAME)
 
@@ -101,35 +101,8 @@ allClean: fclean
 
 re: fclean all clean
 
-compileTest1: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_1.c $(LIBS) $(LDLIBS) -o $(NAME)_test_1
-
-# split_input_str tests
-compileTest2: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_2.c $(LIBS) $(LDLIBS) -o $(NAME)_test_2
-
-# exec_cmd tests
-compileTest3: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_3.c $(LIBS) $(LDLIBS) -o $(NAME)_test_3
-
-# set_here_doc tests
-compileTest4: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_4.c $(LIBS) $(LDLIBS) -o $(NAME)_test_4
-
-# expansion tests
-compileTest5: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_5.c $(LIBS) $(LDLIBS) -o $(NAME)_test_5
-
-# expansion tests
-compileTest6: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/test_main_6.c $(LIBS) $(LDLIBS) -o $(NAME)_test_6
-
-compileTestFull: $(LIBFT) $(LIB)
-	$(CC) $(CFLAGS) tests/minishell_full_test.c $(LIBS) $(LDLIBS) -lreadline -o $(NAME)_test_full
-
 valgrind:
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes --show-leak-kinds=definite ./minishell
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --trace-children=yes ./minishell
 
 .PHONY: all clean fclean allClean re \
-	compileTest1 compileTest2 compileTest3 compileTest4 compileTest5 compileTest6 compileTest6New \
-	compileTestExit compileTestPipelineParser compileTestBuiltins compileTestFull
+	valgrind

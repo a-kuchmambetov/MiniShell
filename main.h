@@ -28,7 +28,7 @@
 # include "libft/libft.h"
 # include "src/new_parser/parser.h"
 # include "types.h"
-#include "src/executor/executor.h"
+# include "src/executor/executor.h"
 
 extern volatile sig_atomic_t	g_signal_received;
 
@@ -73,7 +73,8 @@ int		exec_builtin_fd(t_shell_data *data, char **args, int stored_fd[2]);
 
 char	*process_expansion(t_env_list env, char *input, int *errno,
 			int *current_type);
-int		start_here_doc(t_env_list env, const char *eof_word, char **filename, int is_eof_quoted);
+int		start_here_doc(t_env_list env, const char *eof_word, char **filename,
+			int is_eof_quoted);
 int		delete_here_doc(const char *filename);
 int		parse_input(t_shell_data *data, char *input);
 

@@ -21,6 +21,11 @@ void	parse_exec_folders(t_shell_data *data)
 	{
 		if (ft_strncmp(current->key, "PATH", 4) == 0)
 		{
+			if (!current->value)
+			{
+				data->paths = NULL;
+				return ;
+			}
 			data->paths = ft_split(current->value, ':');
 			break ;
 		}

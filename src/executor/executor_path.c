@@ -33,6 +33,9 @@ static char	*find_executable(t_shell_data *data, char *command)
 	char	*full_path;
 
 	i = 0;
+	free_str_arr(data->paths);
+	data->paths = NULL;
+	parse_exec_folders(data);
 	if (!data->paths)
 		return (NULL);
 	while (data->paths[i])
@@ -64,7 +67,7 @@ void	exec_external(t_shell_data *data, char **argv)
 		exit_exec_failure(argv, NULL, data);
 	}
 	path = find_executable(data, argv[0]);
-	if (!path)
+	if (path == NULL)
 	{
 		ft_print_err("%s: command not found\n", argv[0]);
 		my_exit(127, data);
