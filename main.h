@@ -69,6 +69,7 @@ int		update_last_exit_status(t_shell_data *dt, int last_cmd_code);
 /// Built-in commands
 int		is_builtin(char *cmd);
 int		exec_builtin(t_shell_data *data, char **args);
+int		exec_builtin_fd(t_shell_data *data, char **args, int stored_fd[2]);
 
 char	*process_expansion(t_env_list env, char *input, int *errno,
 			int *current_type);

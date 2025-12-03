@@ -69,3 +69,39 @@ int	exec_builtin(t_shell_data *data, char **args)
 		return (builtin_exit(data, args));
 	return (1);
 }
+
+static void	restore_parent_stdio(int saved[2])
+{
+	if (saved[0] >= 0)
+	{
+		dup2(saved[0], STDIN_FILENO);
+		close(saved[0]);
+	}
+	if (saved[1] >= 0)
+	{
+		dup2(saved[1], STDOUT_FILENO);
+		close(saved[1]);
+	}
+}
+
+int	exec_builtin_fd(t_shell_data *data, char **args, int saved[2])
+{
+	if (!ft_strncmp(args[0], "echo", 5))
+		return (builtin_echo(args));
+	else if (!ft_strncmp(args[0], "cd", 3))
+		return (builtin_cd(data, args));
+	else if (!ft_strncmp(args[0], "pwd", 4))
+		return (builtin_pwd(data, args));
+	else if (!ft_strncmp(args[0], "export", 7))
+		return (builtin_export(data, args));
+	else if (!ft_strncmp(args[0], "unset", 6))
+		return (builtin_unset(data, args));
+	else if (!ft_strncmp(args[0], "env", 4))
+		return (builtin_env(data));
+	else if (!ft_strncmp(args[0], "exit", 5))
+	{
+		restore_parent_stdio(saved);
+		return (builtin_exit(data, args));
+	}
+	return (1);
+}

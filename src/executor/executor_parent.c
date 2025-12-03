@@ -69,7 +69,7 @@ int	execute_builtin_parent(t_shell_data *data, t_cmd_node *cmd)
 		restore_parent_stdio(saved);
 		return (-1);
 	}
-	status = exec_builtin(data, cmd->args);
+	status = exec_builtin_fd(data, cmd->args, saved);
 	restore_parent_stdio(saved);
 	update_last_exit_status(data, status);
 	return (status);

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "main.h"
+#include <stdio.h>
 
 volatile sig_atomic_t	g_signal_received = 0;
 
@@ -42,7 +43,8 @@ static char* read_line_prompt()
 
 static void finish_cmd(t_shell_data *data, char *input)
 {
-	ft_printf("\n");
+	if (isatty(STDIN_FILENO))
+		ft_printf("\n");
 	free_cmd_list(&data->cmd_list);
 	my_free(input);
 }
