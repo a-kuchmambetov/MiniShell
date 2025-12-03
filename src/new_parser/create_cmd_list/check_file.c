@@ -15,7 +15,7 @@
 
 int	check_file_open(const char *filename)
 {
-	int fd;
+	int	fd;
 
 	access(filename, R_OK);
 	if (errno == EACCES)

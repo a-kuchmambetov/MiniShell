@@ -68,7 +68,8 @@ static int	write_here_doc(t_env_list env, const char *eof_word,
 	{
 		input = readline("> ");
 		if (g_signal_received)
-			return (cleanup_here_doc(input, h_d_data.fd, h_d_data.filename), 130);
+			return (
+				cleanup_here_doc(input, h_d_data.fd, h_d_data.filename), 130);
 		if (!input)
 			return (close(h_d_data.fd), print_error(eof_word), 0);
 		if (compare_eof(input, eof_word))
@@ -78,19 +79,20 @@ static int	write_here_doc(t_env_list env, const char *eof_word,
 		if (errno)
 			return (cleanup_here_doc(input, h_d_data.fd, h_d_data.filename), 1);
 		ft_putendl_fd(input, h_d_data.fd);
-		free(input);
+		my_free(input);
 	}
 	if (input)
-		free(input);
+		my_free(input);
 	close(h_d_data.fd);
 	return (0);
 }
 
-int	start_here_doc(t_env_list env, const char *eof_word, char **filename, int type)
+int	start_here_doc(t_env_list env, const char *eof_word, char **filename,
+	int type)
 {
-	int		result;
-	void	(*old_handler)(int);
-	t_here_doc_data h_d_data;
+	int				result;
+	void			(*old_handler)(int);
+	t_here_doc_data	h_d_data;
 
 	h_d_data.fd = -1;
 	h_d_data.filename = filename;

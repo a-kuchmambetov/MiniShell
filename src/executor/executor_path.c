@@ -46,7 +46,7 @@ static char	*find_executable(t_shell_data *data, char *command)
 			+ 1);
 		if (access(full_path, X_OK) == 0)
 			return (full_path);
-		free(full_path);
+		my_free(full_path);
 		i++;
 	}
 	return (NULL);

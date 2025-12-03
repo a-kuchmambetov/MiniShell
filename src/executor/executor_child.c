@@ -12,20 +12,20 @@
 
 #include "executor.h"
 
-static int is_path(const char *cmd)
+static int	is_path(const char *cmd)
 {
-    return strchr(cmd, '/') != NULL;
+	return (ft_strchr(cmd, '/') != NULL);
 }
 
 static int	is_directory_exists(const char *path)
 {
-    struct stat st;
+	struct stat	st;
 
 	if (!is_path(path))
-        return 0;
-    if (stat(path, &st) != 0)
-        return 0;
-    return S_ISDIR(st.st_mode);  // non-zero if directory, 0 otherwise
+		return (0);
+	if (stat(path, &st) != 0)
+		return (0);
+	return (S_ISDIR(st.st_mode));
 }
 
 void	child_execute(t_shell_data *data, t_cmd_node *cmd, int prev_fd,
@@ -65,4 +65,26 @@ bool	should_run_parent_builtin(t_cmd_node *cmd, int exec_count)
 	if (cmd->is_pipe_in || cmd->is_pipe_out)
 		return (false);
 	return (true);
+}
+
+// fork and call of child_execute
+int	spawn_child_process(t_shell_data *data, t_exec_ctx *ctx, t_cmd_node *cmd,
+		int pipefd[2])
+{
+	ctx->pids[ctx->child_count] = fork();
+	if (ctx->pids[ctx->child_count] == 0)
+	{
+		my_free(ctx->pids);
+		ctx->pids = NULL;
+		child_execute(data, cmd, ctx->prev_pipe_read, pipefd);
+	}
+	if (ctx->pids[ctx->child_count] < 0)
+	{
+		perror("fork");
+		return (1);
+	}
+	if (cmd == ctx->last_exec)
+		ctx->last_child = ctx->pids[ctx->child_count];
+	ctx->child_count++;
+	return (0);
 }

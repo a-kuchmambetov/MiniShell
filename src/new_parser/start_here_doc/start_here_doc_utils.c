@@ -39,8 +39,6 @@ void	print_error(const char *eof_word)
 	ft_putstr_fd(COLOR_RESET, 2);
 }
 
-
-
 int	compare_eof(const char *input, const char *eof_word)
 {
 	char	*trimmed_eof;
@@ -51,8 +49,7 @@ int	compare_eof(const char *input, const char *eof_word)
 	trimmed_eof = ft_strtrim((char *)eof_word, "\'\"");
 	if (!trimmed_eof)
 		return (0);
-	result = ft_strncmp(input, trimmed_eof, ft_strlen(trimmed_eof)) == 0;
+	result = ft_strncmp(input, trimmed_eof, ft_strlen(input)) == 0;
 	my_free(trimmed_eof);
 	return (result);
 }
-

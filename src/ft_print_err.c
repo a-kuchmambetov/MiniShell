@@ -12,26 +12,27 @@
 
 #include "../main.h"
 
-static char *join_strs(const char *dest, const char *src)
+static char	*join_strs(const char *dest, const char *src)
 {
-	const size_t len1 = ft_strlen(dest);
-	const size_t len2 = ft_strlen(src);
-	char *result;
+	const size_t	len1 = ft_strlen(dest);
+	const size_t	len2 = ft_strlen(src);
+	char			*result;
 
 	result = malloc(len1 + len2 + 1);
 	if (!result)
-		return NULL;
+		return (NULL);
 	ft_memcpy(result, dest, len1);
 	ft_memcpy(result + len1, src, len2);
 	result[len1 + len2] = '\0';
 	my_free((void *)dest);
-	return result;
+	return (result);
 }
 
-static char *pr_putnbr_base(long n, char *base)
+static char	*pr_putnbr_base(long n, char *base)
 {
-	int	base_len;
-	char *str;
+	int		base_len;
+	char	*str;
+	char	*temp;
 
 	str = ft_strdup("");
 	if (!str)
@@ -48,16 +49,16 @@ static char *pr_putnbr_base(long n, char *base)
 		str = join_strs(str, pr_putnbr_base(n / base_len, base));
 	if (!str)
 		return (NULL);
-	char *temp = (char[2]){base[n % base_len], '\0'};
+	temp = (char [2]){base[n % base_len], '\0'};
 	str = join_strs(str, temp);
 	if (!str)
 		return (NULL);
 	return (str);
 }
 
-static char* procced_print(char *dest, const char* format, int *i, va_list args)
+static char	*process_print(char *dest, const char *format, int *i, va_list args)
 {
-	char *temp;
+	char	*temp;
 
 	if (format[*i] == '%')
 	{
@@ -65,14 +66,14 @@ static char* procced_print(char *dest, const char* format, int *i, va_list args)
 			dest = join_strs(dest, va_arg(args, char *));
 		else if (format[*i] == 'd')
 		{
-			char *temp = pr_putnbr_base(va_arg(args, int), "0123456789");
+			temp = pr_putnbr_base(va_arg(args, int), "0123456789");
 			dest = join_strs(dest, temp);
-			free(temp);
+			my_free(temp);
 		}
 	}
 	else
 	{
-		temp = (char[2]){format[*i], '\0'};
+		temp = (char [2]){format[*i], '\0'};
 		dest = join_strs(dest, temp);
 	}
 	return (dest);
@@ -82,7 +83,7 @@ int	ft_print_err(const char *format, ...)
 {
 	int		i;
 	va_list	args;
-	char *str;
+	char	*str;
 
 	str = ft_strdup("minishell: ");
 	if (!str)
@@ -91,7 +92,7 @@ int	ft_print_err(const char *format, ...)
 	i = 0;
 	while (format[i])
 	{
-		str = procced_print(str, format, &i, args);
+		str = process_print(str, format, &i, args);
 		if (!str)
 			return (1);
 		i++;

@@ -17,10 +17,10 @@ static void	free_env_node(t_env_node *node)
 	if (!node)
 		return ;
 	if (node->key)
-		free(node->key);
+		my_free(node->key);
 	if (node->value)
-		free(node->value);
-	free(node);
+		my_free(node->value);
+	my_free(node);
 }
 
 static int	set_new_env_node(t_env_node *node, char **res)
@@ -60,7 +60,7 @@ static char	**split_by_equal(char *env_var)
 		return (NULL);
 	res[0] = ft_strdup(env_var);
 	if (!res[0])
-		return (free(res[0]), free(res), NULL);
+		return (my_free(res[0]), my_free(res), NULL);
 	return (res);
 }
 

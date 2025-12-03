@@ -14,7 +14,7 @@
 
 /**
  * @brief Prints the environment in declare -x format.
- */
+*/
 void	print_export_list(t_env_node *node)
 {
 	while (node)
@@ -22,7 +22,7 @@ void	print_export_list(t_env_node *node)
 		if (ft_strncmp(node->key, "?", 2) == 0)
 		{
 			node = node->next;
-			continue;
+			continue ;
 		}
 		if (node->value)
 			ft_printf("declare -x %s=\"%s\"\n", node->key, node->value);

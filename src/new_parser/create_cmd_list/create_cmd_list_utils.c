@@ -57,8 +57,8 @@ int	append_arg(t_cmd_node *node, const char *value, int *errno)
 	}
 	new_args[count] = ft_strdup(value);
 	if (!new_args[count])
-		return (free(new_args), set_errno(1, errno));
-	free(node->args);
+		return (my_free(new_args), set_errno(1, errno));
+	my_free(node->args);
 	node->args = new_args;
 	return (0);
 }

@@ -37,7 +37,7 @@ int	add_row(t_split_data *dt, char *s)
 		return (1);
 	new_arr = ft_calloc(sizeof(char *), dt->row + 2);
 	if (!new_arr)
-		return (free(s), 1);
+		return (my_free(s), 1);
 	i = 0;
 	while (i < dt->row)
 	{
@@ -45,7 +45,7 @@ int	add_row(t_split_data *dt, char *s)
 		i++;
 	}
 	new_arr[i] = s;
-	free(dt->arr);
+	my_free(dt->arr);
 	dt->arr = new_arr;
 	dt->row++;
 	return (0);

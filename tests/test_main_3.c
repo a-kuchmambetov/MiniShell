@@ -26,7 +26,7 @@ static char *join_arr(char **arr)
     int i = 0;
     while (arr[i])
     {   
-        total_len += strlen(arr[i]) + 1; // +1 for space or null terminator
+        total_len += ft_strlen(arr[i]) + 1; // +1 for space or null terminator
         i++;
     }
     res = malloc(total_len);
@@ -36,9 +36,9 @@ static char *join_arr(char **arr)
     i = 0;
     while (arr[i])
     {   
-        strcat(res, arr[i]);
+        ft_strlcat(res, arr[i], total_len);
         if (arr[i + 1])
-            strcat(res, " ");
+            ft_strlcat(res, " ", total_len);
         i++;
     }
     return (res);

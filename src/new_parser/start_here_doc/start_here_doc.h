@@ -17,10 +17,9 @@
 
 typedef struct s_here_doc_data
 {
-    int		fd;
-    char	**filename;
-} t_here_doc_data;
-
+	int		fd;
+	char	**filename;
+}	t_here_doc_data;
 
 int		check_signal_hook(void);
 void	handle_sigint_heredoc(int sig);

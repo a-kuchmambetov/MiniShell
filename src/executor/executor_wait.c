@@ -12,7 +12,7 @@
 
 #include "executor.h"
 
-static void print_coredump(int sig)
+static void	print_coredump(int sig)
 {
 	(void)sig;
 	write(STDOUT_FILENO, "Quit (core dumped)", 19);

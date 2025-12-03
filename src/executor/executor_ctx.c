@@ -55,7 +55,7 @@ void	exec_ctx_finish(t_shell_data *data, t_exec_ctx *ctx)
 	}
 	else
 		wait_children(ctx->pids, ctx->child_count, ctx->last_child);
-	free(ctx->pids);
+	my_free(ctx->pids);
 	cleanup_heredocs(data->cmd_list.first);
 	if (ctx->had_error && !ctx->status_updated)
 		update_last_exit_status(data, 1);

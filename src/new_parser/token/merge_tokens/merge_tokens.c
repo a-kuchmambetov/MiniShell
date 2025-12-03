@@ -76,7 +76,7 @@ void	merge_tokens(t_token_list tkn_li, int *errno)
 			temp = join_value(cur->value, cur->next->value, errno);
 			if (*errno)
 				return ;
-			free(cur->value);
+			my_free(cur->value);
 			cur->is_space_after = cur->next->is_space_after;
 			cur->value = temp;
 			next_free = cur->next;

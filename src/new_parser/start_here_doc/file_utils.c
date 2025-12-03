@@ -25,9 +25,9 @@ int	check_file_name(char **name)
 	{
 		counter_str = ft_itoa(counter);
 		if (!counter_str)
-			return (free(counter_str), 1);
+			return (my_free(counter_str), 1);
 		new_name = ft_strjoin(name_template, counter_str);
-		free(counter_str);
+		my_free(counter_str);
 		if (!new_name)
 			return (1);
 		if (access(new_name, F_OK) != 0)
@@ -35,7 +35,7 @@ int	check_file_name(char **name)
 			*name = new_name;
 			return (0);
 		}
-		free(new_name);
+		my_free(new_name);
 		counter++;
 	}
 	return (0);
@@ -49,7 +49,7 @@ int	create_file(char **filename, int *fd)
 	if (*fd < 0)
 	{
 		ft_print_err("error: unable to create here-document temp file\n");
-		free(*filename);
+		my_free(*filename);
 		*filename = NULL;
 		return (1);
 	}

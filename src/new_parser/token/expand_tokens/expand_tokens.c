@@ -19,9 +19,7 @@ static char	*process_src(char *src, int in_quotes, int *check_token)
 		if (*check_token == TOKEN_REDIR_IN || *check_token == TOKEN_REDIR_OUT
 			|| *check_token == TOKEN_APPEND)
 			if (is_ambig(src))
-			{
 				*check_token = TOKEN_AMBIGUOUS;
-			}
 		return (squash_spaces(src));
 	}
 	return (src);

@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   my_exit.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: akuchmam <akuchmam@student.hive.fi>        #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-12-03 10:31:42 by akuchmam          #+#    #+#             */
+/*   Updated: 2025-12-03 10:31:42 by akuchmam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../main.h"
 
-void my_exit(int code, t_shell_data *data)
+void	my_exit(int code, t_shell_data *data)
 {
-    free_shell_data(data);
-    exit(code);
+	free_shell_data(data);
+	exit(code);
 }

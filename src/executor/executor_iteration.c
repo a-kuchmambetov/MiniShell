@@ -68,28 +68,6 @@ static int	handle_failed_command(t_shell_data *data, t_exec_ctx *ctx,
 	return (0);
 }
 
-// fork and call of child_execute
-int	spawn_child_process(t_shell_data *data, t_exec_ctx *ctx, t_cmd_node *cmd,
-		int pipefd[2])
-{
-	ctx->pids[ctx->child_count] = fork();
-	if (ctx->pids[ctx->child_count] == 0)
-	{
-		my_free(ctx->pids); // child does not need pid list; free to avoid valgrind reachable leak
-		ctx->pids = NULL;
-		child_execute(data, cmd, ctx->prev_pipe_read, pipefd);
-	}
-	if (ctx->pids[ctx->child_count] < 0)
-	{
-		perror("fork");
-		return (1);
-	}
-	if (cmd == ctx->last_exec)
-		ctx->last_child = ctx->pids[ctx->child_count];
-	ctx->child_count++;
-	return (0);
-}
-
 static void	update_pipe_links(t_exec_ctx *ctx, t_cmd_node *cmd, int pipefd[2])
 {
 	if (cmd->is_pipe_out)

@@ -71,7 +71,7 @@ int	builtin_echo(char **argv)
 		arg = ft_strdup(argv[i]);
 		if (!arg)
 			return (1);
-		write(1, arg, strlen(arg));
+		write(1, arg, ft_strlen(arg));
 		my_free(arg);
 		if (argv[i + 1])
 			write(1, " ", 1);

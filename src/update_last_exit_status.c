@@ -17,10 +17,10 @@ static void	free_env_node(t_env_node *node)
 	if (!node)
 		return ;
 	if (node->key)
-		free(node->key);
+		my_free(node->key);
 	if (node->value)
-		free(node->value);
-	free(node);
+		my_free(node->value);
+	my_free(node);
 }
 
 static int	create_new(t_shell_data *dt, char *code_str)

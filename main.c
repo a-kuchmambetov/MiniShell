@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "main.h"
-#include <stdio.h>
 
 volatile sig_atomic_t	g_signal_received = 0;
 
@@ -33,15 +32,16 @@ static void	setup_signals_prompt(void)
 		signal(SIGQUIT, SIG_IGN);
 	}
 }
-static char* read_line_prompt()
+
+static char	*read_line_prompt(void)
 {
 	if (isatty(STDIN_FILENO))
-		return"minishell > ";
+		return ("minishell > ");
 	else
-		return " > ";
+		return (" > ");
 }
 
-static void finish_cmd(t_shell_data *data, char *input)
+static void	finish_cmd(t_shell_data *data, char *input)
 {
 	if (isatty(STDIN_FILENO))
 		ft_printf("\n");

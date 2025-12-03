@@ -29,7 +29,7 @@ int	join_value(char **dest, const char *src, int *errno)
 		*errno = 1;
 		return (1);
 	}
-	free(*dest);
+	my_free(*dest);
 	*dest = new_str;
 	return (0);
 }
@@ -100,12 +100,13 @@ char	*get_expanded_val(t_env_list env, char *input, int *i, int *errno)
 	return (my_free(key), env_value);
 }
 
-void	update_token(t_token_node *cur, char *new_value, int current_type, int *errno)
+void	update_token(t_token_node *cur, char *new_value, int current_type,
+	int *errno)
 {
-	if ((cur->type == TOKEN_REDIR_IN || cur->type == TOKEN_REDIR_OUT 
-		|| cur->type == TOKEN_APPEND) && ft_strncmp(new_value, "", 1) == 0)
+	if ((cur->type == TOKEN_REDIR_IN || cur->type == TOKEN_REDIR_OUT
+			|| cur->type == TOKEN_APPEND) && ft_strncmp(new_value, "", 1) == 0)
 		cur->type = TOKEN_AMBIGUOUS;
-	else 
+	else
 		cur->type = current_type;
 	if (cur->type == TOKEN_AMBIGUOUS)
 		return ;
