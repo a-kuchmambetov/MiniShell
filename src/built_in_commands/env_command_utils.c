@@ -27,8 +27,6 @@ static char	*make_env_entry(const char *key, const char *value)
 	char	*tmp;
 	char	*res;
 
-	if (ft_strncmp(key, "?", 2) == 0)
-		return (NULL);
 	tmp = ft_strjoin(key, "=");
 	if (!tmp)
 		return (NULL);
@@ -61,6 +59,11 @@ static int	fill_envp(t_env_node *node, char **envp)
 	{
 		if (node->value)
 		{
+			if (ft_strncmp(node->key, "?", 2) == 0)
+			{
+				node = node->next;
+				continue ;
+			}
 			envp[i] = make_env_entry(node->key, node->value);
 			if (!envp[i])
 				return (0);

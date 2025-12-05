@@ -14,6 +14,8 @@
 
 static int	is_delim(const char *str)
 {
+	if (!str)
+		return (1);
 	if (ft_strncmp(str, "<<", 2) == 0 || ft_strncmp(str, ">>", 2) == 0)
 		return (2);
 	if (str[0] == '|' || str[0] == '>' || str[0] == '<' || str[0] == ' ')
